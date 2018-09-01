@@ -50,12 +50,15 @@ end % end constructors
 methods
     function box = boundingBox(this)
         % Returns the bounding box of this shape
-        box = Box2D(boundingBox(this.coords));
+        mini = min(this.coords);
+        maxi = max(this.coords);
+        box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);
     end
     
-%     function verts = coords(this)
-%         verts = PointSet2D(this.coords);
-%     end
+    function verts = vertices(this)
+        % returns vertices as a new instance of MultiPoint2D
+        verts = MultiPoint2D(this.coords);
+    end
     
     function varargout = draw(this, varargin)
         % Draw the current geometry, eventually specifying the style

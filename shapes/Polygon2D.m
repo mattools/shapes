@@ -68,13 +68,20 @@ methods
         dp = diff(this.coords([1:end 1], :), 1, 1);
         p = sum(hypot(dp(:, 1), dp(:, 2)));
     end
+    
+    function verts = vertices(this)
+        % returns vertices as a new instance of MultiPoint2D
+        verts = MultiPoint2D(this.coords);
+    end
 end
 
 %% Methods implementing the Geometry2D interface
 methods
     function box = boundingBox(this)
         % Returns the bounding box of this shape
-        box = Box2D(boundingBox(this.coords));
+        mini = min(this.coords);
+        maxi = max(this.coords);
+        box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);
     end
     
     function varargout = draw(this, varargin)
