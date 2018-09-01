@@ -1,15 +1,15 @@
-classdef LineString2D < Geometry2D
-%LineString2D An open polyline composed of several line segments 
+classdef MultiPoint2D < Geometry2D
+%POLYGON2D A set of points in the plane
 %
-%   Represents a polyline defined be a series of coords. 
+%   Represents a set of coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
 %   Example
-%   LineString2D([0 0; 10 0; 10 10]; 0 10]);
+%   MultiPoint2D([0 0; 10 0; 10 10]; 0 10]);
 %
 %   See also
-%   Geometry2d, Polygon2D
+%   Geometry2D, Polygon2D
 
 % ------
 % Author: David Legland
@@ -20,7 +20,7 @@ classdef LineString2D < Geometry2D
 
 %% Properties
 properties
-    % the set of coords, given as a N-by-2 array of coordinates
+    % the vertex coordinates, given as a N-by-2 array of double
     coords;
     
 end % end properties
@@ -28,13 +28,13 @@ end % end properties
 
 %% Constructor
 methods
-    function this = LineString2D(varargin)
-    % Constructor for LineString2D class
+    function this = MultiPoint2D(varargin)
+    % Constructor for MultiPoint2D class
     
         if ~isempty(varargin)
             var1 = varargin{1};
             if size(var1, 2) ~= 2
-                error('Creating a linestring requires an array with two columns, not %d', size(var1, 2));
+                error('Creating a MultiPoint requires an array with two columns, not %d', size(var1, 2));
             end
             this.coords = var1;
 
@@ -53,14 +53,10 @@ methods
         box = Box2D(boundingBox(this.coords));
     end
     
-%     function verts = coords(this)
-%         verts = PointSet2D(this.coords);
-%     end
-    
     function varargout = draw(this, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPolyline(this.coords);
+        h = drawPoint(this.coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -76,17 +72,17 @@ methods
     function res = scale(this, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = LineString2D(this.coords * factor);
+        res = MultiPoint2D(this.coords * factor);
     end
     
     function res = translate(this, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = LineString2D(bsxfun(@plus, this.coords, shift));
+        res = MultiPoint2D(bsxfun(@plus, this.coords, shift));
     end
     
     function res = rotate(this, angle, varargin)
-        % Returns a rotated version of this polyline
+        % Returns a rotated version of this polygon
         %
         % POLY2 = rotate(POLY, THETA)
         % POLY2 = rotate(POLY, THETA, CENTER)
@@ -100,7 +96,7 @@ methods
         rot = createRotation(origin, deg2rad(angle));
         verts = transformPoint(this.coords, rot);
         
-        res = LineString2D(verts);
+        res = MultiPoint2D(verts);
     end
 end % end methods
 

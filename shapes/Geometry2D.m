@@ -7,7 +7,7 @@ classdef Geometry2D < Geometry
 %   Geometry2D
 %
 %   See also
-%   svui.app.Polygon2d, svui.app.PointSet2d
+%   Polygon2D, PointSet2D
 
 % ------
 % Author: David Legland
@@ -31,11 +31,16 @@ end % end constructors
 methods ( Abstract )
     
     box = boundingBox(this)
-    % Returns the bounding box of this shape
+    % Returns the bounding box of this geometry
     
     varargout = draw(this, varargin)
     % Draw the current geometry, eventually specifying the style
-       
+end
+
+%% Abstract Methods
+% Not sure we will keep these methods...
+methods ( Abstract )
+    
     res = scale(this, varargin)
     % Returns a scaled version of this geometry
         

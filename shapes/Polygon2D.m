@@ -1,7 +1,7 @@
 classdef Polygon2D < Geometry2D
 %POLYGON2D A polygon in the plane
 %
-%   Represents a polygon defined be a series of vertices. 
+%   Represents a polygon defined be a series of coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -9,7 +9,7 @@ classdef Polygon2D < Geometry2D
 %   Polygon2D([0 0; 10 0; 10 10]; 0 10]);
 %
 %   See also
-%   Geometry2d, LineString2D
+%   Geometry2D, LineString2D
 
 % ------
 % Author: David Legland
@@ -20,8 +20,8 @@ classdef Polygon2D < Geometry2D
 
 %% Properties
 properties
-    % the set of vertices, given as a N-by-2 array of coordinates
-    vertices;
+    % the set of vertex coordinates, given as a N-by-2 array of double
+    coords;
     
 end % end properties
 
@@ -36,27 +36,51 @@ methods
             if size(var1, 2) ~= 2
                 error('Creating a polygon requires an array with two columns, not %d', size(var1, 2));
             end
-            this.vertices = var1;
+            this.coords = var1;
 
         else
-            this.vertices = [];
+            this.coords = [];
         end
     end
 
 end % end constructors
 
+%% Methods specific to Polygon2D
+methods
+    function a = area(this)
+        % Computes the area of this polygon
+        
+        % isolate coordinates
+        px = this.coords(:,1);
+        py = this.coords(:,2);
 
-%% Methods
+        % indices of next vertices
+        N = length(this.coords);
+        iNext = [2:N 1];
+        
+        % compute area (vectorized version)
+        a = sum(px .* py(iNext) - px(iNext) .* py) / 2;
+
+    end
+    
+    function p = perimeter(this)
+        % Computes the perimeter (boundary length) of this polygon
+        dp = diff(this.coords([1:end 1], :), 1, 1);
+        p = sum(hypot(dp(:, 1), dp(:, 2)));
+    end
+end
+
+%% Methods implementing the Geometry2D interface
 methods
     function box = boundingBox(this)
         % Returns the bounding box of this shape
-        box = Box2D(boundingBox(this.vertices));
+        box = Box2D(boundingBox(this.coords));
     end
     
     function varargout = draw(this, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPolygon(this.vertices);
+        h = drawPolygon(this.coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -68,17 +92,20 @@ methods
             varargout = {h};
         end
     end
-    
+end
+
+%% Methods implementing the Geometry2D interface (more)
+methods
     function res = scale(this, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = Polygon2D(this.vertices * factor);
+        res = Polygon2D(this.coords * factor);
     end
     
     function res = translate(this, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = Polygon2D(bsxfun(@plus, this.vertices, shift));
+        res = Polygon2D(bsxfun(@plus, this.coords, shift));
     end
     
     function res = rotate(this, angle, varargin)
@@ -94,7 +121,7 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint(this.vertices, rot);
+        verts = transformPoint(this.coords, rot);
         
         res = Polygon2D(verts);
     end

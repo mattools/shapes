@@ -1,7 +1,7 @@
 classdef PointSet2D < Geometry2D
 %POLYGON2D A set of points in the plane
 %
-%   Represents a set of vertices. 
+%   Represents a set of coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -20,8 +20,8 @@ classdef PointSet2D < Geometry2D
 
 %% Properties
 properties
-    % the set of vertices, given as a N-by-2 array of coordinates
-    vertices;
+    % the vertex coordinates, given as a N-by-2 array of double
+    coords;
     
 end % end properties
 
@@ -36,10 +36,10 @@ methods
             if size(var1, 2) ~= 2
                 error('Creating a point set requires an array with two columns, not %d', size(var1, 2));
             end
-            this.vertices = var1;
+            this.coords = var1;
 
         else
-            this.vertices = [];
+            this.coords = [];
         end
     end
 
@@ -50,13 +50,13 @@ end % end constructors
 methods
     function box = boundingBox(this)
         % Returns the bounding box of this shape
-        box = Box2D(boundingBox(this.vertices));
+        box = Box2D(boundingBox(this.coords));
     end
     
     function varargout = draw(this, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPoint(this.vertices);
+        h = drawPoint(this.coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -72,13 +72,13 @@ methods
     function res = scale(this, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = PointSet2D(this.vertices * factor);
+        res = PointSet2D(this.coords * factor);
     end
     
     function res = translate(this, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = PointSet2D(bsxfun(@plus, this.vertices, shift));
+        res = PointSet2D(bsxfun(@plus, this.coords, shift));
     end
     
     function res = rotate(this, angle, varargin)
@@ -94,7 +94,7 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint(this.vertices, rot);
+        verts = transformPoint(this.coords, rot);
         
         res = PointSet2D(verts);
     end
