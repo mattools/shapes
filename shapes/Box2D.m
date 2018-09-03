@@ -79,7 +79,7 @@ methods
         
         % eventually apply style
         if ~isempty(style)
-            applyStyle(var1, h);
+            apply(var1, h);
         end
         
         % return handle if requested

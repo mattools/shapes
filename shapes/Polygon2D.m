@@ -91,7 +91,7 @@ methods
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
-                applyStyle(var1, h);
+                apply(var1, h);
             end
         end
         
