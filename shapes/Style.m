@@ -202,7 +202,13 @@ methods
             str.fillVisible = this.fillVisible;
         end
     end
+    
+    function write(this, fileName, varargin)
+        % Write into a JSON file
+        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+    end
 end
+
 methods (Static)
     function style = fromStruct(str)
         % Create a new instance from a structure
@@ -221,6 +227,11 @@ methods (Static)
                 error(['Unknown style modifier: ' name]);
             end
         end
+    end
+    
+    function style = read(fileName)
+        % Read a style from a file in JSON format
+        style = Style.fromStruct(loadjson(fileName));
     end
 end
 

@@ -81,7 +81,13 @@ methods
             str.style = toStruct(this.style);
         end
     end
+    
+    function write(this, fileName, varargin)
+        % Write into a JSON file
+        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+    end
 end
+
 methods (Static)
     function shape = fromStruct(str)
         % Creates a new instance from a structure
@@ -95,6 +101,11 @@ methods (Static)
         if isfield(str, 'style')
             shape.style = Style.fromStruct(str.style);
         end
+    end
+    
+    function shape = read(fileName)
+        % Read a shape from a file in JSON format
+        shape = Shape.fromStruct(loadjson(fileName));
     end
 end
 

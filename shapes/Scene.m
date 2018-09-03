@@ -105,14 +105,14 @@ methods
         for i = 1:length(this.shapes)
             str.shapes{i} = toStruct(this.shapes(i));
         end
-%         str.shapes = toStruct(this.shapes(1));
-%         for i = 2:length(this.shapes)
-%             str.shapes(i) = toStruct(this.shapes(i));
-%         end
-        
         if ~isempty(this.viewBox)
             str.viewBox = this.viewBox;
         end
+    end
+    
+    function write(this, fileName, varargin)
+        % Write into a JSON file
+        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
     end
 end
 methods (Static)
@@ -133,6 +133,11 @@ methods (Static)
         if isfield(str, 'viewBox')
             scene.viewBox = str.viewBox;
         end
+    end
+    
+    function scene = read(fileName)
+        % Read a scene from a file in JSON format
+        scene = Scene.fromStruct(loadjson(fileName));
     end
 end
 
