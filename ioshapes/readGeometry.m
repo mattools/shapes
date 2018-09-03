@@ -1,5 +1,5 @@
 function geom = readGeometry(fileName)
-%READGEOMETRY  One-line description here, please.
+%READGEOMETRY Read Geometry instance from a JSON file
 %
 %   output = readGeometry(input)
 %
