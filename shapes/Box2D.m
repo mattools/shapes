@@ -78,7 +78,7 @@ methods
         
         % eventually apply style
         if ~isempty(style)
-            apply(var1, h);
+            apply(style, h);
         end
         
         % return handle if requested

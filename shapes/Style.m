@@ -209,7 +209,7 @@ methods
 end
 methods (Static)
     function style = fromStruct(str)
-        % Creates a new instance from a structure
+        % Create a new instance from a structure
         
         % create default empty style
         style = Style();
