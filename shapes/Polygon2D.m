@@ -87,12 +87,31 @@ methods
     function varargout = draw(this, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPolygon(this.coords);
         if nargin > 1
-            var1 = varargin{1};
-            if isa(var1, 'Style')
-                apply(var1, h);
+            style = varargin{1};
+            if ~isa(style, 'Style')
+                error('Second argument must be a Style');
             end
+            
+            % fill interior
+            if style.fillVisible
+                h = fillPolygon(this.coords);
+                apply(style, h);
+            end
+            
+            % draw outline
+            if style.lineVisible
+                h = drawPolygon(this.coords);
+                apply(style, h);
+            end
+            
+            if style.markerVisible
+                h = drawPoint(this.coords);
+                apply(style, h);
+            end
+            
+        else
+            h = drawPolygon(this.coords);
         end
         
         if nargout > 0

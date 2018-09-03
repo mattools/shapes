@@ -18,7 +18,8 @@ classdef Scene < handle
 
 %% Properties
 properties
-    % the set of shapes within this scene?
+    % the set of shapes within this scene. 
+    % Stored as a struct array.
     shapes;
     
     % The bounding box of the current view. Stored as a 1-by-(2n) array.
@@ -43,7 +44,7 @@ methods
     function varargout = draw(this)
         % display in a new figure
         hFig = figure; 
-        axis square; hold on;
+        axis equal; hold on;
         if ~isempty(this.viewBox)
             axis(this.viewBox);
         end
@@ -100,10 +101,14 @@ methods
         % Convert to a structure to facilitate serialization
 
         % create a structure for the list of shapes
-        str.shapes = toStruct(this.shapes(1));
-        for i = 2:length(this.shapes)
-            str.shapes(i) = toStruct(this.shapes(i));
+        str.shapes = cell(1, length(this.shapes));
+        for i = 1:length(this.shapes)
+            str.shapes{i} = toStruct(this.shapes(i));
         end
+%         str.shapes = toStruct(this.shapes(1));
+%         for i = 2:length(this.shapes)
+%             str.shapes(i) = toStruct(this.shapes(i));
+%         end
         
         if ~isempty(this.viewBox)
             str.viewBox = this.viewBox;
@@ -120,7 +125,7 @@ methods (Static)
         % parse list of shapes
         shapeList = str.shapes;
         for iShape = 1:length(shapeList)
-            shape = Shape.fromStruct(shapeList(iShape));
+            shape = Shape.fromStruct(shapeList{iShape});
             addShape(scene, shape);
         end
         

@@ -125,7 +125,9 @@ methods
     function apply(this, h)
         % apply the style to the given graphic handle(s)
         
-        if this.markerVisible
+        hType = get(h, 'Type');
+
+        if this.markerVisible && ~strcmp(hType, 'patch')
             set(h, 'MarkerEdgeColor',   this.markerColor);
             set(h, 'Marker',            this.markerStyle);
             set(h, 'MarkerSize',        this.markerSize);
@@ -134,7 +136,7 @@ methods
             set(h, 'Marker', 'none');
         end
         
-        if this.lineVisible 
+        if this.lineVisible && ~strcmp(hType, 'patch')
             set(h, 'LineStyle',         this.lineStyle);
             set(h, 'Color',             this.lineColor);
             set(h, 'LineWidth',         this.lineWidth);
@@ -142,16 +144,10 @@ methods
             set(h, 'LineStyle', 'none');
         end
         
-        hType = get(h, 'Type');
-        if strcmp(hType, 'patch') 
-            if this.isFillVisible
-                set(h, 'FaceColor', this.FillColor);
-                set(h, 'FaceAlpha', this.FillOpacity);
-            else
-                set(h, 'FaceColor', []);
-            end
+        if this.fillVisible && strcmp(hType, 'patch')
+            set(h, 'FaceColor', this.fillColor);
+            set(h, 'FaceAlpha', this.fillOpacity);
         end
-        
     end
     
 end % end methods
