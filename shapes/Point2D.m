@@ -11,7 +11,7 @@ classdef Point2D < Geometry2D
 
 % ------
 % Author: David Legland
-% e-mail: david.legland@nantes.inra.fr
+% e-mail: david.legland@inra.fr
 % Created: 2018-09-01,    using Matlab 8.6.0.267246 (R2015b)
 % Copyright 2018 INRA - BIA-BIBS.
 
