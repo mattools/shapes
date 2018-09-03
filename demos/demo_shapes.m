@@ -18,7 +18,7 @@
 verts = ellipseToPolygon([50 50 40 20 30]);
 poly = Polygon2D(verts);
 
-% dispy pooygon
+% dispy polygon
 figure; hold on; 
 draw(poly);
 axis equal; axis([0 100 0 100]);

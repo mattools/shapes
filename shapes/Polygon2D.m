@@ -134,5 +134,19 @@ methods
     end
 end % end methods
 
+%% Serialization methods
+methods
+    function str = toStruct(this)
+        % Convert to a structure to facilitate serialization
+        str = struct('type', 'Polygon2D', 'coordinates', this.coords);
+    end
+end
+methods (Static)
+    function poly = fromStruct(str)
+        % Create a new instance from a structure
+        poly = Polygon2D(str.coordinates);
+    end
+end
+
 end % end classdef
 

@@ -22,7 +22,7 @@ function test_Constructor %#ok<*DEFNU>
 
 vertices = [10 10; 20 10; 20 20; 10 20];
 poly = Polygon2D(vertices);
-
+assertEqual(4, size(poly.coords, 1));
 
 function test_perimeter_square %#ok<*DEFNU>
 % Test call of function without argument

@@ -48,6 +48,8 @@ methods
         if nargin == 1
             var1 = varargin{1};
             if isnumeric(var1) && ~any(size(var1) ~= [1 2])
+                this.x = var1(1);
+                this.y = var1(2);
             else
                 error('Can not parse input for Point2D');
             end
@@ -68,6 +70,22 @@ methods
 
 end % end constructors
 
+%% Methods specific to Point2D
+methods
+    function d = distance(this, that)
+        % Distance between two points
+
+        % check input
+        if ~isa(this, Point2D) || ~isa(that, Point2D)
+            error('Both arguments must be instances of Point2D');
+        end
+        
+        % compute distance
+        dx = this.x - that.x;
+        dy = this.y - that.y;
+        d = hypot(dx, dy);
+    end
+end
 
 %% Methods implementing the Geometry2D interface
 methods
@@ -95,7 +113,6 @@ end
 
 %% Methods implementing the Geometry2D interface (more)
 methods
-    
     function res = scale(this, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
@@ -126,6 +143,20 @@ methods
         res = Point2D(verts);
     end
 end % end methods
+
+%% Serialization methods
+methods
+    function str = toStruct(this)
+        % Convert to a structure to facilitate serialization
+        str = struct('type', 'Point2D', 'x', this.x, 'y', this.y);
+    end
+end
+methods (Static)
+    function point = fromStruct(str)
+        % Create a new instance from a structure
+        point = Point2D(str.x, str.y);
+    end
+end
 
 end % end classdef
 

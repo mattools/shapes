@@ -51,7 +51,6 @@ methods
         this.xmax = data(2);
         this.ymin = data(3);
         this.ymax = data(4);
-
     end
 
 end % end constructors
@@ -106,6 +105,22 @@ methods
         error('A box can not be rotated');
     end
 end % end methods
+
+%% Serialization methods
+methods
+    function str = toStruct(this)
+        % Convert to a structure to facilitate serialization
+        str = struct('type', 'Box2D', ...
+            'xmin', this.xmin, 'xmax', this.xmax, ...
+            'ymin', this.ymin, 'ymax', this.ymax);
+    end
+end
+methods (Static)
+    function box = fromStruct(str)
+        % Create a new instance from a structure
+        box = Box2D([str.xmin str.xmax str.ymin str.ymax]);
+    end
+end
 
 end % end classdef
 

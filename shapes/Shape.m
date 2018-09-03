@@ -62,5 +62,41 @@ methods
     end
 end % end methods
 
+
+%% Serialization methods
+methods
+    function str = toStruct(this)
+        % Convert to a structure to facilitate serialization
+
+        % creates a structure for geometry, including class name
+        str.geometry = toStruct(this.geometry);
+        if ~isfield(str.geometry, 'type')
+            type = classname(this.geometry);
+            warning(['geometry type not specified, use class name: ' type]);
+            str.geometry.type = type;
+        end
+        
+        % add optional style
+        if ~isempty(this.style)
+            str.style = toStruct(this.style);
+        end
+    end
+end
+methods (Static)
+    function shape = fromStruct(str)
+        % Creates a new instance from a structure
+        
+        % parse geometry
+        type = str.geometry.type;
+        geom = eval([type '.fromStruct(str.geometry)']);
+        shape = Shape(geom);
+        
+        % eventually parse style
+        if isfield(str, 'style')
+            shape.style = Style.fromStruct(str.style);
+        end
+    end
+end
+
 end % end classdef
 

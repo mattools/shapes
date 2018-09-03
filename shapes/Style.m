@@ -30,9 +30,9 @@ classdef Style < handle
 
 %% Properties
 properties
-    markerColor     = [0 0 1];
-    markerSize      = 6;
+    markerColor     = 'b';
     markerStyle     = '+';
+    markerSize      = 6;
     markerFillColor = 'none';
     markerVisible   = false;
     
@@ -41,7 +41,7 @@ properties
     lineStyle       = '-';
     lineVisible     = true;
     
-    fillColor       = [0 1 1];
+    fillColor       = 'y';
     fillOpacity     = 1;
     fillVisible     = false;
     
@@ -71,6 +71,8 @@ methods
                 this.markerColor = value;
             elseif strcmpi(name, 'markerStyle')
                 this.markerStyle = value;
+            elseif strcmpi(name, 'markerSize')
+                this.markerSize = value;
             elseif strcmpi(name, 'markerFillColor')
                 this.markerFillColor = value;
             elseif strcmpi(name, 'markerVisible')
@@ -99,6 +101,7 @@ methods
         function copyFields(that)
             this.markerColor        = that.markerColor;
             this.markerStyle        = that.markerStyle;
+            this.markerSize         = that.markerSize;
             this.markerFillColor    = that.markerFillColor;
             this.markerVisible      = that.markerVisible;
             
@@ -123,8 +126,8 @@ methods
         % apply the style to the given graphic handle(s)
         
         if this.markerVisible
-            set(h, 'Marker',            this.markerStyle);
             set(h, 'MarkerEdgeColor',   this.markerColor);
+            set(h, 'Marker',            this.markerStyle);
             set(h, 'MarkerSize',        this.markerSize);
             set(h, 'MarkerFaceColor',   this.markerFillColor);            
         else
@@ -145,11 +148,84 @@ methods
                 set(h, 'FaceColor', this.FillColor);
                 set(h, 'FaceAlpha', this.FillOpacity);
             else
+                set(h, 'FaceColor', []);
             end
         end
         
     end
     
 end % end methods
+
+%% Serialization methods
+methods
+    function str = toStruct(this)
+        % Convert to a structure to facilitate serialization
+
+        % create empty struct
+        str = struct();
+        
+        % update marker modifiers with values different from default
+        if this.markerColor ~= 'b'
+            str.markerColor = this.markerColor;
+        end
+        if this.markerStyle ~= '+'
+            str.markerStyle = this.markerStyle;
+        end
+        if this.markerSize ~= 6
+            str.markerSize = this.markerSize;
+        end
+        if ~ischar(this.markerFillColor) || ~strcmp(this.markerFillColor, 'none')
+            str.markerFillColor = this.markerFillColor;
+        end
+        if this.markerVisible ~= false
+            str.markerVisible = this.markerVisible;
+        end
+        
+        % update line modifiers with values different from default
+        if this.lineColor ~= 'b'
+            str.lineColor = this.lineColor;
+        end
+        if this.lineWidth ~= .5
+            str.lineWidth = this.lineWidth;
+        end
+        if ~strcmp(this.lineStyle, '-')
+            str.lineStyle = this.lineStyle;
+        end
+        if this.lineVisible ~= true
+            str.lineVisible = this.lineVisible;
+        end
+        
+        % update fill modifiers with values different from default
+        if this.fillColor ~= 'y'
+            str.fillColor = this.fillColor;
+        end
+        if this.fillOpacity ~= 1
+            str.fillOpacity = this.fillOpacity;
+        end
+        if this.fillVisible ~= false
+            str.fillVisible = this.fillVisible;
+        end
+    end
+end
+methods (Static)
+    function style = fromStruct(str)
+        % Creates a new instance from a structure
+        
+        % create default empty style
+        style = Style();
+        mc = metaclass(style);
+        
+        % update styles with fields
+        names = fieldnames(str);
+        for i = 1:length(names)
+            name = names{i};
+            if ~isempty(findobj(mc.PropertyList, 'Name', name))
+                style.(name) = str.(name);
+            else
+                error(['Unknown style modifier: ' name]);
+            end
+        end
+    end
+end
 
 end % end classdef
