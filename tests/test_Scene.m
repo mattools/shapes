@@ -27,3 +27,13 @@ function test_read
 scene = Scene.read('kandinsky.scene');
 assertTrue(isa(scene, 'Scene'));
 assertEqual(3, length(scene.shapes));
+
+
+function test_viewBox
+% test conversion viewbox to scene axis limits
+box = [1 2 3 4 5 6];
+scene = Scene();
+setViewBox(scene, box);
+box2 = viewBox(scene);
+assertElementsAlmostEqual(box, box2);
+

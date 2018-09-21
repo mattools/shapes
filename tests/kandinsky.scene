@@ -1,4 +1,13 @@
 {
+	"xAxis": {
+		"limits": [0,90]
+	},
+	"yAxis": {
+		"limits": [0,50]
+	},
+	"zAxis": {
+		"limits": [0,1]
+	},
 	"shapes": [
 		{
 			"geometry": {
@@ -105,6 +114,5 @@
 				"fillVisible": 1
 			}
 		}
-	],
-	"viewBox": [0,90,0,50]
+	]
 }

@@ -31,10 +31,10 @@ properties
     % Description of x-axis, as a SceneAxis instance
     zAxis;
     
-    % The bounding box of the current view. Stored as a 1-by-(2n) array.
-    % Can be 2D or 3D
-    % (to be deprecated)
-    viewBox = [];
+%     % The bounding box of the current view. Stored as a 1-by-(2n) array.
+%     % Can be 2D or 3D
+%     % (to be deprecated)
+%     viewBox = [];
     
 end % end properties
 
@@ -42,8 +42,13 @@ end % end properties
 %% Constructor
 methods
     function this = Scene(varargin)
-    % Constructor for Scene class
-
+        % Constructor for Scene class
+        
+        % create new axes
+        this.xAxis = SceneAxis();
+        this.yAxis = SceneAxis();
+        this.zAxis = SceneAxis();
+        
     end
 
 end % end constructors
@@ -55,9 +60,7 @@ methods
         % display in a new figure
         hFig = figure; 
         axis equal; hold on;
-        if ~isempty(this.viewBox)
-            axis(this.viewBox);
-        end
+        axis(viewBox(this));
         
         for iShape = 1:length(this.shapes)
             draw(this.shapes(iShape));
@@ -66,6 +69,18 @@ methods
         if nargout > 0
             varargout = {hFig};
         end
+    end
+    
+    function box = viewBox(this)
+        % Compute the view box from the limits on the different axes
+        box = [this.xAxis.limits this.yAxis.limits this.zAxis.limits];
+    end
+    
+    function setViewBox(this, box)
+        % set axes limits from viewbox values
+        this.xAxis.limits = box(1:2);
+        this.yAxis.limits = box(3:4);
+        this.zAxis.limits = box(5:6);
     end
 end % end methods
 
@@ -110,13 +125,15 @@ methods
     function str = toStruct(this)
         % Convert to a structure to facilitate serialization
 
+        % first add information about axes
+        str.xAxis = toStruct(this.xAxis);
+        str.yAxis = toStruct(this.yAxis);
+        str.zAxis = toStruct(this.zAxis);
+
         % create a structure for the list of shapes
         str.shapes = cell(1, length(this.shapes));
         for i = 1:length(this.shapes)
             str.shapes{i} = toStruct(this.shapes(i));
-        end
-        if ~isempty(this.viewBox)
-            str.viewBox = this.viewBox;
         end
     end
     
@@ -132,17 +149,24 @@ methods (Static)
         % create an empty scene
         scene = Scene();
         
+        % parse eventual axes information
+        if isfield(str, 'xAxis')
+            scene.xAxis = SceneAxis.fromStruct(str.xAxis);
+        end
+        if isfield(str, 'yAxis')
+            scene.yAxis = SceneAxis.fromStruct(str.yAxis);
+        end
+        if isfield(str, 'zAxis')
+            scene.zAxis = SceneAxis.fromStruct(str.zAxis);
+        end
+        
         % parse list of shapes
         shapeList = str.shapes;
         for iShape = 1:length(shapeList)
             shape = Shape.fromStruct(shapeList{iShape});
             addShape(scene, shape);
         end
-        
-        % eventually parse viewBox
-        if isfield(str, 'viewBox')
-            scene.viewBox = str.viewBox;
-        end
+
     end
     
     function scene = read(fileName)
