@@ -27,6 +27,7 @@ function test_read
 scene = Scene.read('kandinsky.scene');
 assertTrue(isa(scene, 'Scene'));
 assertEqual(3, length(scene.shapes));
+assertElementsAlmostEqual([0 90], scene.xAxis.limits);
 
 
 function test_viewBox

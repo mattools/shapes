@@ -38,7 +38,7 @@ methods
 
         if nargin == 1
             this.geometry = varargin{1};
-            this.style = Style();
+            this.style = createDefaultStyle(this.geometry);
             
         elseif nargin == 2
             this.geometry = varargin{1};
@@ -46,6 +46,14 @@ methods
             
         else
             error('Wrong number of arguments for creation of Shape');
+        end
+        
+        function style = createDefaultStyle(geom)
+            if isa(geom, 'Point2D') || isa(geom, 'MultiPoint2D')
+                style = Style('markerVisible', true, 'lineVisible', false);
+            else
+                style = Style();
+            end
         end
     end
 
