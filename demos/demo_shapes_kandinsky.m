@@ -38,13 +38,15 @@ addShape(scene, squareShape);
 addShape(scene, circShape);
 scene.viewBox = [0 90 0 50];
 
-draw(scene);
+write(scene, 'kandinsky.scene');
 
-
-%% save the scene and re-open it
-
-json = savejson('', toStruct(scene));
-
-scene2 = Scene.fromStruct(loadjson(json));
-
-draw(scene2);
+% draw(scene);
+% 
+% 
+% %% save the scene and re-open it
+% 
+% json = savejson('', toStruct(scene));
+% 
+% scene2 = Scene.fromStruct(loadjson(json));
+% 
+% draw(scene2);

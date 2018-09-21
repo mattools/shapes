@@ -98,7 +98,7 @@ methods (Static)
         shape = Shape(geom);
         
         % eventually parse style
-        if isfield(str, 'style')
+        if isfield(str, 'style') && ~isempty(str.style)
             shape.style = Style.fromStruct(str.style);
         end
     end

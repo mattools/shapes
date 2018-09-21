@@ -1,5 +1,5 @@
 classdef Scene < handle
-%SCENE  One-line description here, please.
+%SCENE  A container of shape instances
 %
 %   Class Scene
 %
@@ -22,8 +22,18 @@ properties
     % Stored as a struct array.
     shapes;
     
+    % Description of x-axis, as a SceneAxis instance
+    xAxis;
+    
+    % Description of y-axis, as a SceneAxis instance
+    yAxis;
+    
+    % Description of x-axis, as a SceneAxis instance
+    zAxis;
+    
     % The bounding box of the current view. Stored as a 1-by-(2n) array.
     % Can be 2D or 3D
+    % (to be deprecated)
     viewBox = [];
     
 end % end properties
