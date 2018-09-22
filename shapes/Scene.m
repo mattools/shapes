@@ -28,13 +28,11 @@ properties
     % Description of y-axis, as a SceneAxis instance
     yAxis;
     
-    % Description of x-axis, as a SceneAxis instance
+    % Description of z-axis, as a SceneAxis instance
     zAxis;
-    
-%     % The bounding box of the current view. Stored as a 1-by-(2n) array.
-%     % Can be 2D or 3D
-%     % (to be deprecated)
-%     viewBox = [];
+
+    % indicates whether main axes are visible or not (boolean)
+    axisLinesVisible = true;
     
 end % end properties
 
@@ -135,6 +133,9 @@ methods
         for i = 1:length(this.shapes)
             str.shapes{i} = toStruct(this.shapes(i));
         end
+        
+        str.axisLinesVisible = this.axisLinesVisible;
+        
     end
     
     function write(this, fileName, varargin)
@@ -167,6 +168,9 @@ methods (Static)
             addShape(scene, shape);
         end
 
+        if isfield(str, 'axisLinesVisible')
+            scene.axisLinesVisible = str.axisLinesVisible;
+        end
     end
     
     function scene = read(fileName)
