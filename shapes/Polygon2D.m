@@ -6,10 +6,10 @@ classdef Polygon2D < Geometry2D
 %   Data are represented by a NV-by-2 array.
 %
 %   Example
-%   Polygon2D([0 0; 10 0; 10 10]; 0 10]);
+%   Polygon2D([0 0; 10 0; 10 10; 0 10]);
 %
 %   See also
-%   Geometry2D, LineString2D
+%     Geometry2D, LineString2D
 
 % ------
 % Author: David Legland

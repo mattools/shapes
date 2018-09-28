@@ -55,11 +55,21 @@ end % end constructors
 %% Display Methods
 methods
     function varargout = draw(this)
-        % display in a new figure
+        % display current scene in a new figure
         hFig = figure; 
-        axis equal; hold on;
-        axis(viewBox(this));
         
+        % setup axis
+        axis equal; hold on;
+        
+        % set view box from axis limits stored within scene
+        axis(viewBox(this));
+
+        % draw lines for X and Y axes, based on current axis bounds
+        if this.axisLinesVisible
+            plot(this.xAxis.limits, [0 0], 'k-');
+            plot([0 0], this.yAxis.limits, 'k-');
+        end
+
         for iShape = 1:length(this.shapes)
             draw(this.shapes(iShape));
         end

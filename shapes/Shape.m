@@ -1,15 +1,18 @@
 classdef Shape < handle
 %SHAPE Contains information to draw a 2D or 3D shape 
 %
-%   The shape class ezncapsulates information about the geometry of the
+%   The shape class encapsulates information about the geometry of the
 %   shape (as an instance of Geometry class) and drawing options (as an
 %   instance of the Style class).
 %
 %   Example
-%   Shape
+%     poly = Polygon2D([10 10; 20 10; 20 20; 10 20]);
+%     shp = Shape(poly);
+%     figure; hold on; axis equal; axis([0 50 0 50]);
+%     draw(shp);
 %
 %   See also
-%     Geometry2D, Geometry2D, Style
+%     Geometry2D, Style
 
 % ------
 % Author: David Legland
@@ -20,12 +23,16 @@ classdef Shape < handle
 
 %% Properties
 properties
+    % The geometry of the shape, as an instance of Geometry
     geometry;
     
+    % The options for drawing the shape, as an instance of Style
     style;
     
+    % visibility flag (default true)
     visible = true;
     
+    % a name for identifying the shape
     name = '';
     
 end % end properties
@@ -35,6 +42,11 @@ end % end properties
 methods
     function this = Shape(varargin)
     % Constructor for Shape class
+    %   
+    %   usage:
+    %   shape = Shape(geom)
+    %   shape = Shape(geom, style)
+    %
 
         if nargin == 1
             this.geometry = varargin{1};
@@ -63,6 +75,7 @@ end % end constructors
 %% Methods
 methods
     function varargout = draw(this)
+        % Draws this shape on the current axis
         h = draw(this.geometry, this.style);
         if nargout > 0
             varargout = {h};
