@@ -31,6 +31,9 @@ properties
     % Description of z-axis, as a SceneAxis instance
     zAxis;
 
+    % an optional background image, as an instance of ImageNode
+    backgroundImage;
+    
     % indicates whether main axes are visible or not (boolean)
     axisLinesVisible = true;
     
@@ -57,6 +60,11 @@ methods
     function varargout = draw(this)
         % display current scene in a new figure
         hFig = figure; 
+        
+        % start by background image
+        if ~isempty(this.backgroundImage)
+            show(this.backgroundImage);
+        end
         
         % setup axis
         axis equal; hold on;
@@ -128,6 +136,23 @@ methods
     
 end
 
+%% background image
+methods
+    function setBackgroundImage(this, img)
+        if isa(img, 'ImageNode')
+            this.backgroundImage = img;
+        else
+            img = ImageNode(img);
+            this.backgroundImage = img;
+        end
+        
+        extent = physicalExtent(this.backgroundImage);
+        this.xAxis.limits = extent([1 2]);
+        this.yAxis.limits = extent([3 4]);
+        
+    end
+end
+
 %% Serialization methods
 methods
     function str = toStruct(this)
@@ -138,13 +163,16 @@ methods
         str.yAxis = toStruct(this.yAxis);
         str.zAxis = toStruct(this.zAxis);
 
+        str.backgroundImage = toStruct(this.backgroundImage);
+        
+        str.axisLinesVisible = this.axisLinesVisible;
+
         % create a structure for the list of shapes
+        % (use it as last fields to finish by the more numerous data)
         str.shapes = cell(1, length(this.shapes));
         for i = 1:length(this.shapes)
             str.shapes{i} = toStruct(this.shapes(i));
         end
-        
-        str.axisLinesVisible = this.axisLinesVisible;
         
     end
     
@@ -171,15 +199,19 @@ methods (Static)
             scene.zAxis = SceneAxis.fromStruct(str.zAxis);
         end
         
+        if isfield(str, 'backgroundImage')
+            scene.backgroundImage = ImageNode.fromStruct(str.backgroundImage);
+        end
+        
+        if isfield(str, 'axisLinesVisible')
+            scene.axisLinesVisible = str.axisLinesVisible;
+        end
+        
         % parse list of shapes
         shapeList = str.shapes;
         for iShape = 1:length(shapeList)
             shape = Shape.fromStruct(shapeList{iShape});
             addShape(scene, shape);
-        end
-
-        if isfield(str, 'axisLinesVisible')
-            scene.axisLinesVisible = str.axisLinesVisible;
         end
     end
     

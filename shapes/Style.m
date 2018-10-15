@@ -132,6 +132,7 @@ methods
             set(h, 'Marker',            this.markerStyle);
             set(h, 'MarkerSize',        this.markerSize);
             set(h, 'MarkerFaceColor',   this.markerFillColor);            
+            set(h, 'LineWidth',         this.lineWidth);
         else
             set(h, 'Marker', 'none');
         end
