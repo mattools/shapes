@@ -15,7 +15,7 @@
 % Copyright 2018 INRA - Cepia Software Platform.
 
 
-%% Create a display the scene
+%% Create and display the scene
 
 L = 10;
 
@@ -36,12 +36,12 @@ scene = Scene;
 addShape(scene, triShape);
 addShape(scene, squareShape);
 addShape(scene, circShape);
-scene.viewBox = [0 90 0 50];
+setViewBox(scene, [0 90 0 50]);
 
 write(scene, 'kandinsky.scene');
 
-% draw(scene);
-% 
+draw(scene);
+
 % 
 % %% save the scene and re-open it
 % 
