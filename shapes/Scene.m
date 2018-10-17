@@ -96,7 +96,9 @@ methods
         % set axes limits from viewbox values
         this.xAxis.limits = box(1:2);
         this.yAxis.limits = box(3:4);
-        this.zAxis.limits = box(5:6);
+        if length(box) > 4
+            this.zAxis.limits = box(5:6);
+        end
     end
 end % end methods
 
@@ -163,7 +165,9 @@ methods
         str.yAxis = toStruct(this.yAxis);
         str.zAxis = toStruct(this.zAxis);
 
-        str.backgroundImage = toStruct(this.backgroundImage);
+        if ~isempty(this.backgroundImage)
+            str.backgroundImage = toStruct(this.backgroundImage);
+        end
         
         str.axisLinesVisible = this.axisLinesVisible;
 

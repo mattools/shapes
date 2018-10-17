@@ -24,9 +24,12 @@ properties
     % the image data, as a Matlab array
     imageData = [];
     
+    % the size of image, nx-by-ny
+    imageSize;
+
     % information for spatial calibration
-    origin;
-    spacing;
+    spacing = [1 1];
+    origin = [1 1];
     
 end % end properties
 
@@ -44,18 +47,21 @@ methods
             % copy constructor
             this.filePath = var1.filePath;
             this.imageData = var1.imageData;
+            this.imageSize = var1.imageSize;
             this.spacing = var1.spacing;
             this.origin = var1.origin;
             
         elseif ischar(var1)
             % intialize from file path
             this.filePath = var1;
+            info = imfinfo(this.filePath);
+            this.imageSize = [info.Width info.Height];
             
         elseif isnumeric(var1)
             % initialisation constructor
             this.imageData = var1;
             
-            % initialize spacing and origin from dimension
+            % initialize spacing and origin from image data
             initializeSpatialCalibration(this);
         else
             error('Unable to create image node');
@@ -76,13 +82,18 @@ methods
     function h = show(this, varargin)
         % display image data on current axis
         
+        % read image data if necessary
+        if isempty(this.imageData)
+            data = imread(this.filePath);
+        end
+        
         % compute physical extents
-        dim = size(this.imageData);
-        lx = (0:dim(2)-1) * this.spacing(1) + this.origin(1);
-        ly = (0:dim(1)-1) * this.spacing(2) + this.origin(2);
+        dim = this.imageSize;
+        lx = (0:dim(1)-1) * this.spacing(1) + this.origin(1);
+        ly = (0:dim(2)-1) * this.spacing(2) + this.origin(2);
         
         % display image with approriate spatial reference
-        hh = imshow(this.imageData, 'XData', lx, 'YData', ly);
+        hh = imshow(data, 'XData', lx, 'YData', ly);
         
         if nargout > 0
             h = hh;
@@ -94,8 +105,7 @@ methods
         nd = ndims(this);
         
         % extract base data
-        sz = size(this.imageData);
-        sz = sz([2 1]);
+        sz = this.imageSize;
         sp = this.spacing;
         or = this.origin;
         
@@ -107,12 +117,12 @@ methods
     end
     
     function lx = xData(this)
-        dim = size(this.imageData);
+        dim = this.imageSize;
         lx = (0:dim(2)-1) * this.spacing(1) + this.origin(1);
     end
     
     function ly = yData(this)
-        dim = size(this.imageData);
+        dim = this.imageSize;
         ly = (0:dim(1)-1) * this.spacing(2) + this.origin(2);
     end
     
@@ -122,10 +132,18 @@ end % end methods
 methods (Access = private)
     function initializeSpatialCalibration(this)
         % setup spacing and origin from image data
+
+        % image dimensionality
         nd = 2;
         if ndims(this.imageData) > 2 && size(this.imageData, 3) > 3 %#ok<ISMAT>
             nd = 3;
         end
+        
+        % size in XY order
+        dims = size(this.imageSize);
+        this.imageSize = dims([2 1 3:nd]);
+        
+        % init spacing and origin
         this.spacing = ones(1, nd);
         this.origin = ones(1, nd);
     end
@@ -140,6 +158,9 @@ methods
         % Convert to a structure to facilitate serialization
 
         str.filePath = this.filePath;
+        str.imageSize = this.imageSize;
+        str.spacing = this.spacing;
+        str.origin = this.origin;
     end
     
     function write(this, fileName, varargin)
@@ -156,6 +177,9 @@ methods (Static)
         node = ImageNode(str.filePath);
         
         % parse optional fields
+        if isfield(str, 'imageSize')
+            node.imageSize = str.imageSize;
+        end
         if isfield(str, 'spacing')
             node.spacing = str.spacing;
         end
