@@ -70,7 +70,8 @@ methods
         axis equal; hold on;
         
         % set view box from axis limits stored within scene
-        axis(viewBox(this));
+        box = viewBox(this);
+        axis(box);
 
         % draw lines for X and Y axes, based on current axis bounds
         if this.axisLinesVisible

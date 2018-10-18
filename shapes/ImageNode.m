@@ -85,6 +85,8 @@ methods
         % read image data if necessary
         if isempty(this.imageData)
             data = imread(this.filePath);
+        else
+            data = this.imageData;
         end
         
         % compute physical extents
@@ -140,7 +142,7 @@ methods (Access = private)
         end
         
         % size in XY order
-        dims = size(this.imageSize);
+        dims = size(this.imageData);
         this.imageSize = dims([2 1 3:nd]);
         
         % init spacing and origin
