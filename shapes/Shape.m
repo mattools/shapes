@@ -89,6 +89,11 @@ methods
     function str = toStruct(this)
         % Convert to a structure to facilitate serialization
 
+        % add the name only if not null
+        if ~isempty(this.name)
+            str.name = this.name;
+        end
+
         % creates a structure for geometry, including class name
         str.geometry = toStruct(this.geometry);
         if ~isfield(str.geometry, 'type')
@@ -118,6 +123,11 @@ methods (Static)
         geom = eval([type '.fromStruct(str.geometry)']);
         shape = Shape(geom);
         
+        % parse the optionnal name
+        if isfield(str, 'name') && ~isempty(str.name)
+            shape.name = str.name;
+        end
+
         % eventually parse style
         if isfield(str, 'style') && ~isempty(str.style)
             shape.style = Style.fromStruct(str.style);
