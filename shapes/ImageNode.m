@@ -53,6 +53,17 @@ methods
             
         elseif ischar(var1)
             % intialize from file path
+            
+            % create absolute file path
+            file = java.io.File(var1);
+            if ~file.exists()
+                error('Could not resolve absolute path for %s.', var1);
+            end
+            
+            if ~file.isAbsolute()
+                var1 = fullfile(pwd, var1);
+            end
+                        
             this.filePath = var1;
             info = imfinfo(this.filePath);
             this.imageSize = [info.Width info.Height];
