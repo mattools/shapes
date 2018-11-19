@@ -93,6 +93,11 @@ methods
         if ~isempty(this.name)
             str.name = this.name;
         end
+        
+        % add optional style
+        if ~isempty(this.style)
+            str.style = toStruct(this.style);
+        end
 
         % creates a structure for geometry, including class name
         str.geometry = toStruct(this.geometry);
@@ -100,11 +105,6 @@ methods
             type = classname(this.geometry);
             warning(['geometry type not specified, use class name: ' type]);
             str.geometry.type = type;
-        end
-        
-        % add optional style
-        if ~isempty(this.style)
-            str.style = toStruct(this.style);
         end
     end
     
