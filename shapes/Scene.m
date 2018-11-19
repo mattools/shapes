@@ -37,6 +37,9 @@ properties
     % indicates whether main axes are visible or not (boolean)
     axisLinesVisible = true;
     
+    % base directory for saving data
+    baseDir = pwd;
+    
 end % end properties
 
 
@@ -54,6 +57,28 @@ methods
 
 end % end constructors
 
+
+%% Operators on scenes
+methods
+    function res = merge(this, that)
+        % Merge the content of two scenes
+        
+        % copy all fields of first scene
+        res = Scene();
+        res.xAxis = SceneAxis(this.xAxis);
+        res.yAxis = SceneAxis(this.yAxis);
+        res.zAxis = SceneAxis(this.zAxis);
+        res.backgroundImage = ImageNode(this.backgroundImage);
+        res.axisLinesVisible = this.axisLinesVisible;
+        
+        for iShape = 1:length(this.shapes)
+            addShape(res, Shape(this.shapes(iShape)));
+        end
+        for iShape = 1:length(that.shapes)
+            addShape(res, Shape(that.shapes(iShape)));
+        end
+    end
+end
 
 %% Display Methods
 methods
@@ -107,7 +132,7 @@ end % end methods
 
 methods
     function addShape(this, s)
-        % add a given shape to this scene
+        % Add a given shape to this scene 
         this.shapes = [this.shapes s];
     end
     

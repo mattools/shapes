@@ -41,18 +41,30 @@ end % end properties
 %% Constructor
 methods
     function this = Shape(varargin)
-    % Constructor for Shape class
-    %   
-    %   usage:
-    %   shape = Shape(geom)
-    %   shape = Shape(geom, style)
-    %
+        % Constructor for Shape class
+        %
+        %   usage:
+        %   shape = Shape(geom)
+        %   shape = Shape(geom, style)
+        %
 
         if nargin == 1
-            this.geometry = varargin{1};
-            this.style = createDefaultStyle(this.geometry);
+            var1 = varargin{1};
+            if isa(var1, 'Shape')
+                % copy constructor
+                this.geometry = var1.geometry; % geometry is not duplicated
+                this.style = Style(var1.style);
+                this.visible = var1.visible;
+                this.name = var1.name;
+                
+            else
+                % initialisation constructor
+                this.geometry = varargin{1};
+                this.style = createDefaultStyle(this.geometry);
+            end
             
         elseif nargin == 2
+            % initialisation constructor with two arguments
             this.geometry = varargin{1};
             this.style = varargin{2};
             

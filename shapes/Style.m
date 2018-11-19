@@ -59,7 +59,7 @@ methods
         
         var1 = varargin{1};
         if isa(var1, 'Style')
-            copyFields(that);
+            copyFields(var1);
             return;
         end
         
