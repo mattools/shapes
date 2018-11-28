@@ -113,6 +113,53 @@ methods
         end
     end
     
+    function fitBoundsToShape(this)
+        % updates the bounds of the axis such that they contain all shapes
+        % (with finite geometries)
+
+        % avoid case with no shape
+        if length(this.shapes) < 1
+            return;
+        end
+        
+        % initial box
+        box = [inf -inf inf -inf inf -inf];
+        
+        % iterate over shapes
+        for iShape = 1:length(this.shapes)
+            shape = this.shapes(iShape);
+            geom = shape.geometry;
+            
+            if ismethod(geom, 'boundingBox')
+                bbox = boundingBox(geom);
+                box(1) = min(box(1), bbox.xmin);
+                box(2) = max(box(2), bbox.xmax);
+                box(3) = min(box(3), bbox.ymin);
+                box(4) = max(box(4), bbox.ymax);
+                
+                % eventually process 3D coords
+                if length(bbox) > 5
+                    box(5) = min(box(5), bbox.zmin);
+                    box(6) = max(box(6), bbox.zmax);
+                end
+            end
+        end
+        
+        % check presence of infinite
+        if any(~isfinite(box(1:4)))
+            warning('Unable to determine bounding box from existing geometries');
+            return;
+        end
+        if any(~isfinite(box(5:6)))
+            box(5:6) = this.zAxis.limits;
+        end
+        
+        % set up new bounding box
+        this.xAxis.limits = box(1:2);
+        this.yAxis.limits = box(3:4);
+        this.zAxis.limits = box(5:6);
+    end
+    
     function box = viewBox(this)
         % Compute the view box from the limits on the different axes
         box = [this.xAxis.limits this.yAxis.limits this.zAxis.limits];
