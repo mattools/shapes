@@ -45,6 +45,13 @@ methods
 
 end % end constructors
 
+%% Methods specific to MultiPoint2D
+methods
+    function centro = centroid(this)
+        % compute centroid of the points within this multi-point
+        centro = Point2D(mean(this.coords, 1));
+    end
+end
 
 %% Methods
 methods

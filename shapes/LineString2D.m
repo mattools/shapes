@@ -46,6 +46,19 @@ methods
 end % end constructors
 
 
+%% Methods specific to LineString2D
+methods
+    function centro = centroid(this)
+        
+        % compute center and length of each line segment
+        centers = (this.coords(1:end-1,:) + this.coords(2:end,:))/2;
+        lengths = sqrt(sum(diff(this.coords).^2, 2));
+        
+        % centroid of edge centers weighted by edge lengths
+        centro = Point2D(sum(bsxfun(@times, centers, lengths), 1) / sum(lengths));
+    end
+end
+
 %% Methods
 methods
     function box = boundingBox(this)

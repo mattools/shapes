@@ -47,6 +47,27 @@ end % end constructors
 
 %% Methods specific to Polygon2D
 methods
+    function centro = centroid(this)
+        % Computes the centroid of this polygon
+        
+        % isolate coordinates
+        px = this.coords(:,1);
+        py = this.coords(:,2);
+
+        % indices of next vertices
+        N = length(this.coords);
+        iNext = [2:N 1];
+        
+        % compute cross products
+        common = px .* py(iNext) - px(iNext) .* py;
+        sx = sum((px + px(iNext)) .* common);
+        sy = sum((py + py(iNext)) .* common);
+        
+        % area and centroid
+        area = sum(common) / 2;
+        centro = Point2D([sx sy] / 6 / area);
+    end
+    
     function a = area(this)
         % Computes the area of this polygon
         
@@ -60,7 +81,6 @@ methods
         
         % compute area (vectorized version)
         a = sum(px .* py(iNext) - px(iNext) .* py) / 2;
-
     end
     
     function p = perimeter(this)
