@@ -2,6 +2,22 @@ classdef Style < handle
 %STYLE Stores information for drawing shapes
 %
 %   Class Style
+%   Contains the information for drawing a shape.
+%
+%   The different fields in Style are:
+%     markerColor     = 'b';
+%     markerStyle     = '+';
+%     markerSize      = 6;
+%     markerFillColor = 'none';
+%     markerVisible   = false;
+%     lineColor       = 'b';
+%     lineWidth       = .5;
+%     lineStyle       = '-';
+%     lineVisible     = true;
+%     fillColor       = 'y';
+%     fillOpacity     = 1;
+%     fillVisible     = false;
+%
 %
 %   Example
 %     % draw a polygon with default style
