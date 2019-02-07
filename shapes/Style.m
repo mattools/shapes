@@ -46,20 +46,31 @@ classdef Style < handle
 
 %% Properties
 properties
+    % global visibility of the shape
+    visible = true;
+    
+    % style for the markers / vertices
     markerColor     = 'b';
     markerStyle     = '+';
     markerSize      = 6;
     markerFillColor = 'none';
     markerVisible   = false;
     
+    % style for the lines / curves / edges
     lineColor       = 'b';
     lineWidth       = .5;
     lineStyle       = '-';
     lineVisible     = true;
     
+    % style for filling interior of polygons
     fillColor       = 'y';
     fillOpacity     = 1;
     fillVisible     = false;
+    
+    % style for polygonal surfaces
+    faceColor = [.5 .5 .5];
+    faceOpacity = 1;
+    faceVisible = true;
     
 end % end properties
 
@@ -83,7 +94,10 @@ methods
             name = varargin{1};
             value = varargin{2};
             
-            if strcmpi(name, 'markerColor')
+            if strcmpi(name, 'visible')
+                this.visible = value;
+    
+            elseif strcmpi(name, 'markerColor')
                 this.markerColor = value;
             elseif strcmpi(name, 'markerStyle')
                 this.markerStyle = value;
@@ -109,12 +123,21 @@ methods
                 this.fillOpacity = value;
             elseif strcmpi(name, 'fillVisible')
                 this.fillVisible= value;
+                
+            elseif strcmpi(name, 'faceColor')
+                this.faceColor = value;
+            elseif strcmpi(name, 'faceOpacity')
+                this.faceOpacity = value;
+            elseif strcmpi(name, 'faceVisible')
+                this.faceVisible= value;
             end
             
             varargin(1:2) = [];
         end
         
         function copyFields(that)
+            this.visible            = that.visible;
+            
             this.markerColor        = that.markerColor;
             this.markerStyle        = that.markerStyle;
             this.markerSize         = that.markerSize;
@@ -130,6 +153,10 @@ methods
             this.fillOpacity        = that.fillOpacity;
             this.fillVisible        = that.fillVisible;
 
+            this.faceColor          = that.faceColor;
+            this.faceOpacity        = that.faceOpacity;
+            this.faceVisible        = that.faceVisible;
+
         end
     end
 
@@ -143,7 +170,8 @@ methods
         
         hType = get(h, 'Type');
 
-        if this.markerVisible && ~strcmp(hType, 'patch')
+        % setup marker style
+        if this.visible && this.markerVisible && ~strcmp(hType, 'patch')
             set(h, 'MarkerEdgeColor',   this.markerColor);
             set(h, 'Marker',            this.markerStyle);
             set(h, 'MarkerSize',        this.markerSize);
@@ -153,7 +181,8 @@ methods
             set(h, 'Marker', 'none');
         end
         
-        if this.lineVisible && ~strcmp(hType, 'patch')
+        % setup line style
+        if this.visible && this.lineVisible && ~strcmp(hType, 'patch')
             set(h, 'LineStyle',         this.lineStyle);
             set(h, 'Color',             this.lineColor);
             set(h, 'LineWidth',         this.lineWidth);
@@ -161,9 +190,16 @@ methods
             set(h, 'LineStyle', 'none');
         end
         
-        if this.fillVisible && strcmp(hType, 'patch')
+        % setup fill style
+        if this.visible && this.fillVisible && strcmp(hType, 'patch')
             set(h, 'FaceColor', this.fillColor);
             set(h, 'FaceAlpha', this.fillOpacity);
+        end
+        
+        % setup face style
+        if this.visible && this.faceVisible && strcmp(hType, 'patch')
+            set(h, 'FaceColor', this.faceColor);
+            set(h, 'FaceAlpha', this.faceOpacity);
         end
     end
     
@@ -176,8 +212,16 @@ methods
 
         % create empty struct
         str = struct();
-        
+
+        % global visibility
+        if this.visible ~= false
+            str.visible = this.visible;
+        end
+
         % update marker modifiers with values different from default
+        if this.markerVisible ~= false
+            str.markerVisible = this.markerVisible;
+        end
         if this.markerColor ~= 'b'
             str.markerColor = this.markerColor;
         end
@@ -190,12 +234,12 @@ methods
         if ~ischar(this.markerFillColor) || ~strcmp(this.markerFillColor, 'none')
             str.markerFillColor = this.markerFillColor;
         end
-        if this.markerVisible ~= false
-            str.markerVisible = this.markerVisible;
-        end
         
         % update line modifiers with values different from default
-        if this.lineColor ~= 'b'
+        if this.lineVisible ~= true
+            str.lineVisible = this.lineVisible;
+        end
+        if ~isSameColor(this.lineColor, 'b')
             str.lineColor = this.lineColor;
         end
         if this.lineWidth ~= .5
@@ -204,21 +248,56 @@ methods
         if ~strcmp(this.lineStyle, '-')
             str.lineStyle = this.lineStyle;
         end
-        if this.lineVisible ~= true
-            str.lineVisible = this.lineVisible;
-        end
         
         % update fill modifiers with values different from default
-        if this.fillColor ~= 'y'
+        if this.fillVisible ~= false
+            str.fillVisible = this.fillVisible;
+        end
+        if ~isSameColor(this.fillColor, 'y')
             str.fillColor = this.fillColor;
         end
         if this.fillOpacity ~= 1
             str.fillOpacity = this.fillOpacity;
         end
-        if this.fillVisible ~= false
-            str.fillVisible = this.fillVisible;
+        
+        % update face modifiers with values different from default
+        if this.faceVisible ~= false
+            str.faceVisible = this.faceVisible;
         end
+        if ~isSameColor(this.faceColor, [.7 .7 .7])
+            str.faceColor = this.faceColor;
+        end
+        if this.faceOpacity ~= 1
+            str.faceOpacity = this.faceOpacity;
+        end
+        
+        function b = isSameColor(color1, color2)
+            if ischar(color1)
+                color1 = colorFromName(color1);
+            end
+            if ischar(color2)
+                color2 = colorFromName(color2);
+            end
+            b = all(color1 & color2);
+        end
+        
+        function color = colorFromName(name)
+            switch name(1)
+                case 'k', color = [0 0 0];
+                case 'r', color = [1 0 0];
+                case 'g', color = [0 1 0];
+                case 'b', color = [0 0 1];
+                case 'y', color = [1 1 0];
+                case 'm', color = [1 0 1];
+                case 'c', color = [0 1 1];
+                case 'w', color = [1 1 1];
+                otherwise
+                    error('unknown color name: %s', name);
+            end
+        end
+        
     end
+    
     
     function write(this, fileName, varargin)
         % Write into a JSON file
