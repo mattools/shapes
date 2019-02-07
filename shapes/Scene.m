@@ -138,7 +138,7 @@ methods
                 box(4) = max(box(4), bbox.ymax);
                 
                 % eventually process 3D coords
-                if length(bbox) > 5
+                if isa(bbox, 'Box3D')
                     box(5) = min(box(5), bbox.zmin);
                     box(6) = max(box(6), bbox.zmax);
                 end
@@ -179,7 +179,10 @@ end % end methods
 
 methods
     function addShape(this, s)
-        % Add a given shape to this scene 
+        % Add a given shape to this scene
+        if isa(s, 'Geometry')
+            s = Shape(s);
+        end
         this.shapes = [this.shapes s];
     end
     
