@@ -18,40 +18,40 @@ classdef Scene < handle
 
 %% Properties
 properties
-    % the set of shapes within this scene. 
+    % the set of Shapes within obj scene. 
     % Stored as a struct array.
-    shapes;
+    Shapes;
     
     % Description of x-axis, as a SceneAxis instance
-    xAxis;
+    XAxis;
     
     % Description of y-axis, as a SceneAxis instance
-    yAxis;
+    YAxis;
     
     % Description of z-axis, as a SceneAxis instance
-    zAxis;
+    ZAxis;
 
     % an optional background image, as an instance of ImageNode
-    backgroundImage;
+    BackgroundImage;
     
     % indicates whether main axes are visible or not (boolean)
-    axisLinesVisible = true;
+    AxisLinesVisible = true;
     
     % base directory for saving data
-    baseDir = pwd;
+    BaseDir = pwd;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Scene(varargin)
+    function obj = Scene(varargin)
         % Constructor for Scene class
         
         % create new axes
-        this.xAxis = SceneAxis();
-        this.yAxis = SceneAxis();
-        this.zAxis = SceneAxis();
+        obj.XAxis = SceneAxis();
+        obj.YAxis = SceneAxis();
+        obj.ZAxis = SceneAxis();
         
     end
 
@@ -60,29 +60,29 @@ end % end constructors
 
 %% Operators on scenes
 methods
-    function res = merge(this, that)
+    function res = merge(obj, that)
         % Merge the content of two scenes
         
         % copy all fields of first scene
         res = Scene();
-        res.xAxis = SceneAxis(this.xAxis);
-        res.yAxis = SceneAxis(this.yAxis);
-        res.zAxis = SceneAxis(this.zAxis);
-        res.backgroundImage = ImageNode(this.backgroundImage);
-        res.axisLinesVisible = this.axisLinesVisible;
+        res.XAxis = SceneAxis(obj.XAxis);
+        res.YAxis = SceneAxis(obj.YAxis);
+        res.ZAxis = SceneAxis(obj.ZAxis);
+        res.BackgroundImage = ImageNode(obj.BackgroundImage);
+        res.AxisLinesVisible = obj.AxisLinesVisible;
         
-        for iShape = 1:length(this.shapes)
-            addShape(res, Shape(this.shapes(iShape)));
+        for iShape = 1:length(obj.Shapes)
+            addShape(res, Shape(obj.Shapes(iShape)));
         end
-        for iShape = 1:length(that.shapes)
-            addShape(res, Shape(that.shapes(iShape)));
+        for iShape = 1:length(that.Shapes)
+            addShape(res, Shape(that.Shapes(iShape)));
         end
     end
 end
 
 %% Display Methods
 methods
-    function varargout = draw(this)
+    function varargout = draw(obj)
         % display current scene in a new figure
         
         % create new figure and keep handle to axis
@@ -90,8 +90,8 @@ methods
         ax = gca;
         
         % start by background image
-        if ~isempty(this.backgroundImage)
-            show(this.backgroundImage);
+        if ~isempty(obj.BackgroundImage)
+            show(obj.BackgroundImage);
         end
         
         % setup axis
@@ -99,28 +99,28 @@ methods
         hold on;
         
         % set view box from axis limits stored within scene
-        box = viewBox(this);
+        box = viewBox(obj);
         axis(box);
         
         % optionnally reverse some axes
-        if this.xAxis.reverse
+        if obj.XAxis.Reverse
             set(ax, 'xdir', 'reverse');
         end
-        if this.yAxis.reverse
+        if obj.YAxis.Reverse
             set(ax, 'ydir', 'reverse');
         end
-        if this.zAxis.reverse
+        if obj.ZAxis.Reverse
             set(ax, 'zdir', 'reverse');
         end
         
         % draw lines for X and Y axes, based on current axis bounds
-        if this.axisLinesVisible
-            plot(ax, this.xAxis.limits, [0 0], 'k-');
-            plot(ax, [0 0], this.yAxis.limits, 'k-');
+        if obj.AxisLinesVisible
+            plot(ax, obj.XAxis.Limits, [0 0], 'k-');
+            plot(ax, [0 0], obj.YAxis.Limits, 'k-');
         end
 
-        for iShape = 1:length(this.shapes)
-            draw(this.shapes(iShape));
+        for iShape = 1:length(obj.Shapes)
+            draw(obj.Shapes(iShape));
         end
         
         if nargout > 0
@@ -128,34 +128,34 @@ methods
         end
     end
     
-    function fitBoundsToShape(this)
-        % updates the bounds of the axis such that they contain all shapes
+    function fitBoundsToShape(obj)
+        % updates the bounds of the axis such that they contain all Shapes
         % (with finite geometries)
 
         % avoid case with no shape
-        if length(this.shapes) < 1
+        if length(obj.Shapes) < 1
             return;
         end
         
         % initial box
         box = [inf -inf inf -inf inf -inf];
         
-        % iterate over shapes
-        for iShape = 1:length(this.shapes)
-            shape = this.shapes(iShape);
-            geom = shape.geometry;
+        % iterate over Shapes
+        for iShape = 1:length(obj.Shapes)
+            shape = obj.Shapes(iShape);
+            geom = shape.Geometry;
             
             if ismethod(geom, 'boundingBox')
                 bbox = boundingBox(geom);
-                box(1) = min(box(1), bbox.xmin);
-                box(2) = max(box(2), bbox.xmax);
-                box(3) = min(box(3), bbox.ymin);
-                box(4) = max(box(4), bbox.ymax);
+                box(1) = min(box(1), bbox.XMin);
+                box(2) = max(box(2), bbox.XMax);
+                box(3) = min(box(3), bbox.YMin);
+                box(4) = max(box(4), bbox.YMax);
                 
                 % eventually process 3D coords
                 if isa(bbox, 'Box3D')
-                    box(5) = min(box(5), bbox.zmin);
-                    box(6) = max(box(6), bbox.zmax);
+                    box(5) = min(box(5), bbox.ZMin);
+                    box(6) = max(box(6), bbox.ZMax);
                 end
             end
         end
@@ -166,26 +166,26 @@ methods
             return;
         end
         if any(~isfinite(box(5:6)))
-            box(5:6) = this.zAxis.limits;
+            box(5:6) = obj.ZAxis.Limits;
         end
         
         % set up new bounding box
-        this.xAxis.limits = box(1:2);
-        this.yAxis.limits = box(3:4);
-        this.zAxis.limits = box(5:6);
+        obj.XAxis.Limits = box(1:2);
+        obj.YAxis.Limits = box(3:4);
+        obj.ZAxis.Limits = box(5:6);
     end
     
-    function box = viewBox(this)
+    function box = viewBox(obj)
         % Compute the view box from the limits on the different axes
-        box = [this.xAxis.limits this.yAxis.limits this.zAxis.limits];
+        box = [obj.XAxis.Limits obj.YAxis.Limits obj.ZAxis.Limits];
     end
     
-    function setViewBox(this, box)
+    function setViewBox(obj, box)
         % set axes limits from viewbox values
-        this.xAxis.limits = box(1:2);
-        this.yAxis.limits = box(3:4);
+        obj.XAxis.Limits = box(1:2);
+        obj.YAxis.Limits = box(3:4);
         if length(box) > 4
-            this.zAxis.limits = box(5:6);
+            obj.ZAxis.Limits = box(5:6);
         end
     end
 end % end methods
@@ -193,19 +193,19 @@ end % end methods
 %% Shapes management
 
 methods
-    function addShape(this, s)
+    function addShape(obj, s)
         % Add a given shape to this scene
         if isa(s, 'Geometry')
             s = Shape(s);
         end
-        this.shapes = [this.shapes s];
+        obj.Shapes = [obj.Shapes s];
     end
     
-    function removeShape(this, s)
+    function removeShape(obj, s)
         % remove a given shape from this scene
         ind = [];
-        for i = 1:length(this.shapes)
-            if this.shapes(i) == s
+        for i = 1:length(obj.Shapes)
+            if obj.Shapes(i) == s
                 ind = i;
                 break;
             end
@@ -214,66 +214,66 @@ methods
             disp('could not find shape to remove');
             return;
         end
-        this.shapes(ind) = [];
+        obj.Shapes(ind) = [];
     end
     
-    function shapes = getShapes(this)
-        % return a cell array containing the shapes in this scene
-        shapes = this.shapes;
+    function Shapes = getShapes(obj)
+        % return a cell array containing the Shapes in this scene
+        Shapes = obj.Shapes;
     end
     
-    function clearShapes(this)
-        % clear the shapes within this scene
-        this.shapes = {};
+    function clearShapes(obj)
+        % clear the Shapes within this scene
+        obj.Shapes = {};
     end
     
 end
 
 %% background image
 methods
-    function setBackgroundImage(this, img)
+    function setBackgroundImage(obj, img)
         if isa(img, 'ImageNode')
-            this.backgroundImage = img;
+            obj.BackgroundImage = img;
         else
             img = ImageNode(img);
-            this.backgroundImage = img;
+            obj.BackgroundImage = img;
         end
         
-        extent = physicalExtent(this.backgroundImage);
-        this.xAxis.limits = extent([1 2]);
-        this.yAxis.limits = extent([3 4]);
+        extent = physicalExtent(obj.BackgroundImage);
+        obj.XAxis.limits = extent([1 2]);
+        obj.YAxis.limits = extent([3 4]);
         
     end
 end
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
         % first add information about axes
-        str.xAxis = toStruct(this.xAxis);
-        str.yAxis = toStruct(this.yAxis);
-        str.zAxis = toStruct(this.zAxis);
+        str.xAxis = toStruct(obj.XAxis);
+        str.yAxis = toStruct(obj.YAxis);
+        str.zAxis = toStruct(obj.ZAxis);
 
-        if ~isempty(this.backgroundImage)
-            str.backgroundImage = toStruct(this.backgroundImage);
+        if ~isempty(obj.BackgroundImage)
+            str.backgroundImage = toStruct(obj.BackgroundImage);
         end
         
-        str.axisLinesVisible = this.axisLinesVisible;
+        str.axisLinesVisible = obj.AxisLinesVisible;
 
-        % create a structure for the list of shapes
+        % create a structure for the list of Shapes
         % (use it as last fields to finish by the more numerous data)
-        str.shapes = cell(1, length(this.shapes));
-        for i = 1:length(this.shapes)
-            str.shapes{i} = toStruct(this.shapes(i));
+        str.shapes = cell(1, length(obj.Shapes));
+        for i = 1:length(obj.Shapes)
+            str.shapes{i} = toStruct(obj.Shapes(i));
         end
         
     end
     
-    function write(this, fileName, varargin)
+    function write(obj, fileName, varargin)
         % Write into a JSON file
-        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
 methods (Static)
@@ -285,27 +285,26 @@ methods (Static)
         
         % parse eventual axes information
         if isfield(str, 'xAxis')
-            scene.xAxis = SceneAxis.fromStruct(str.xAxis);
+            scene.XAxis = SceneAxis.fromStruct(str.xAxis);
         end
         if isfield(str, 'yAxis')
-            scene.yAxis = SceneAxis.fromStruct(str.yAxis);
+            scene.YAxis = SceneAxis.fromStruct(str.yAxis);
         end
         if isfield(str, 'zAxis')
-            scene.zAxis = SceneAxis.fromStruct(str.zAxis);
+            scene.ZAxis = SceneAxis.fromStruct(str.zAxis);
         end
         
         if isfield(str, 'backgroundImage')
-            scene.backgroundImage = ImageNode.fromStruct(str.backgroundImage);
+            scene.BackgroundImage = ImageNode.fromStruct(str.backgroundImage);
         end
         
         if isfield(str, 'axisLinesVisible')
-            scene.axisLinesVisible = str.axisLinesVisible;
+            scene.AxisLinesVisible = str.axisLinesVisible;
         end
         
-        % parse list of shapes
-        shapeList = str.shapes;
-        for iShape = 1:length(shapeList)
-            shape = Shape.fromStruct(shapeList{iShape});
+        % parse list of Shapes
+        for iShape = 1:length(str.shapes)
+            shape = Shape.fromStruct(str.shapes{iShape});
             addShape(scene, shape);
         end
     end

@@ -21,9 +21,9 @@ function test_Constructor_Single(testCase) %#ok<*DEFNU>
 % Test call of function without argument
 
 p = Point3D([5 4 3]);
-assertEqual(5, p.x);
-assertEqual(4, p.y);
-assertEqual(3, p.z);
+assertEqual(5, p.X);
+assertEqual(4, p.Y);
+assertEqual(3, p.Z);
 
 function test_Serialize(testCase)
 % Test call of function without argument
@@ -31,9 +31,9 @@ function test_Serialize(testCase)
 p = Point3D([5 4 3]);
 str = toStruct(p);
 p2 = Point3D.fromStruct(str);
-assertEqual(5, p2.x);
-assertEqual(4, p2.y);
-assertEqual(3, p2.z);
+assertEqual(5, p2.X);
+assertEqual(4, p2.Y);
+assertEqual(3, p2.Z);
 
 
 

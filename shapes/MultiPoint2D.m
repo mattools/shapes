@@ -1,7 +1,7 @@
 classdef MultiPoint2D < Geometry2D
 %POLYGON2D A set of points in the plane
 %
-%   Represents a set of coords. 
+%   Represents a set of Coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -21,14 +21,14 @@ classdef MultiPoint2D < Geometry2D
 %% Properties
 properties
     % the vertex coordinates, given as a N-by-2 array of double
-    coords;
+    Coords;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = MultiPoint2D(varargin)
+    function obj = MultiPoint2D(varargin)
     % Constructor for MultiPoint2D class
     
         if ~isempty(varargin)
@@ -36,10 +36,10 @@ methods
             if size(var1, 2) ~= 2
                 error('Creating a MultiPoint requires an array with two columns, not %d', size(var1, 2));
             end
-            this.coords = var1;
+            obj.Coords = var1;
 
         else
-            this.coords = [];
+            obj.Coords = [];
         end
     end
 
@@ -47,25 +47,25 @@ end % end constructors
 
 %% Methods specific to MultiPoint2D
 methods
-    function centro = centroid(this)
-        % compute centroid of the points within this multi-point
-        centro = Point2D(mean(this.coords, 1));
+    function centro = centroid(obj)
+        % compute centroid of the points within obj multi-point
+        centro = Point2D(mean(obj.Coords, 1));
     end
 end
 
 %% Methods
 methods
-    function box = boundingBox(this)
+    function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        mini = min(this.coords);
-        maxi = max(this.coords);
+        mini = min(obj.Coords);
+        maxi = max(obj.Coords);
         box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPoint(this.coords);
+        h = drawPoint(obj.Coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -78,19 +78,19 @@ methods
         end
     end
     
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = MultiPoint2D(this.coords * factor);
+        res = MultiPoint2D(obj.Coords * factor);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = MultiPoint2D(bsxfun(@plus, this.coords, shift));
+        res = MultiPoint2D(bsxfun(@plus, obj.Coords, shift));
     end
     
-    function res = rotate(this, angle, varargin)
+    function res = rotate(obj, angle, varargin)
         % Returns a rotated version of this polygon
         %
         % POLY2 = rotate(POLY, THETA)
@@ -103,7 +103,7 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint(this.coords, rot);
+        verts = transformPoint(obj.Coords, rot);
         
         res = MultiPoint2D(verts);
     end
@@ -111,9 +111,9 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'MultiPoint2D', 'coordinates', this.coords);
+        str = struct('type', 'MultiPoint2D', 'coordinates', obj.Coords);
     end
 end
 methods (Static)

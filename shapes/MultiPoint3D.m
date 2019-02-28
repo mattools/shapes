@@ -19,14 +19,14 @@ classdef MultiPoint3D < handle
 %% Properties
 properties
     % the vertex coordinates, given as a N-by-3 array of double
-    coords;
+    Coords;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = MultiPoint3D(varargin)
+    function obj = MultiPoint3D(varargin)
     % Constructor for MultiPoint3D class
 
         if ~isempty(varargin)
@@ -34,10 +34,10 @@ methods
             if size(var1, 2) ~= 3
                 error('Creating a 3D MultiPoint requires an array with three columns, not %d', size(var1, 2));
             end
-            this.coords = var1;
+            obj.Coords = var1;
 
         else
-            this.coords = [];
+            obj.Coords = [];
         end
         
     end
@@ -46,26 +46,26 @@ end % end constructors
 
 %% Methods specific to MultiPoint2D
 methods
-    function centro = centroid(this)
-        % compute centroid of the points within this multi-point
-        centro = Point3D(mean(this.coords, 1));
+    function centro = centroid(obj)
+        % compute centroid of the points within obj multi-point
+        centro = Point3D(mean(obj.Coords, 1));
     end
 end
 
 
 %% Methods
 methods
-    function box = boundingBox(this)
+    function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        mini = min(this.coords);
-        maxi = max(this.coords);
+        mini = min(obj.Coords);
+        maxi = max(obj.Coords);
         box = Box3D([mini(1) maxi(1) mini(2) maxi(2) mini(3) maxi(3)]);
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPoint3d(this.coords);
+        h = drawPoint3d(obj.Coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -78,16 +78,16 @@ methods
         end
     end
     
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = MultiPoint3D(this.coords * factor);
+        res = MultiPoint3D(obj.Coords * factor);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = MultiPoint3D(bsxfun(@plus, this.coords, shift));
+        res = MultiPoint3D(bsxfun(@plus, obj.Coords, shift));
     end
     
 end % end methods
@@ -95,9 +95,9 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'MultiPoint3D', 'coordinates', this.coords);
+        str = struct('type', 'MultiPoint3D', 'coordinates', obj.Coords);
     end
 end
 methods (Static)

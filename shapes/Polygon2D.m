@@ -1,7 +1,7 @@
 classdef Polygon2D < Geometry2D
 %POLYGON2D A polygon in the plane
 %
-%   Represents a polygon defined be a series of coords. 
+%   Represents a polygon defined be a series of Coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -21,14 +21,14 @@ classdef Polygon2D < Geometry2D
 %% Properties
 properties
     % the set of vertex coordinates, given as a N-by-2 array of double
-    coords;
+    Coords;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Polygon2D(varargin)
+    function obj = Polygon2D(varargin)
     % Constructor for Polygon2D class
     
         if ~isempty(varargin)
@@ -36,10 +36,10 @@ methods
             if size(var1, 2) ~= 2
                 error('Creating a polygon requires an array with two columns, not %d', size(var1, 2));
             end
-            this.coords = var1;
+            obj.Coords = var1;
 
         else
-            this.coords = [];
+            obj.Coords = [];
         end
     end
 
@@ -47,15 +47,15 @@ end % end constructors
 
 %% Methods specific to Polygon2D
 methods
-    function centro = centroid(this)
+    function centro = centroid(obj)
         % Computes the centroid of this polygon
         
         % isolate coordinates
-        px = this.coords(:,1);
-        py = this.coords(:,2);
+        px = obj.Coords(:,1);
+        py = obj.Coords(:,2);
 
         % indices of next vertices
-        N = length(this.coords);
+        N = length(obj.Coords);
         iNext = [2:N 1];
         
         % compute cross products
@@ -68,43 +68,43 @@ methods
         centro = Point2D([sx sy] / 6 / area);
     end
     
-    function a = area(this)
+    function a = area(obj)
         % Computes the area of this polygon
         
         % isolate coordinates
-        px = this.coords(:,1);
-        py = this.coords(:,2);
+        px = obj.Coords(:,1);
+        py = obj.Coords(:,2);
 
         % indices of next vertices
-        N = length(this.coords);
+        N = length(obj.Coords);
         iNext = [2:N 1];
         
         % compute area (vectorized version)
         a = sum(px .* py(iNext) - px(iNext) .* py) / 2;
     end
     
-    function p = perimeter(this)
+    function p = perimeter(obj)
         % Computes the perimeter (boundary length) of this polygon
-        dp = diff(this.coords([1:end 1], :), 1, 1);
+        dp = diff(obj.Coords([1:end 1], :), 1, 1);
         p = sum(hypot(dp(:, 1), dp(:, 2)));
     end
     
-    function verts = vertices(this)
+    function verts = vertices(obj)
         % returns vertices as a new instance of MultiPoint2D
-        verts = MultiPoint2D(this.coords);
+        verts = MultiPoint2D(obj.Coords);
     end
 end
 
 %% Methods implementing the Geometry2D interface
 methods
-    function box = boundingBox(this)
+    function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        mini = min(this.coords);
-        maxi = max(this.coords);
+        mini = min(obj.Coords);
+        maxi = max(obj.Coords);
         box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
         if nargin > 1
@@ -114,24 +114,24 @@ methods
             end
             
             % fill interior
-            if style.fillVisible
-                h = fillPolygon(this.coords);
+            if style.FillVisible
+                h = fillPolygon(obj.Coords);
                 apply(style, h);
             end
             
             % draw outline
-            if style.lineVisible
-                h = drawPolygon(this.coords);
+            if style.LineVisible
+                h = drawPolygon(obj.Coords);
                 apply(style, h);
             end
             
-            if style.markerVisible
-                h = drawPoint(this.coords);
+            if style.MarkerVisible
+                h = drawPoint(obj.Coords);
                 apply(style, h);
             end
             
         else
-            h = drawPolygon(this.coords);
+            h = drawPolygon(obj.Coords);
         end
         
         if nargout > 0
@@ -142,19 +142,19 @@ end
 
 %% Methods implementing the Geometry2D interface (more)
 methods
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = Polygon2D(this.coords * factor);
+        res = Polygon2D(obj.Coords * factor);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = Polygon2D(bsxfun(@plus, this.coords, shift));
+        res = Polygon2D(bsxfun(@plus, obj.Coords, shift));
     end
     
-    function res = rotate(this, angle, varargin)
+    function res = rotate(obj, angle, varargin)
         % Returns a rotated version of this polygon
         %
         % POLY2 = rotate(POLY, THETA)
@@ -167,7 +167,7 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint(this.coords, rot);
+        verts = transformPoint(obj.Coords, rot);
         
         res = Polygon2D(verts);
     end
@@ -175,9 +175,9 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Polygon2D', 'coordinates', this.coords);
+        str = struct('type', 'Polygon2D', 'coordinates', obj.Coords);
     end
 end
 methods (Static)

@@ -5,18 +5,18 @@ classdef Style < handle
 %   Contains the information for drawing a shape.
 %
 %   The different fields in Style are:
-%     markerColor     = 'b';
-%     markerStyle     = '+';
-%     markerSize      = 6;
-%     markerFillColor = 'none';
-%     markerVisible   = false;
-%     lineColor       = 'b';
-%     lineWidth       = .5;
-%     lineStyle       = '-';
-%     lineVisible     = true;
-%     fillColor       = 'y';
-%     fillOpacity     = 1;
-%     fillVisible     = false;
+%     MarkerColor     = 'b';
+%     MarkerStyle     = '+';
+%     MarkerSize      = 6;
+%     MarkerFillColor = 'none';
+%     MarkerVisible   = false;
+%     LineColor       = 'b';
+%     LineWidth       = .5;
+%     LineStyle       = '-';
+%     LineVisible     = true;
+%     FillColor       = 'y';
+%     FillOpacity     = 1;
+%     FillVisible     = false;
 %
 %
 %   Example
@@ -25,12 +25,12 @@ classdef Style < handle
 %     figure; h1 = drawPolygon(poly, 'b');
 %     axis equal; axis([0 50 0 50]);
 %     % change style using Style class
-%     style1 = Style('lineWidth', 2, 'lineColor', 'g');
+%     style1 = Style('LineWidth', 2, 'LineColor', 'g');
 %     apply(style1, h1)
 %     % chage vertex style
 %     hold on;
 %     h2 = drawPolygon(poly);
-%     style2 = Style('markerStyle', 's', 'MarkerColor', 'k', 'MarkerFillColor', 'w', 'MarkerVisible', true, 'LineVisible', false);
+%     style2 = Style('MarkerStyle', 's', 'MarkerColor', 'k', 'MarkerFillColor', 'w', 'MarkerVisible', true, 'LineVisible', false);
 %     apply(style2, h2)
 %
 %   See also
@@ -47,37 +47,37 @@ classdef Style < handle
 %% Properties
 properties
     % global visibility of the shape
-    visible = true;
+    Visible = true;
     
     % style for the markers / vertices
-    markerColor     = 'b';
-    markerStyle     = '+';
-    markerSize      = 6;
-    markerFillColor = 'none';
-    markerVisible   = false;
+    MarkerColor     = 'b';
+    MarkerStyle     = '+';
+    MarkerSize      = 6;
+    MarkerFillColor = 'none';
+    MarkerVisible   = false;
     
     % style for the lines / curves / edges
-    lineColor       = 'b';
-    lineWidth       = .5;
-    lineStyle       = '-';
-    lineVisible     = true;
+    LineColor       = 'b';
+    LineWidth       = .5;
+    LineStyle       = '-';
+    LineVisible     = true;
     
     % style for filling interior of polygons
-    fillColor       = 'y';
-    fillOpacity     = 1;
-    fillVisible     = false;
+    FillColor       = 'y';
+    FillOpacity     = 1;
+    FillVisible     = false;
     
     % style for polygonal surfaces
-    faceColor = [.5 .5 .5];
-    faceOpacity = 1;
-    faceVisible = true;
+    FaceColor = [.5 .5 .5];
+    FaceOpacity = 1;
+    FaceVisible = true;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Style(varargin)
+    function obj = Style(varargin)
     % Constructor for Style class
 
         if nargin == 0
@@ -94,68 +94,68 @@ methods
             name = varargin{1};
             value = varargin{2};
             
-            if strcmpi(name, 'visible')
-                this.visible = value;
+            if strcmpi(name, 'Visible')
+                obj.Visible = value;
     
-            elseif strcmpi(name, 'markerColor')
-                this.markerColor = value;
-            elseif strcmpi(name, 'markerStyle')
-                this.markerStyle = value;
-            elseif strcmpi(name, 'markerSize')
-                this.markerSize = value;
-            elseif strcmpi(name, 'markerFillColor')
-                this.markerFillColor = value;
-            elseif strcmpi(name, 'markerVisible')
-                this.markerVisible= value;
+            elseif strcmpi(name, 'MarkerColor')
+                obj.MarkerColor = value;
+            elseif strcmpi(name, 'MarkerStyle')
+                obj.MarkerStyle = value;
+            elseif strcmpi(name, 'MarkerSize')
+                obj.MarkerSize = value;
+            elseif strcmpi(name, 'MarkerFillColor')
+                obj.MarkerFillColor = value;
+            elseif strcmpi(name, 'MarkerVisible')
+                obj.MarkerVisible= value;
                 
-            elseif strcmpi(name, 'lineColor')
-                this.lineColor = value;
-            elseif strcmpi(name, 'lineWidth')
-                this.lineWidth = value;
-            elseif strcmpi(name, 'lineStyle')
-                this.lineStyle = value;
-            elseif strcmpi(name, 'lineVisible')
-                this.lineVisible= value;
+            elseif strcmpi(name, 'LineColor')
+                obj.LineColor = value;
+            elseif strcmpi(name, 'LineWidth')
+                obj.LineWidth = value;
+            elseif strcmpi(name, 'LineStyle')
+                obj.LineStyle = value;
+            elseif strcmpi(name, 'LineVisible')
+                obj.LineVisible= value;
                 
-            elseif strcmpi(name, 'fillColor')
-                this.fillColor = value;
-            elseif strcmpi(name, 'fillOpacity')
-                this.fillOpacity = value;
-            elseif strcmpi(name, 'fillVisible')
-                this.fillVisible= value;
+            elseif strcmpi(name, 'FillColor')
+                obj.FillColor = value;
+            elseif strcmpi(name, 'FillOpacity')
+                obj.FillOpacity = value;
+            elseif strcmpi(name, 'FillVisible')
+                obj.FillVisible= value;
                 
-            elseif strcmpi(name, 'faceColor')
-                this.faceColor = value;
-            elseif strcmpi(name, 'faceOpacity')
-                this.faceOpacity = value;
-            elseif strcmpi(name, 'faceVisible')
-                this.faceVisible= value;
+            elseif strcmpi(name, 'FaceColor')
+                obj.FaceColor = value;
+            elseif strcmpi(name, 'FaceOpacity')
+                obj.FaceOpacity = value;
+            elseif strcmpi(name, 'FaceVisible')
+                obj.FaceVisible= value;
             end
             
             varargin(1:2) = [];
         end
         
         function copyFields(that)
-            this.visible            = that.visible;
+            obj.Visible            = that.Visible;
             
-            this.markerColor        = that.markerColor;
-            this.markerStyle        = that.markerStyle;
-            this.markerSize         = that.markerSize;
-            this.markerFillColor    = that.markerFillColor;
-            this.markerVisible      = that.markerVisible;
+            obj.MarkerColor        = that.MarkerColor;
+            obj.MarkerStyle        = that.MarkerStyle;
+            obj.MarkerSize         = that.MarkerSize;
+            obj.MarkerFillColor    = that.MarkerFillColor;
+            obj.MarkerVisible      = that.MarkerVisible;
             
-            this.lineColor          = that.lineColor;
-            this.lineWidth          = that.lineWidth;
-            this.lineStyle          = that.lineStyle;
-            this.lineVisible        = that.lineVisible;
+            obj.LineColor          = that.LineColor;
+            obj.LineWidth          = that.LineWidth;
+            obj.LineStyle          = that.LineStyle;
+            obj.LineVisible        = that.LineVisible;
             
-            this.fillColor          = that.fillColor;
-            this.fillOpacity        = that.fillOpacity;
-            this.fillVisible        = that.fillVisible;
+            obj.FillColor          = that.FillColor;
+            obj.FillOpacity        = that.FillOpacity;
+            obj.FillVisible        = that.FillVisible;
 
-            this.faceColor          = that.faceColor;
-            this.faceOpacity        = that.faceOpacity;
-            this.faceVisible        = that.faceVisible;
+            obj.FaceColor          = that.FaceColor;
+            obj.FaceOpacity        = that.FaceOpacity;
+            obj.FaceVisible        = that.FaceVisible;
 
         end
     end
@@ -165,41 +165,41 @@ end % end constructors
 
 %% Methods
 methods
-    function apply(this, h)
+    function apply(obj, h)
         % apply the style to the given graphic handle(s)
         
         hType = get(h, 'Type');
 
         % setup marker style
-        if this.visible && this.markerVisible && ~strcmp(hType, 'patch')
-            set(h, 'MarkerEdgeColor',   this.markerColor);
-            set(h, 'Marker',            this.markerStyle);
-            set(h, 'MarkerSize',        this.markerSize);
-            set(h, 'MarkerFaceColor',   this.markerFillColor);            
-            set(h, 'LineWidth',         this.lineWidth);
+        if obj.Visible && obj.MarkerVisible && ~strcmp(hType, 'patch')
+            set(h, 'MarkerEdgeColor',   obj.MarkerColor);
+            set(h, 'Marker',            obj.MarkerStyle);
+            set(h, 'MarkerSize',        obj.MarkerSize);
+            set(h, 'MarkerFaceColor',   obj.MarkerFillColor);            
+            set(h, 'LineWidth',         obj.LineWidth);
         else
             set(h, 'Marker', 'none');
         end
         
         % setup line style
-        if this.visible && this.lineVisible && ~strcmp(hType, 'patch')
-            set(h, 'LineStyle',         this.lineStyle);
-            set(h, 'Color',             this.lineColor);
-            set(h, 'LineWidth',         this.lineWidth);
+        if obj.Visible && obj.LineVisible && ~strcmp(hType, 'patch')
+            set(h, 'LineStyle',         obj.LineStyle);
+            set(h, 'Color',             obj.LineColor);
+            set(h, 'LineWidth',         obj.LineWidth);
         else
             set(h, 'LineStyle', 'none');
         end
         
         % setup fill style
-        if this.visible && this.fillVisible && strcmp(hType, 'patch')
-            set(h, 'FaceColor', this.fillColor);
-            set(h, 'FaceAlpha', this.fillOpacity);
+        if obj.Visible && obj.FillVisible && strcmp(hType, 'patch')
+            set(h, 'FaceColor', obj.FillColor);
+            set(h, 'FaceAlpha', obj.FillOpacity);
         end
         
         % setup face style
-        if this.visible && this.faceVisible && strcmp(hType, 'patch')
-            set(h, 'FaceColor', this.faceColor);
-            set(h, 'FaceAlpha', this.faceOpacity);
+        if obj.Visible && obj.FaceVisible && strcmp(hType, 'patch')
+            set(h, 'FaceColor', obj.FaceColor);
+            set(h, 'FaceAlpha', obj.FaceOpacity);
         end
     end
     
@@ -207,68 +207,68 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
         % create empty struct
         str = struct();
 
         % global visibility
-        if this.visible ~= false
-            str.visible = this.visible;
+        if obj.Visible ~= false
+            str.visible = obj.Visible;
         end
 
         % update marker modifiers with values different from default
-        if this.markerVisible ~= false
-            str.markerVisible = this.markerVisible;
+        if obj.MarkerVisible ~= false
+            str.markerVisible = obj.MarkerVisible;
         end
-        if this.markerColor ~= 'b'
-            str.markerColor = this.markerColor;
+        if obj.MarkerColor ~= 'b'
+            str.markerColor = obj.MarkerColor;
         end
-        if this.markerStyle ~= '+'
-            str.markerStyle = this.markerStyle;
+        if obj.MarkerStyle ~= '+'
+            str.markerStyle = obj.MarkerStyle;
         end
-        if this.markerSize ~= 6
-            str.markerSize = this.markerSize;
+        if obj.MarkerSize ~= 6
+            str.markerSize = obj.MarkerSize;
         end
-        if ~ischar(this.markerFillColor) || ~strcmp(this.markerFillColor, 'none')
-            str.markerFillColor = this.markerFillColor;
+        if ~ischar(obj.MarkerFillColor) || ~strcmp(obj.MarkerFillColor, 'none')
+            str.markerFillColor = obj.MarkerFillColor;
         end
         
         % update line modifiers with values different from default
-        if this.lineVisible ~= true
-            str.lineVisible = this.lineVisible;
+        if obj.LineVisible ~= true
+            str.lineVisible = obj.LineVisible;
         end
-        if ~isSameColor(this.lineColor, 'b')
-            str.lineColor = this.lineColor;
+        if ~isSameColor(obj.LineColor, 'b')
+            str.lineColor = obj.LineColor;
         end
-        if this.lineWidth ~= .5
-            str.lineWidth = this.lineWidth;
+        if obj.LineWidth ~= .5
+            str.lineWidth = obj.LineWidth;
         end
-        if ~strcmp(this.lineStyle, '-')
-            str.lineStyle = this.lineStyle;
+        if ~strcmp(obj.LineStyle, '-')
+            str.lineStyle = obj.LineStyle;
         end
         
         % update fill modifiers with values different from default
-        if this.fillVisible ~= false
-            str.fillVisible = this.fillVisible;
+        if obj.FillVisible ~= false
+            str.fillVisible = obj.FillVisible;
         end
-        if ~isSameColor(this.fillColor, 'y')
-            str.fillColor = this.fillColor;
+        if ~isSameColor(obj.FillColor, 'y')
+            str.fillColor = obj.FillColor;
         end
-        if this.fillOpacity ~= 1
-            str.fillOpacity = this.fillOpacity;
+        if obj.FillOpacity ~= 1
+            str.fillOpacity = obj.FillOpacity;
         end
         
         % update face modifiers with values different from default
-        if this.faceVisible ~= false
-            str.faceVisible = this.faceVisible;
+        if obj.FaceVisible ~= false
+            str.faceVisible = obj.FaceVisible;
         end
-        if ~isSameColor(this.faceColor, [.7 .7 .7])
-            str.faceColor = this.faceColor;
+        if ~isSameColor(obj.FaceColor, [.7 .7 .7])
+            str.faceColor = obj.FaceColor;
         end
-        if this.faceOpacity ~= 1
-            str.faceOpacity = this.faceOpacity;
+        if obj.FaceOpacity ~= 1
+            str.faceOpacity = obj.FaceOpacity;
         end
         
         function b = isSameColor(color1, color2)
@@ -299,9 +299,9 @@ methods
     end
     
     
-    function write(this, fileName, varargin)
+    function write(obj, fileName, varargin)
         % Write into a JSON file
-        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
 
@@ -311,18 +311,66 @@ methods (Static)
         
         % create default empty style
         style = Style();
-        mc = metaclass(style);
         
-        % update styles with fields
-        names = fieldnames(str);
-        for i = 1:length(names)
-            name = names{i};
-            if ~isempty(findobj(mc.PropertyList, 'Name', name))
-                style.(name) = str.(name);
-            else
-                error(['Unknown style modifier: ' name]);
-            end
+        % global visibility
+        if isfield(str, 'visible')
+            style.Visible = str.visible;
         end
+
+        % parse marker style modifiers
+        if isfield(str, 'markerVisible')
+            style.MarkerVisible = str.markerVisible;
+        end
+        if isfield(str, 'markerColor')
+            style.MarkerColor = str.markerColor;
+        end
+        if isfield(str, 'markerStyle')
+            style.MarkerStyle = str.markerStyle;
+        end
+        if isfield(str, 'markerSize')
+            style.MarkerSize = str.markerSize;
+        end
+        if isfield(str, 'markerFillColor')
+            style.MarkerFillColor = str.markerFillColor;
+        end
+        
+        
+        % parse line style modifiers
+        if isfield(str, 'lineVisible')
+            style.LineVisible = str.lineVisible;
+        end
+        if isfield(str, 'lineColor')
+            style.LineColor = str.lineColor;
+        end
+        if isfield(str, 'lineWidth')
+            style.LineWidth = str.lineWidth;
+        end
+        if isfield(str, 'lineStyle')
+            style.LineStyle = str.lineStyle;
+        end
+         
+        % parse fill style modifiers
+        if isfield(str, 'fillVisible')
+            style.FillVisible = str.fillVisible;
+        end
+        if isfield(str, 'fillColor')
+            style.FillColor = str.fillColor;
+        end
+        if isfield(str, 'fillOpacity')
+            style.FillOpacity = str.fillOpacity;
+        end
+        
+        % parse face style modifiers
+        if isfield(str, 'faceVisible')
+            style.FaceVisible = str.faceVisible;
+        end
+        if isfield(str, 'faceColor')
+            style.FaceColor = str.faceColor;
+        end
+        if isfield(str, 'faceOpacity')
+            style.FaceOpacity = str.faceOpacity;
+        end
+        
     end
     
     function style = read(fileName)

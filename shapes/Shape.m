@@ -1,7 +1,7 @@
 classdef Shape < handle
 %SHAPE Contains information to draw a 2D or 3D shape 
 %
-%   The shape class encapsulates information about the geometry of the
+%   The shape class encapsulates information about the Geometry of the
 %   shape (as an instance of Geometry class) and drawing options (as an
 %   instance of the Style class).
 %
@@ -23,50 +23,50 @@ classdef Shape < handle
 
 %% Properties
 properties
-    % The geometry of the shape, as an instance of Geometry
-    geometry;
+    % The Geometry of the shape, as an instance of Geometry
+    Geometry;
     
     % The options for drawing the shape, as an instance of Style
-    style;
+    Style;
     
     % visibility flag (default true)
-    visible = true;
+    Visible = true;
     
-    % a name for identifying the shape
-    name = '';
+    % a Name for identifying the shape
+    Name = '';
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Shape(varargin)
+    function obj = Shape(varargin)
         % Constructor for Shape class
         %
         %   usage:
         %   shape = Shape(geom)
-        %   shape = Shape(geom, style)
+        %   shape = Shape(geom, Style)
         %
 
         if nargin == 1
             var1 = varargin{1};
             if isa(var1, 'Shape')
                 % copy constructor
-                this.geometry = var1.geometry; % geometry is not duplicated
-                this.style = Style(var1.style);
-                this.visible = var1.visible;
-                this.name = var1.name;
+                obj.Geometry = var1.Geometry; % Geometry is not duplicated
+                obj.Style = Style(var1.Style);
+                obj.Visible = var1.Visible;
+                obj.Name = var1.Name;
                 
             else
                 % initialisation constructor
-                this.geometry = varargin{1};
-                this.style = createDefaultStyle(this.geometry);
+                obj.Geometry = varargin{1};
+                obj.Style = createDefaultStyle(obj.Geometry);
             end
             
         elseif nargin == 2
             % initialisation constructor with two arguments
-            this.geometry = varargin{1};
-            this.style = varargin{2};
+            obj.Geometry = varargin{1};
+            obj.Style = varargin{2};
             
         else
             error('Wrong number of arguments for creation of Shape');
@@ -86,9 +86,9 @@ end % end constructors
 
 %% Methods
 methods
-    function varargout = draw(this)
-        % Draws this shape on the current axis
-        h = draw(this.geometry, this.style);
+    function varargout = draw(obj)
+        % Draws obj shape on the current axis
+        h = draw(obj.Geometry, obj.Style);
         if nargout > 0
             varargout = {h};
         end
@@ -98,31 +98,31 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        % add the name only if not null
-        if ~isempty(this.name)
-            str.name = this.name;
+        % add the Name only if not null
+        if ~isempty(obj.Name)
+            str.name = obj.Name;
         end
         
-        % add optional style
-        if ~isempty(this.style)
-            str.style = toStruct(this.style);
+        % add optional Style
+        if ~isempty(obj.Style)
+            str.style = toStruct(obj.Style);
         end
 
-        % creates a structure for geometry, including class name
-        str.geometry = toStruct(this.geometry);
+        % creates a structure for Geometry, including class Name
+        str.geometry = toStruct(obj.Geometry);
         if ~isfield(str.geometry, 'type')
-            type = classname(this.geometry);
-            warning(['geometry type not specified, use class name: ' type]);
+            type = classname(obj.Geometry);
+            warning(['Geometry type not specified, use class Name: ' type]);
             str.geometry.type = type;
         end
     end
     
-    function write(this, fileName, varargin)
+    function write(obj, fileName, varargin)
         % Write into a JSON file
-        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
 
@@ -130,19 +130,19 @@ methods (Static)
     function shape = fromStruct(str)
         % Creates a new instance from a structure
         
-        % parse geometry
+        % parse Geometry
         type = str.geometry.type;
         geom = eval([type '.fromStruct(str.geometry)']);
         shape = Shape(geom);
         
-        % parse the optionnal name
+        % parse the optionnal Name
         if isfield(str, 'name') && ~isempty(str.name)
-            shape.name = str.name;
+            shape.Name = str.name;
         end
 
-        % eventually parse style
+        % eventually parse Style
         if isfield(str, 'style') && ~isempty(str.style)
-            shape.style = Style.fromStruct(str.style);
+            shape.Style = Style.fromStruct(str.style);
         end
     end
     

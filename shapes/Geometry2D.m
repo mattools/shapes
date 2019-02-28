@@ -17,7 +17,7 @@ classdef Geometry2D < Geometry
 
 %% Constructor
 methods
-    function this = Geometry2D(varargin)
+    function obj = Geometry2D(varargin)
     % Constructor for Geometry2D class
     %   (will be called by subclasses)
 
@@ -30,10 +30,10 @@ end % end constructors
 % Declares some methods that will be implemented by subclasses.
 methods ( Abstract )
     
-    box = boundingBox(this)
-    % Returns the bounding box of this geometry
+    box = boundingBox(obj)
+    % Returns the bounding box of obj geometry
     
-    varargout = draw(this, varargin)
+    varargout = draw(obj, varargin)
     % Draw the current geometry, eventually specifying the style
 end
 
@@ -41,14 +41,14 @@ end
 % Not sure we will keep these methods...
 methods ( Abstract )
     
-    res = scale(this, varargin)
-    % Returns a scaled version of this geometry
+    res = scale(obj, varargin)
+    % Returns a scaled version of obj geometry
         
-    res = translate(this, varargin)
-    % Returns a translated version of this geometry       
+    res = translate(obj, varargin)
+    % Returns a translated version of obj geometry       
     
-    res = rotate(this, varargin)
-    % Returns a rotated version of this geometry
+    res = rotate(obj, varargin)
+    % Returns a rotated version of obj geometry
         
 end % end methods
 

@@ -23,5 +23,5 @@ function test_Simple(testCase) %#ok<*DEFNU>
 node = ImageNode('rice.png');
 readImageData(node);
 
-assertTrue(~isempty(node.imageData));
+assertTrue(~isempty(node.ImageData));
 
