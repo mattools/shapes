@@ -84,7 +84,10 @@ end
 methods
     function varargout = draw(this)
         % display current scene in a new figure
+        
+        % create new figure and keep handle to axis
         hFig = figure; 
+        ax = gca;
         
         % start by background image
         if ~isempty(this.backgroundImage)
@@ -92,16 +95,28 @@ methods
         end
         
         % setup axis
-        axis equal; hold on;
+        axis equal; 
+        hold on;
         
         % set view box from axis limits stored within scene
         box = viewBox(this);
         axis(box);
-
+        
+        % optionnally reverse some axes
+        if this.xAxis.reverse
+            set(ax, 'xdir', 'reverse');
+        end
+        if this.yAxis.reverse
+            set(ax, 'ydir', 'reverse');
+        end
+        if this.zAxis.reverse
+            set(ax, 'zdir', 'reverse');
+        end
+        
         % draw lines for X and Y axes, based on current axis bounds
         if this.axisLinesVisible
-            plot(this.xAxis.limits, [0 0], 'k-');
-            plot([0 0], this.yAxis.limits, 'k-');
+            plot(ax, this.xAxis.limits, [0 0], 'k-');
+            plot(ax, [0 0], this.yAxis.limits, 'k-');
         end
 
         for iShape = 1:length(this.shapes)
