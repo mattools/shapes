@@ -34,7 +34,7 @@ pts = MultiPoint3D(v);
 str = toStruct(pts);
 
 pts2 = MultiPoint3D.fromStruct(str);
-assertElementsAlmostEqual(pts.coords, pts2.coords);
+assertElementsAlmostEqual(pts.Coords, pts2.Coords);
 
 
 

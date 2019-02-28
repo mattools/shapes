@@ -19,24 +19,24 @@ classdef ImageNode < handle
 %% Properties
 properties
     % the path to the image file, as a char array
-    filePath = '';
+    FilePath = '';
     
     % the image data, as a Matlab array
-    imageData = [];
+    ImageData = [];
     
     % the size of image, nx-by-ny
-    imageSize;
+    ImageSize;
 
     % information for spatial calibration
-    spacing = [1 1];
-    origin = [1 1];
+    Spacing = [1 1];
+    Origin = [1 1];
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = ImageNode(var1, varargin)
+    function obj = ImageNode(var1, varargin)
     % Constructor for ImageNode class
 
         if nargin == 0
@@ -45,11 +45,11 @@ methods
         
         if isa(var1, 'ImageNode')
             % copy constructor
-            this.filePath = var1.filePath;
-            this.imageData = var1.imageData;
-            this.imageSize = var1.imageSize;
-            this.spacing = var1.spacing;
-            this.origin = var1.origin;
+            obj.FilePath = var1.FilePath;
+            obj.ImageData = var1.ImageData;
+            obj.ImageSize = var1.ImageSize;
+            obj.Spacing = var1.Spacing;
+            obj.Origin = var1.Origin;
             
         elseif ischar(var1)
             % intialize from file path
@@ -64,16 +64,16 @@ methods
                 var1 = fullfile(pwd, var1);
             end
                         
-            this.filePath = var1;
-            info = imfinfo(this.filePath);
-            this.imageSize = [info.Width info.Height];
+            obj.FilePath = var1;
+            info = imfinfo(obj.FilePath);
+            obj.ImageSize = [info.Width info.Height];
             
         elseif isnumeric(var1)
             % initialisation constructor
-            this.imageData = var1;
+            obj.ImageData = var1;
             
-            % initialize spacing and origin from image data
-            initializeSpatialCalibration(this);
+            % initialize Spacing and Origin from image data
+            initializeSpatialCalibration(obj);
         else
             error('Unable to create image node');
         end
@@ -84,26 +84,26 @@ end % end constructors
 
 %% Methods
 methods
-    function readImageData(this)
+    function readImageData(obj)
         % read image data from file path and populate corresponding field
-        this.imageData = imread(this.filePath);
-        initializeSpatialCalibration(this);
+        obj.ImageData = imread(obj.FilePath);
+        initializeSpatialCalibration(obj);
     end
     
-    function h = show(this, varargin)
+    function h = show(obj, varargin)
         % display image data on current axis
         
         % read image data if necessary
-        if isempty(this.imageData)
-            data = imread(this.filePath);
+        if isempty(obj.ImageData)
+            data = imread(obj.FilePath);
         else
-            data = this.imageData;
+            data = obj.ImageData;
         end
         
         % compute physical extents
-        dim = this.imageSize;
-        lx = (0:dim(1)-1) * this.spacing(1) + this.origin(1);
-        ly = (0:dim(2)-1) * this.spacing(2) + this.origin(2);
+        dim = obj.ImageSize;
+        lx = (0:dim(1)-1) * obj.Spacing(1) + obj.Origin(1);
+        ly = (0:dim(2)-1) * obj.Spacing(2) + obj.Origin(2);
         
         % display image with approriate spatial reference
         hh = imshow(data, 'XData', lx, 'YData', ly);
@@ -114,13 +114,13 @@ methods
     end
 
     
-    function extent = physicalExtent(this)
-        nd = ndims(this);
+    function extent = physicalExtent(obj)
+        nd = ndims(obj);
         
         % extract base data
-        sz = this.imageSize;
-        sp = this.spacing;
-        or = this.origin;
+        sz = obj.ImageSize;
+        sp = obj.Spacing;
+        or = obj.Origin;
         
         % put extent in array
         extent = (([zeros(nd, 1) sz']-.5).* [sp' sp'] + [or' or'])';
@@ -129,36 +129,36 @@ methods
         extent = extent(:)';
     end
     
-    function lx = xData(this)
-        dim = this.imageSize;
-        lx = (0:dim(2)-1) * this.spacing(1) + this.origin(1);
+    function lx = xData(obj)
+        dim = obj.ImageSize;
+        lx = (0:dim(2)-1) * obj.Spacing(1) + obj.Origin(1);
     end
     
-    function ly = yData(this)
-        dim = this.imageSize;
-        ly = (0:dim(1)-1) * this.spacing(2) + this.origin(2);
+    function ly = yData(obj)
+        dim = obj.ImageSize;
+        ly = (0:dim(1)-1) * obj.Spacing(2) + obj.Origin(2);
     end
     
 end % end methods
 
 %% Private methods
 methods (Access = private)
-    function initializeSpatialCalibration(this)
-        % setup spacing and origin from image data
+    function initializeSpatialCalibration(obj)
+        % setup Spacing and Origin from image data
 
         % image dimensionality
         nd = 2;
-        if ndims(this.imageData) > 2 && size(this.imageData, 3) > 3 %#ok<ISMAT>
+        if ndims(obj.ImageData) > 2 && size(obj.ImageData, 3) > 3 %#ok<ISMAT>
             nd = 3;
         end
         
         % size in XY order
-        dims = size(this.imageData);
-        this.imageSize = dims([2 1 3:nd]);
+        dims = size(obj.ImageData);
+        obj.ImageSize = dims([2 1 3:nd]);
         
-        % init spacing and origin
-        this.spacing = ones(1, nd);
-        this.origin = ones(1, nd);
+        % init Spacing and Origin
+        obj.Spacing = ones(1, nd);
+        obj.Origin = ones(1, nd);
     end
     
 end % end methods
@@ -167,18 +167,18 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        str.filePath = this.filePath;
-        str.imageSize = this.imageSize;
-        str.spacing = this.spacing;
-        str.origin = this.origin;
+        str.FilePath = obj.FilePath;
+        str.ImageSize = obj.ImageSize;
+        str.Spacing = obj.Spacing;
+        str.Origin = obj.Origin;
     end
     
-    function write(this, fileName, varargin)
+    function write(obj, fileName, varargin)
         % Write into a JSON file
-        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
 
@@ -187,17 +187,17 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse file path
-        node = ImageNode(str.filePath);
+        node = ImageNode(str.FilePath);
         
         % parse optional fields
-        if isfield(str, 'imageSize')
-            node.imageSize = str.imageSize;
+        if isfield(str, 'ImageSize')
+            node.ImageSize = str.ImageSize;
         end
-        if isfield(str, 'spacing')
-            node.spacing = str.spacing;
+        if isfield(str, 'Spacing')
+            node.Spacing = str.Spacing;
         end
-        if isfield(str, 'origin')
-            node.origin = str.origin;
+        if isfield(str, 'Origin')
+            node.Origin = str.Origin;
         end
     end
     

@@ -1,5 +1,9 @@
 {
 	"style": {
+		"visible": 1,
+		"lineColor": "b",
+		"fillColor": "y",
+		"faceVisible": 1
 	},
 	"geometry": {
 		"type": "Polygon2D",

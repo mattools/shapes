@@ -21,14 +21,14 @@ function test_EmptyConstructor %#ok<*DEFNU>
 % Test call of function without argument
 
 style = Style();
-style.lineWidth;
+style.LineWidth;
 
 
 function test_ArgumentConstructor %#ok<*DEFNU>
 % Test call of function without argument
 
 style = Style('LineStyle', '-', 'linewidth', 2);
-style.lineWidth;
+style.LineWidth;
 
 
 function test_read

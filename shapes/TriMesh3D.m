@@ -17,24 +17,24 @@ classdef TriMesh3D < Geometry3D
 
 properties
     % coordinates of vertices, as a NV-by-3 array
-    vertexCoords;
+    VertexCoords;
     
     % vertex indices for each face, as a NF-by-3 array
-    faceVertexInds;
+    FaceVertexInds;
 end
 
 %% Constructor
 methods
-    function this = TriMesh3D(varargin)
+    function obj = TriMesh3D(varargin)
         
         if isnumeric(varargin{1})
-            this.vertexCoords = varargin{1};
-            this.faceVertexInds = varargin{2};
+            obj.VertexCoords = varargin{1};
+            obj.FaceVertexInds = varargin{2};
             
         elseif isstruct(varargin{1})
             var1 = varargin{1};
-            this.vertexCoords = var1.vertices;
-            this.faceVertexInds = var1.faces;
+            obj.VertexCoords = var1.vertices;
+            obj.FaceVertexInds = var1.faces;
         end
         
     end
@@ -42,36 +42,36 @@ end
 
 %% Vertex management methods
 methods
-    function nv = vertexNumber(this)
-        nv = size(this.vertexCoords, 1);
+    function nv = vertexNumber(obj)
+        nv = size(obj.VertexCoords, 1);
     end
     
-    function verts = vertices(this)
-        verts = this.vertexCoords;
+    function verts = vertices(obj)
+        verts = obj.VertexCoords;
     end
 end
 
 %% Face management methods
 methods
-    function nf = faceNumber(this)
-        nf = size(this.faceVertexInds, 1);
+    function nf = faceNumber(obj)
+        nf = size(obj.FaceVertexInds, 1);
     end
 end
 
 
 %% Methods implementing Geometry3D
 methods
-    function box = boundingBox(this)
+    function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        mini = min(this.vertexCoords);
-        maxi = max(this.vertexCoords);
+        mini = min(obj.VertexCoords);
+        maxi = max(obj.VertexCoords);
         box = Box3D([mini(1) maxi(1) mini(2) maxi(2) mini(3) maxi(3)]);
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawMesh(this.vertexCoords, this.faceVertexInds);
+        h = drawMesh(obj.VertexCoords, obj.FaceVertexInds);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -84,16 +84,16 @@ methods
         end
     end
     
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = TriMesh3D(this.vertexCoords * factor, this.faceVertexInds);
+        res = TriMesh3D(obj.VertexCoords * factor, obj.FaceVertexInds);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = TriMesh3D(bsxfun(@plus, this.vertexCords, shift), this.faceVertexInds);
+        res = TriMesh3D(bsxfun(@plus, obj.vertexCords, shift), obj.FaceVertexInds);
     end
     
 end % end methods
@@ -101,11 +101,11 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
         str = struct('type', 'TriMesh3D', ...
-            'vertices', this.vertexCoords, ...
-            'faces', this.faceVertexInds);
+            'vertices', obj.VertexCoords, ...
+            'faces', obj.FaceVertexInds);
     end
 end
 methods (Static)

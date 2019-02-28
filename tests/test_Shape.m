@@ -24,7 +24,7 @@ coords = [0 0;1 0; 1 1;0 1];
 geom = Polygon2D(coords);
 
 shape = Shape(geom);
-shape.geometry;
+shape.Geometry;
 
 
 function test_write
@@ -41,10 +41,10 @@ function test_read
 % Test call of function without argument
 
 shape = Shape.read('simplePolygon01.shape');
-geom = shape.geometry;
+geom = shape.Geometry;
 assertTrue(isa(geom, 'Polygon2D'));
 
-coords = geom.coords;
+coords = geom.Coords;
 assertEqual(6, size(coords, 1));
 
 

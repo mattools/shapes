@@ -21,14 +21,14 @@ classdef Point2D < Geometry2D
 
 %% Properties
 properties
-    x = 0;
-    y = 0;
+    X = 0;
+    Y = 0;
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Point2D(varargin)
+    function obj = Point2D(varargin)
         % Constructor for Point2D class
         
         % empty constructor -> initialize to origin
@@ -39,8 +39,8 @@ methods
         % copy constructor
         if isa(varargin{1}, 'Point2D')
             that = varargin{1};
-            this.x = that.x;
-            this.y = that.y;
+            obj.X = that.X;
+            obj.Y = that.Y;
             return;
         end
         
@@ -48,8 +48,8 @@ methods
         if nargin == 1
             var1 = varargin{1};
             if isnumeric(var1) && ~any(size(var1) ~= [1 2])
-                this.x = var1(1);
-                this.y = var1(2);
+                obj.X = var1(1);
+                obj.Y = var1(2);
             else
                 error('Can not parse input for Point2D');
             end
@@ -60,8 +60,8 @@ methods
             var1 = varargin{1};
             var2 = varargin{2};
             if isnumeric(var1) && isnumeric(var2) && isscalar(var1) && isscalar(var2)
-                this.x = varargin{1};
-                this.y = varargin{2};
+                obj.X = varargin{1};
+                obj.Y = varargin{2};
             else
                 error('Can not parse inputs for Point2D');
             end
@@ -72,32 +72,32 @@ end % end constructors
 
 %% Methods specific to Point2D
 methods
-    function d = distance(this, that)
+    function d = distance(obj, that)
         % Distance between two points
 
         % check input
-        if ~isa(this, Point2D) || ~isa(that, Point2D)
+        if ~isa(obj, Point2D) || ~isa(that, Point2D)
             error('Both arguments must be instances of Point2D');
         end
         
         % compute distance
-        dx = this.x - that.x;
-        dy = this.y - that.y;
+        dx = obj.X - that.X;
+        dy = obj.Y - that.Y;
         d = hypot(dx, dy);
     end
 end
 
 %% Methods implementing the Geometry2D interface
 methods
-    function box = boundingBox(this)
+    function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        box = Box2D([this.x this.x this.y this.y]);
+        box = Box2D([obj.X obj.X obj.Y obj.Y]);
     end
     
-    function varargout = draw(this, varargin)
-        % Draw this point, eventually specifying the style
+    function varargout = draw(obj, varargin)
+        % Draw obj point, eventually specifying the style
         
-        h = drawPoint([this.x this.y]);
+        h = drawPoint([obj.X obj.Y]);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -113,19 +113,19 @@ end
 
 %% Methods implementing the Geometry2D interface (more)
 methods
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = Point2D([this.x this.y] * factor);
+        res = Point2D([obj.X obj.Y] * factor);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = Point2D(bsxfun(@plus, [this.x this.y], shift));
+        res = Point2D(bsxfun(@plus, [obj.X obj.Y], shift));
     end
     
-    function res = rotate(this, angle, varargin)
+    function res = rotate(obj, angle, varargin)
         % Returns a rotated version of this point
         %
         % PT2 = rotate(PT, THETA)
@@ -138,23 +138,27 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint([this.x this.y], rot);
+        verts = transformPoint([obj.X obj.Y], rot);
         
         res = Point2D(verts);
+    end
+    
+    function res = uminus(obj)
+        res = Point2D(-obj.X, -obj.Y);
     end
 end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Point2D', 'x', this.x, 'y', this.y);
+        str = struct('type', 'Point2D', 'X', obj.X, 'Y', obj.Y);
     end
 end
 methods (Static)
     function point = fromStruct(str)
         % Create a new instance from a structure
-        point = Point2D(str.x, str.y);
+        point = Point2D(str.X, str.Y);
     end
 end
 

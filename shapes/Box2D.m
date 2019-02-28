@@ -3,7 +3,7 @@ classdef Box2D < Geometry2D
 %
 %   Class Box2D
 %   Defined by max extent in each dimension:
-%   * xmin, xmax, ymin, ymax.
+%   * XMin, XMax, YMin, YMax.
 %
 %   Example
 %   box = Box2D([0, 10, 0, 10])
@@ -20,17 +20,17 @@ classdef Box2D < Geometry2D
 
 %% Properties
 properties
-    xmin;
-    xmax;
-    ymin;
-    ymax;
+    XMin;
+    XMax;
+    YMin;
+    YMax;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = Box2D(varargin)
+    function obj = Box2D(varargin)
     % Constructor for Box2D class
     
         if ~isempty(varargin)
@@ -47,10 +47,10 @@ methods
             data = [0 1 0 1];
         end
         
-        this.xmin = data(1);
-        this.xmax = data(2);
-        this.ymin = data(3);
-        this.ymax = data(4);
+        obj.XMin = data(1);
+        obj.XMax = data(2);
+        obj.YMin = data(3);
+        obj.YMax = data(4);
     end
 
 end % end constructors
@@ -58,12 +58,12 @@ end % end constructors
 
 %% Methods
 methods
-    function box = boundingBox(this)
-        % Returns the bounding box of this shape
-        box = this.data;
+    function box = boundingBox(obj)
+        % Returns the bounding box of obj shape
+        box = obj.data;
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
         % extract style agument if present
@@ -74,7 +74,7 @@ methods
         end
         
         % draw the box
-        h = drawBox([this.xmin this.xmax this.ymin this.ymax], varargin{:});
+        h = drawBox([obj.XMin obj.XMax obj.YMin obj.YMax], varargin{:});
         
         % eventually apply style
         if ~isempty(style)
@@ -87,20 +87,20 @@ methods
         end
     end
     
-    function res = scale(this, varargin)
-        % Returns a scaled version of this geometry
+    function res = scale(obj, varargin)
+        % Returns a scaled version of obj geometry
         factor = varargin{1};
-        res = Box2D([this.xmin this.xmax this.ymin this.ymax] * factor);
+        res = Box2D([obj.XMin obj.XMax obj.YMin obj.YMax] * factor);
     end
     
-    function res = translate(this, varargin)
-        % Returns a translated version of this geometry
+    function res = translate(obj, varargin)
+        % Returns a translated version of obj geometry
         shift = varargin{1};
-        data2 = [this.xmin this.xmax this.ymin this.ymax] + shift(1, [1 1 2 2]);
+        data2 = [obj.XMin obj.XMax obj.YMin obj.YMax] + shift(1, [1 1 2 2]);
         res = Box2D(data2);
     end
     
-    function res = rotate(this, angle) %#ok<STOUT,INUSD>
+    function res = rotate(obj, angle) %#ok<STOUT,INUSD>
         % Throws an error as a box can not be rotated
         error('A box can not be rotated');
     end
@@ -108,17 +108,17 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
         str = struct('type', 'Box2D', ...
-            'xmin', this.xmin, 'xmax', this.xmax, ...
-            'ymin', this.ymin, 'ymax', this.ymax);
+            'XMin', obj.XMin, 'XMax', obj.XMax, ...
+            'YMin', obj.YMin, 'YMax', obj.YMax);
     end
 end
 methods (Static)
     function box = fromStruct(str)
         % Create a new instance from a structure
-        box = Box2D([str.xmin str.xmax str.ymin str.ymax]);
+        box = Box2D([str.XMin str.XMax str.YMin str.YMax]);
     end
 end
 

@@ -23,7 +23,7 @@ end % end properties
 
 %% Constructor
 methods
-    function this = Geometry3D(varargin)
+    function obj = Geometry3D(varargin)
     % Constructor for Geometry3D class
     %   (will be called by subclasses)
 
@@ -36,10 +36,10 @@ end % end constructors
 % Declares some methods that will be implemented by subclasses.
 methods ( Abstract )
     
-    box = boundingBox(this)
-    % Returns the 3D bounding box of this geometry
+    box = boundingBox(obj)
+    % Returns the 3D bounding box of obj geometry
     
-    varargout = draw(this, varargin)
+    varargout = draw(obj, varargin)
     % Draw the current geometry, eventually specifying the style
 end
 
@@ -47,11 +47,11 @@ end
 % Not sure we will keep these methods...
 methods ( Abstract )
     
-    res = scale(this, varargin)
-    % Returns a scaled version of this geometry
+    res = scale(obj, varargin)
+    % Returns a scaled version of obj geometry
         
-    res = translate(this, varargin)
-    % Returns a translated version of this geometry       
+    res = translate(obj, varargin)
+    % Returns a translated version of obj geometry       
     
 end % end methods
 

@@ -32,7 +32,7 @@ end % end methods
 
 %% Serialization methods
 methods
-    function write(this, fileName, varargin)
+    function write(obj, fileName, varargin)
         % Writes geometry into a JSON file
         % 
         % Requires implementation of the "toStruct" method.
@@ -40,11 +40,11 @@ methods
         if exist('savejson', 'file') == 0
             error('Requires the ''jsonlab'' library');
         end
-        if ~ismethod(this, 'toStruct')
+        if ~ismethod(obj, 'toStruct')
             error('Requires implementation of the ''toStruct'' method');
         end
         
-        savejson('', toStruct(this), 'FileName', fileName, varargin{:});
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
 

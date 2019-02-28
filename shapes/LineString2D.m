@@ -1,7 +1,7 @@
 classdef LineString2D < Geometry2D
 %LineString2D An open polyline composed of several line segments 
 %
-%   Represents a polyline defined be a series of coords. 
+%   Represents a polyline defined be a series of Coords. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -20,15 +20,15 @@ classdef LineString2D < Geometry2D
 
 %% Properties
 properties
-    % the set of coords, given as a N-by-2 array of coordinates
-    coords;
+    % the set of Coords, given as a N-by-2 array of coordinates
+    Coords;
     
 end % end properties
 
 
 %% Constructor
 methods
-    function this = LineString2D(varargin)
+    function obj = LineString2D(varargin)
     % Constructor for LineString2D class
     
         if ~isempty(varargin)
@@ -36,10 +36,10 @@ methods
             if size(var1, 2) ~= 2
                 error('Creating a linestring requires an array with two columns, not %d', size(var1, 2));
             end
-            this.coords = var1;
+            obj.Coords = var1;
 
         else
-            this.coords = [];
+            obj.Coords = [];
         end
     end
 
@@ -48,11 +48,11 @@ end % end constructors
 
 %% Methods specific to LineString2D
 methods
-    function centro = centroid(this)
+    function centro = centroid(obj)
         
         % compute center and length of each line segment
-        centers = (this.coords(1:end-1,:) + this.coords(2:end,:))/2;
-        lengths = sqrt(sum(diff(this.coords).^2, 2));
+        centers = (obj.Coords(1:end-1,:) + obj.Coords(2:end,:))/2;
+        lengths = sqrt(sum(diff(obj.Coords).^2, 2));
         
         % centroid of edge centers weighted by edge lengths
         centro = Point2D(sum(bsxfun(@times, centers, lengths), 1) / sum(lengths));
@@ -61,22 +61,22 @@ end
 
 %% Methods
 methods
-    function box = boundingBox(this)
-        % Returns the bounding box of this shape
-        mini = min(this.coords);
-        maxi = max(this.coords);
+    function box = boundingBox(obj)
+        % Returns the bounding box of obj shape
+        mini = min(obj.Coords);
+        maxi = max(obj.Coords);
         box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);
     end
     
-    function verts = vertices(this)
+    function verts = vertices(obj)
         % returns vertices as a new instance of MultiPoint2D
-        verts = MultiPoint2D(this.coords);
+        verts = MultiPoint2D(obj.Coords);
     end
     
-    function varargout = draw(this, varargin)
+    function varargout = draw(obj, varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPolyline(this.coords);
+        h = drawPolyline(obj.Coords);
         if nargin > 1
             var1 = varargin{1};
             if isa(var1, 'Style')
@@ -89,19 +89,19 @@ methods
         end
     end
     
-    function res = scale(this, varargin)
+    function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = LineString2D(this.coords * factor);
+        res = LineString2D(obj.Coords * factor);
     end
     
-    function res = translate(this, varargin)
+    function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = LineString2D(bsxfun(@plus, this.coords, shift));
+        res = LineString2D(bsxfun(@plus, obj.Coords, shift));
     end
     
-    function res = rotate(this, angle, varargin)
+    function res = rotate(obj, angle, varargin)
         % Returns a rotated version of this polyline
         %
         % POLY2 = rotate(POLY, THETA)
@@ -114,7 +114,7 @@ methods
         end
         
         rot = createRotation(origin, deg2rad(angle));
-        verts = transformPoint(this.coords, rot);
+        verts = transformPoint(obj.Coords, rot);
         
         res = LineString2D(verts);
     end
@@ -122,9 +122,9 @@ end % end methods
 
 %% Serialization methods
 methods
-    function str = toStruct(this)
+    function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'LineString2D', 'coordinates', this.coords);
+        str = struct('type', 'LineString2D', 'coordinates', obj.Coords);
     end
 end
 methods (Static)
