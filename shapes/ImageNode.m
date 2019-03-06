@@ -170,10 +170,10 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        str.FilePath = obj.FilePath;
-        str.ImageSize = obj.ImageSize;
-        str.Spacing = obj.Spacing;
-        str.Origin = obj.Origin;
+        str.filePath = obj.FilePath;
+        str.imageSize = obj.ImageSize;
+        str.spacing = obj.Spacing;
+        str.origin = obj.Origin;
     end
     
     function write(obj, fileName, varargin)
@@ -187,17 +187,17 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse file path
-        node = ImageNode(str.FilePath);
+        node = ImageNode(str.filePath);
         
         % parse optional fields
         if isfield(str, 'ImageSize')
-            node.ImageSize = str.ImageSize;
+            node.ImageSize = str.imageSize;
         end
         if isfield(str, 'Spacing')
-            node.Spacing = str.Spacing;
+            node.Spacing = str.spacing;
         end
         if isfield(str, 'Origin')
-            node.Origin = str.Origin;
+            node.Origin = str.origin;
         end
     end
     
