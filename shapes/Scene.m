@@ -193,8 +193,9 @@ end % end methods
 %% Shapes management
 
 methods
-    function addShape(obj, s)
-        % Add a given shape to this scene
+    function s = addShape(obj, s)
+        % Add a given shape to this scene, and return the new shape
+        % shape = addShape(scene, Point2D(4, 3));
         if isa(s, 'Geometry')
             s = Shape(s);
         end
