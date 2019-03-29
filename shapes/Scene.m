@@ -100,7 +100,11 @@ methods
         
         % set view box from axis limits stored within scene
         box = viewBox(obj);
-        axis(box);
+        if length(box) < 5 || box(5) == box(6)
+            axis(box(1:4));
+        else
+            axis(box);
+        end
         
         % optionnally reverse some axes
         if obj.XAxis.Reverse

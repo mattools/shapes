@@ -1,7 +1,7 @@
 classdef MultiPoint2D < Geometry2D
-%POLYGON2D A set of points in the plane
+%MULTIPOINT2D A set of points in the plane
 %
-%   Represents a set of Coords. 
+%   Represents a set of Coordinates. 
 %
 %   Data are represented by a NV-by-2 array.
 %
@@ -9,7 +9,7 @@ classdef MultiPoint2D < Geometry2D
 %   MultiPoint2D([0 0; 10 0; 10 10]; 0 10]);
 %
 %   See also
-%   Geometry2D, Polygon2D
+%   Geometry2D, Polygon2D, LineString2D
 
 % ------
 % Author: David Legland
@@ -20,7 +20,7 @@ classdef MultiPoint2D < Geometry2D
 
 %% Properties
 properties
-    % the vertex coordinates, given as a N-by-2 array of double
+    % the point coordinates, given as a N-by-2 array of double
     Coords;
     
 end % end properties
