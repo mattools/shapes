@@ -1,5 +1,5 @@
-classdef ImageNode < handle
-%IMAGENODE  One-line description here, please.
+classdef ImageNode < SceneNode
+%IMAGENODE Contains information to represent an image within the scene
 %
 %   Class ImageNode
 %
@@ -163,6 +163,13 @@ methods (Access = private)
     
 end % end methods
 
+
+%% Methods specializing the SceneNode superclass
+methods
+    function b = isLeaf(obj) %#ok<MANU>
+        b = true;
+    end
+end
 
 
 %% Serialization methods
