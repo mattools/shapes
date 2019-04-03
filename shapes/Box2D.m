@@ -106,6 +106,7 @@ methods
     end
 end % end methods
 
+
 %% Serialization methods
 methods
     function str = toStruct(obj)

@@ -23,8 +23,6 @@ function test_Constructor_Single(testCase) %#ok<*DEFNU>
 v = [0 0 0;1 0 0;0 1 0;0 0 1];
 pts = MultiPoint3D(v); %#ok<NASGU>
 
-
-
 function test_Serialize(testCase)
 % Test call of function without argument
 
@@ -35,7 +33,4 @@ str = toStruct(pts);
 
 pts2 = MultiPoint3D.fromStruct(str);
 assertEqual(testCase, pts.Coords, pts2.Coords);
-
-
-
 

@@ -33,5 +33,3 @@ p2 = Point2D.fromStruct(str);
 assertEqual(testCase, 3, p2.X);
 assertEqual(testCase, 4, p2.Y);
 
-
-

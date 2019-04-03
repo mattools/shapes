@@ -1,12 +1,13 @@
 classdef SceneGraph < handle
 %SCENEGRAPH The top-level class for the scene
 %
-%   Class Scene
+%   Class SceneGraph
 %
 %   Example
 %   Scene
 %
 %   See also
+%     SceneNode, ShapeNode
 %
 
 % ------
@@ -18,6 +19,10 @@ classdef SceneGraph < handle
 
 %% Properties
 properties
+    % the reference node of this scene, as a SceneNode instance.
+    % Most of the time, this will be a GroupNode instance.
+    RefNode;
+    
     % the set of Shapes within the scene. 
     % Stored as a struct array.
     Shapes;
