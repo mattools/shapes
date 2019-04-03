@@ -1,4 +1,4 @@
-function testSuite = test_Style(varargin)
+function tests = test_Style(varargin)
 %TEST_STYLE  Test case for the file Style
 %
 %   Test case for the file Style
@@ -15,24 +15,24 @@ function testSuite = test_Style(varargin)
 % Created: 2018-09-19,    using Matlab 8.6.0.267246 (R2015b)
 % Copyright 2018 INRA - Cepia Software Platform.
 
-testSuite = buildFunctionHandleTestSuite(localfunctions);
+tests = functiontests(localfunctions);
 
-function test_EmptyConstructor %#ok<*DEFNU>
+function test_EmptyConstructor(testCase) %#ok<*DEFNU>
 % Test call of function without argument
 
 style = Style();
 style.LineWidth;
 
 
-function test_ArgumentConstructor %#ok<*DEFNU>
+function test_ArgumentConstructor(testCase) %#ok<*DEFNU>
 % Test call of function without argument
 
 style = Style('LineStyle', '-', 'linewidth', 2);
 style.LineWidth;
 
 
-function test_read
+function test_read(testCase)
 % Test call of function without argument
 
 style = Style.read('style1.style');
-assertTrue(isa(style, 'Style')); 
+assertTrue(testCase, isa(style, 'Style')); 

@@ -1,4 +1,4 @@
-function testSuite = test_Shape(varargin)
+function tests = test_Shape(varargin)
 %TEST_SHAPE  Test case for the file Shape
 %
 %   Test case for the file Shape
@@ -15,9 +15,9 @@ function testSuite = test_Shape(varargin)
 % Created: 2018-09-19,    using Matlab 8.6.0.267246 (R2015b)
 % Copyright 2018 INRA - Cepia Software Platform.
 
-testSuite = buildFunctionHandleTestSuite(localfunctions);
+tests = functiontests(localfunctions);
 
-function test_Simple %#ok<*DEFNU>
+function test_Simple(testCase) %#ok<*DEFNU>
 % Test call of function without argument
 
 coords = [0 0;1 0; 1 1;0 1];
@@ -27,7 +27,7 @@ shape = Shape(geom);
 shape.Geometry;
 
 
-function test_write
+function test_write(testCase)
 % Test call of function without argument
 
 coords = [10 10; 30 10; 30 20; 20 20; 20 30 ;10 30];
@@ -37,7 +37,7 @@ shape = Shape(geom);
 write(shape, 'simplePolygon01.shape');
 
 
-function test_read
+function test_read(testCase)
 % Test call of function without argument
 
 shape = Shape.read('simplePolygon01.shape');
@@ -45,7 +45,7 @@ geom = shape.Geometry;
 assertTrue(isa(geom, 'Polygon2D'));
 
 coords = geom.Coords;
-assertEqual(6, size(coords, 1));
+assertEqual(testCase, 6, size(coords, 1));
 
 
 

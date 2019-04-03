@@ -1,4 +1,4 @@
-function testSuite = test_Point2D
+function tests = test_Point2D
 %TEST_POINT2D  Test case for the file Point2D
 %
 %   Test case for the file Point2D
@@ -15,14 +15,14 @@ function testSuite = test_Point2D
 % Created: 2018-09-03,    using Matlab 9.4.0.813654 (R2018a)
 % Copyright 2018 INRA - Cepia Software Platform.
 
-testSuite = buildFunctionHandleTestSuite(localfunctions);
+tests = functiontests(localfunctions);
 
 function test_Constructor_Single(testCase) %#ok<*DEFNU>
 % Test call of function without argument
 
 p = Point2D([3 4]);
-assertEqual(3, p.X);
-assertEqual(4, p.Y);
+assertEqual(testCase, 3, p.X);
+assertEqual(testCase, 4, p.Y);
 
 function test_Serialize(testCase)
 % Test call of function without argument
@@ -30,8 +30,8 @@ function test_Serialize(testCase)
 p = Point2D([3 4]);
 str = toStruct(p);
 p2 = Point2D.fromStruct(str);
-assertEqual(3, p2.X);
-assertEqual(4, p2.Y);
+assertEqual(testCase, 3, p2.X);
+assertEqual(testCase, 4, p2.Y);
 
 
 
