@@ -18,8 +18,8 @@ classdef GroupNode < SceneNode
 
 %% Properties
 properties
-    % the list of children, as a cell array containing SceneNode instances
-    Children
+    % the list of children, as a 1-by-N array of SceneNode instances
+    Children = [];
     
 end % end properties
 
@@ -40,7 +40,7 @@ methods
         if ~isa(node, 'SceneNode')
             error('Requires a SceneNode object');
         end
-        obj.Children = [obj.Children {node}];
+        obj.Children = [obj.Children node];
     end
     
 end % end methods
@@ -48,6 +48,21 @@ end % end methods
 
 %% Methods specializing the SceneNode superclass
 methods
+    function varargout = draw(obj)
+        % draw all children referenced by this group
+        
+        nChildren = length(obj.Children);
+        h = zeros(1, nChildren);
+        
+        for iChild = 1:nChildren
+            h(iChild) = draw(obj.Children(iChild));
+        end
+        
+        if nargout > 0
+            varargout = {h};
+        end
+    end
+    
     function b = isLeaf(obj)
         % returns true only if this node contains no children
         b = isempty(obj.Children);

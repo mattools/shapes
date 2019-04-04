@@ -23,10 +23,10 @@ classdef ShapeNode < SceneNode
 
 %% Properties
 properties
-    % a Name for identifying the shape
+    % a name for identifying the shape
     Name = '';
     
-    % The Geometry of the shape, as an instance of Geometry
+    % The geometry of the shape, as an instance of Geometry
     Geometry;
     
     % The options for drawing the shape, as an instance of Style

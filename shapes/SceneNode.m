@@ -7,7 +7,7 @@ classdef SceneNode < handle
 %   SceneNode
 %
 %   See also
-%
+%     SceneGraph, ShapeNode, GroupNode
 
 % ------
 % Author: David Legland
@@ -33,6 +33,10 @@ end % end constructors
 
 %% Methods
 methods (Abstract)
+    % Draw the current node
+    h = draw(obj);
+    
+    % Determines whether the current node is a leaf (terminal) node
     b = isLeaf(obj);
         
 end % end methods
