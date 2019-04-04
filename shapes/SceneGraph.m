@@ -19,11 +19,11 @@ classdef SceneGraph < handle
 
 %% Properties
 properties
-    % the reference node of this scene, as a SceneNode instance.
+    % the reference node of this scene graph, as a SceneNode instance.
     % Most of the time, this will be a GroupNode instance.
-    RefNode;
+    RootNode;
     
-    % the set of Shapes within the scene. 
+    % the set of Shapes within the scene. (deprecated)
     % Stored as a struct array.
     Shapes;
     
@@ -36,7 +36,7 @@ properties
     % Description of z-axis, as a SceneAxis instance
     ZAxis;
 
-    % an optional background image, as an instance of ImageNode
+    % an optional background image, as an instance of ImageNode (deprecated)
     BackgroundImage;
     
     % indicates whether main axes are visible or not (boolean)
@@ -50,8 +50,8 @@ end % end properties
 
 %% Constructor
 methods
-    function obj = Scene(varargin)
-        % Constructor for Scene class
+    function obj = SceneGraph(varargin)
+        % Constructor for SceneGraph class
         
         % create new axes
         obj.XAxis = SceneAxis();
@@ -272,13 +272,7 @@ methods
         
         str.axisLinesVisible = obj.AxisLinesVisible;
 
-        % create a structure for the list of Shapes
-        % (use it as last fields to finish by the more numerous data)
-        str.shapes = cell(1, length(obj.Shapes));
-        for i = 1:length(obj.Shapes)
-            str.shapes{i} = toStruct(obj.Shapes(i));
-        end
-        
+        str.rootNode = toStruct(obj.RootNode);
     end
     
     function write(obj, fileName, varargin)
@@ -322,11 +316,8 @@ methods (Static)
             scene.AxisLinesVisible = str.axisLinesVisible;
         end
         
-        % parse list of Shapes
-        for iShape = 1:length(str.shapes)
-            shape = ShapeNode.fromStruct(str.shapes{iShape});
-            addShape(scene, shape);
-        end
+        % recursively parse the root node
+        scene.RootNode = SceneNode.fromStruct(str.rootNode);
     end
     
     function scene = read(fileName)

@@ -69,6 +69,59 @@ methods
     end
 end
 
+%% Serialization methods
+methods
+    function str = toStruct(obj)
+        % Convert to a structure to facilitate serialization
+        
+        % set type
+        str.type = 'group';
+
+        % allocate memory for children array
+        str.children = cell(1, length(obj.Children));
+
+        % populate child nodes
+        for iChild = 1:length(obj.Children)
+             str.children{iChild} = toStruct(obj.Children(iChild));
+        end
+    end
+    
+    function write(obj, fileName, varargin)
+        % Write into a JSON file
+        
+        % check existence of output directory
+        [outputDir, tmp] = fileparts(fileName);  %#ok<ASGLU>
+        if ~isempty(outputDir)
+            if ~exist(outputDir, 'dir')
+                error(['Output directory does not exist: ' outputDir]);
+            end
+        end
+        
+        % save the scene
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
+    end
+end
+
+methods (Static)
+    function node = fromStruct(str)
+        % Create a new instance from a structure
+        
+        % create an empty node
+        node = GroupNode();
+        
+        % parse list of Children
+        for iChild = 1:length(str.children)
+            strChild = str.children{iChild};
+            child = SceneNode.fromStruct(strChild);
+            add(node, child);
+        end
+    end
+    
+    function node = read(fileName)
+        % Read a node from a file in JSON format
+        node = GroupNode.fromStruct(loadjson(fileName));
+    end
+end
 
 end % end classdef
 

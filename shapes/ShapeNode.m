@@ -131,6 +131,8 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
+        str.type = 'shape';
+        
         % add the Name only if not null
         if ~isempty(obj.Name)
             str.name = obj.Name;

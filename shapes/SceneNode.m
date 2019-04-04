@@ -41,5 +41,25 @@ methods (Abstract)
         
 end % end methods
 
+%% Serialization methods
+methods (Static)
+    function node = fromStruct(str)
+        % Create a new instance from a structure
+        
+        % Dispatch to sub-classes depending on content of the "type" field.
+        switch lower(str.type)
+            case 'shape', node = ShapeNode.fromStruct(str);
+            case 'group', node = GroupNode.fromStruct(str);
+            otherwise
+                warning(['Unknown SceneNode type: ' type]);
+        end
+    end
+    
+    function node = read(fileName)
+        % Read a node from a file in JSON format
+        node = SceneNode.fromStruct(loadjson(fileName));
+    end
+end
+
 end % end classdef
 
