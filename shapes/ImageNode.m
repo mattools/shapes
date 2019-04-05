@@ -18,6 +18,8 @@ classdef ImageNode < SceneNode
 
 %% Properties
 properties
+    Name = '';
+    
     % the path to the image file, as a char array
     FilePath = '';
     
@@ -65,8 +67,17 @@ methods
             end
                         
             obj.FilePath = var1;
+            
+            % determine image size (2D or 3D)
             info = imfinfo(obj.FilePath);
-            obj.ImageSize = [info.Width info.Height];
+            if length(info) == 1
+                obj.ImageSize = [info.Width info.Height];
+            else
+                obj.ImageSize = [info(1).Width info(1).Height length(info)];
+                % update information for spatial calibration
+                obj.Spacing = [1 1 1]; 
+                obj.Origin = [1 1 1];
+            end
             
         elseif isnumeric(var1)
             % initialisation constructor
@@ -91,31 +102,12 @@ methods
     end
     
     function h = show(obj, varargin)
-        % display image data on current axis
-        
-        % read image data if necessary
-        if isempty(obj.ImageData)
-            data = imread(obj.FilePath);
-        else
-            data = obj.ImageData;
-        end
-        
-        % compute physical extents
-        dim = obj.ImageSize;
-        lx = (0:dim(1)-1) * obj.Spacing(1) + obj.Origin(1);
-        ly = (0:dim(2)-1) * obj.Spacing(2) + obj.Origin(2);
-        
-        % display image with approriate spatial reference
-        hh = imshow(data, 'XData', lx, 'YData', ly);
-        
-        if nargout > 0
-            h = hh;
-        end
+        warning('''show'' is deprecated, use ''draw''');
+        h = draw(obj, varargin{:});
     end
-
     
     function extent = physicalExtent(obj)
-        nd = ndims(obj);
+        nd = length(obj.ImageSize);
         
         % extract base data
         sz = obj.ImageSize;
@@ -123,7 +115,7 @@ methods
         or = obj.Origin;
         
         % put extent in array
-        extent = (([zeros(nd, 1) sz']-.5).* [sp' sp'] + [or' or'])';
+        extent = (([zeros(nd, 1) sz']-.5) .* [sp' sp'] + [or' or'])';
         
         % change array shape to get a single row
         extent = extent(:)';
@@ -166,6 +158,34 @@ end % end methods
 
 %% Methods specializing the SceneNode superclass
 methods
+    function h = draw(obj, varargin)
+        % display image data on current axis
+        
+        % read image data if necessary
+        if isempty(obj.ImageData)
+            data = imread(obj.FilePath);
+        else
+            data = obj.ImageData;
+        end
+        
+        % compute physical extents
+        dim = obj.ImageSize;
+        lx = (0:dim(1)-1) * obj.Spacing(1) + obj.Origin(1);
+        ly = (0:dim(2)-1) * obj.Spacing(2) + obj.Origin(2);
+        
+        % display image with approriate spatial reference
+        hh = imshow(data, 'XData', lx, 'YData', ly);
+        
+        if nargout > 0
+            h = hh;
+        end
+    end
+
+    function box = boundingBox(obj)
+        extent = physicalExtent(obj);
+        box = [extent 0 0];
+    end
+    
     function b = isLeaf(obj) %#ok<MANU>
         b = true;
     end
@@ -177,6 +197,9 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
+        if ~isempty(obj.Name)
+            str.name = obj.Name;
+        end
         str.filePath = obj.FilePath;
         str.imageSize = obj.ImageSize;
         str.spacing = obj.Spacing;
@@ -197,13 +220,17 @@ methods (Static)
         node = ImageNode(str.filePath);
         
         % parse optional fields
-        if isfield(str, 'ImageSize')
+        if isfield(str, 'name')
+            node.Name = str.name;
+        end
+        % parse optional fields
+        if isfield(str, 'imageSize')
             node.ImageSize = str.imageSize;
         end
-        if isfield(str, 'Spacing')
+        if isfield(str, 'spacing')
             node.Spacing = str.spacing;
         end
-        if isfield(str, 'Origin')
+        if isfield(str, 'origin')
             node.Origin = str.origin;
         end
     end

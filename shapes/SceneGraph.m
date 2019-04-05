@@ -23,10 +23,6 @@ properties
     % Most of the time, this will be a GroupNode instance.
     RootNode;
     
-%     % the set of Shapes within the scene. (deprecated)
-%     % Stored as a struct array.
-%     Shapes;
-    
     % Description of x-axis, as a SceneAxis instance
     XAxis;
     
@@ -36,8 +32,8 @@ properties
     % Description of z-axis, as a SceneAxis instance
     ZAxis;
 
-    % an optional background image, as an instance of ImageNode (deprecated)
-    BackgroundImage;
+%     % an optional background image, as an instance of ImageNode (deprecated)
+%     BackgroundImage;
     
     % indicates whether main axes are visible or not (boolean)
     AxisLinesVisible = true;
@@ -58,6 +54,7 @@ methods
         obj.YAxis = SceneAxis();
         obj.ZAxis = SceneAxis();
         
+        obj.BaseDir = pwd;
     end
 
 end % end constructors
@@ -100,11 +97,6 @@ methods
         % create new figure and keep handle to axis
         hFig = figure; 
         ax = gca;
-        
-        % start by background image
-        if ~isempty(obj.BackgroundImage)
-            show(obj.BackgroundImage);
-        end
         
         % setup axis
         axis equal; 
@@ -208,10 +200,6 @@ methods
         str.yAxis = toStruct(obj.YAxis);
         str.zAxis = toStruct(obj.ZAxis);
 
-        if ~isempty(obj.BackgroundImage)
-            str.backgroundImage = toStruct(obj.BackgroundImage);
-        end
-        
         str.axisLinesVisible = obj.AxisLinesVisible;
 
         str.rootNode = toStruct(obj.RootNode);
@@ -232,6 +220,7 @@ methods
         savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
     end
 end
+
 methods (Static)
     function scene = fromStruct(str)
         % Create a new instance from a structure
@@ -249,30 +238,36 @@ methods (Static)
         if isfield(str, 'zAxis')
             scene.ZAxis = SceneAxis.fromStruct(str.zAxis);
         end
-        
-        if isfield(str, 'backgroundImage')
-            scene.BackgroundImage = ImageNode.fromStruct(str.backgroundImage);
-        end
-        
+                
         if isfield(str, 'axisLinesVisible')
             scene.AxisLinesVisible = str.axisLinesVisible;
         end
+        
+        % create default root node
+        scene.RootNode = GroupNode;
+        scene.RootNode.Name = 'Root';
         
         % recursively parse the root node
         if isfield(str, 'rootNode')
             scene.RootNode = SceneNode.fromStruct(str.rootNode);
         end
         
-        % parses old Shape data
-        if isfield(str, 'shapes')
-            root = GroupNode();
-            root.Name = 'Shapes';
-            for i = 1:length(str.shapes)
-                add(root, ShapeNode.fromStruct(str.shapes{i}));
-            end
-            scene.RootNode = root;
+        % parse old background image data
+        if isfield(str, 'backgroundImage')
+            imageNode = ImageNode.fromStruct(str.backgroundImage);
+            imageNode.Name = 'BackgroundImage';
+            add(scene.RootNode, imageNode);
         end
         
+        % parse old Shape data
+        if isfield(str, 'shapes')
+            shapes = GroupNode();
+            shapes.Name = 'Shapes';
+            for i = 1:length(str.shapes)
+                add(shapes, ShapeNode.fromStruct(str.shapes{i}));
+            end
+            add(scene.RootNode, shapes);
+        end
     end
     
     function scene = read(fileName)

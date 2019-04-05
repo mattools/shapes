@@ -21,8 +21,8 @@ properties
     % A name for this group
     Name = '';
     
-    % the list of children, as a 1-by-N array of SceneNode instances
-    Children = [];
+    % the list of children, as a 1-by-N cell array containing SceneNode instances
+    Children = {};
     
 end % end properties
 
@@ -43,7 +43,7 @@ methods
         if ~isa(node, 'SceneNode')
             error('Requires a SceneNode object');
         end
-        obj.Children = [obj.Children node];
+        obj.Children = [obj.Children, {node}];
     end
     
 end % end methods
@@ -55,10 +55,10 @@ methods
         % draw all children referenced by this group
         
         nChildren = length(obj.Children);
-        h = zeros(1, nChildren);
+        h = cell(1, nChildren);
         
         for iChild = 1:nChildren
-            h(iChild) = draw(obj.Children(iChild));
+            h{iChild} = draw(obj.Children{iChild});
         end
         
         if nargout > 0
@@ -71,7 +71,7 @@ methods
         minCoords =  [inf inf inf];
         maxCoords = -[inf inf inf];
         for iChild = 1:length(obj.Children)
-            box = boundingBox(obj.Children(iChild));
+            box = boundingBox(obj.Children{iChild});
             minCoords = min(minCoords, box([1 3 5]));
             maxCoords = max(maxCoords, box([2 4 6]));
         end
@@ -103,7 +103,7 @@ methods
 
         % populate child nodes
         for iChild = 1:length(obj.Children)
-             str.children{iChild} = toStruct(obj.Children(iChild));
+             str.children{iChild} = toStruct(obj.Children{iChild});
         end
     end
     
@@ -149,4 +149,3 @@ methods (Static)
 end
 
 end % end classdef
-
