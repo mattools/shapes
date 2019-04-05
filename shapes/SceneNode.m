@@ -39,6 +39,8 @@ methods (Abstract)
     % Returns the bounding box of this node, as a 1-by-6 row vector
     box = boundingBox(obj);
     
+    printTree(obj, nIndents);
+
     % Determines whether the current node is a leaf (terminal) node
     b = isLeaf(obj);
         

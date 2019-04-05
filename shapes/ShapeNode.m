@@ -135,6 +135,11 @@ end % end methods
 
 %% Methods specializing the SceneNode superclass
 methods
+    function printTree(obj, nIndents)
+        str = [repmat('  ', 1, nIndents) '[ShapeNode] (' class(obj.Geometry) ')'];
+        disp(str);
+    end
+
     function b = isLeaf(obj) %#ok<MANU>
         b = true;
     end

@@ -186,6 +186,11 @@ methods
         box = [extent 0 0];
     end
     
+    function printTree(obj, nIndents) %#ok<INUSL>
+        str = [repmat('  ', 1, nIndents) '[ImageNode]'];
+        disp(str);
+    end
+    
     function b = isLeaf(obj) %#ok<MANU>
         b = true;
     end

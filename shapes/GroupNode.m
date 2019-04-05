@@ -79,6 +79,14 @@ methods
         box = box(:)';
     end
     
+    function printTree(obj, nIndents)
+        str = [repmat('  ', 1, nIndents) '[GroupNode]'];
+        disp(str);
+        for i = 1:length(obj.Children)
+            printTree(obj.Children{i}, nIndents+1);
+        end
+    end
+    
     function b = isLeaf(obj)
         % returns true only if this node contains no children
         b = isempty(obj.Children);
