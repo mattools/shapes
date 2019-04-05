@@ -18,6 +18,9 @@ classdef GroupNode < SceneNode
 
 %% Properties
 properties
+    % A name for this group
+    Name = '';
+    
     % the list of children, as a 1-by-N array of SceneNode instances
     Children = [];
     
@@ -90,6 +93,11 @@ methods
         % set type
         str.type = 'group';
 
+        % optional name
+        if ~isempty(obj.Name)
+            str.name = obj.Name;
+        end
+        
         % allocate memory for children array
         str.children = cell(1, length(obj.Children));
 
@@ -121,6 +129,10 @@ methods (Static)
         
         % create an empty node
         node = GroupNode();
+        
+        if isfield(str, 'name')
+            node.Name = str.name;
+        end
         
         % parse list of Children
         for iChild = 1:length(str.children)

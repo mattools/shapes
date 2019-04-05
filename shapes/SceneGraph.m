@@ -76,11 +76,18 @@ methods
         res.BackgroundImage = ImageNode(obj.BackgroundImage);
         res.AxisLinesVisible = obj.AxisLinesVisible;
         
-        for iShape = 1:length(obj.Shapes)
-            addShape(res, Shape(obj.Shapes(iShape)));
+        root = obj.RootNode;
+        if ~isa(root, 'GroupNode')
+            root = GroupNode();
+            add(root, obj.RootNode);
         end
-        for iShape = 1:length(that.Shapes)
-            addShape(res, Shape(that.Shapes(iShape)));
+        
+        if isa(that.RootNode, 'GroupNode')
+            for iChild = 1:length(that.RootNode.Children)
+                add(root, that.RootNode.Children(iChild));
+            end
+        else
+            add(root, that.RootNode);
         end
     end
 end
@@ -174,45 +181,6 @@ methods
     end
 end % end methods
 
-%% Shapes management
-
-% methods
-%     function s = addShape(obj, s)
-%         % Add a given shape to this scene, and return the new shape
-%         % shape = addShape(scene, Point2D(4, 3));
-%         if isa(s, 'Geometry')
-%             s = Shape(s);
-%         end
-%         obj.Shapes = [obj.Shapes s];
-%     end
-%     
-%     function removeShape(obj, s)
-%         % remove a given shape from this scene
-%         ind = [];
-%         for i = 1:length(obj.Shapes)
-%             if obj.Shapes(i) == s
-%                 ind = i;
-%                 break;
-%             end
-%         end
-%         if isempty(ind)
-%             disp('could not find shape to remove');
-%             return;
-%         end
-%         obj.Shapes(ind) = [];
-%     end
-%     
-%     function Shapes = getShapes(obj)
-%         % return a cell array containing the Shapes in this scene
-%         Shapes = obj.Shapes;
-%     end
-%     
-%     function clearShapes(obj)
-%         % clear the Shapes within this scene
-%         obj.Shapes = {};
-%     end
-% end
-
 %% background image
 methods
     function setBackgroundImage(obj, img)
@@ -291,7 +259,20 @@ methods (Static)
         end
         
         % recursively parse the root node
-        scene.RootNode = SceneNode.fromStruct(str.rootNode);
+        if isfield(str, 'rootNode')
+            scene.RootNode = SceneNode.fromStruct(str.rootNode);
+        end
+        
+        % parses old Shape data
+        if isfield(str, 'shapes')
+            root = GroupNode();
+            root.Name = 'Shapes';
+            for i = 1:length(str.shapes)
+                add(root, ShapeNode.fromStruct(str.shapes{i}));
+            end
+            scene.RootNode = root;
+        end
+        
     end
     
     function scene = read(fileName)
