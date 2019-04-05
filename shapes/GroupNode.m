@@ -63,6 +63,19 @@ methods
         end
     end
     
+    function box = boundingBox(obj)
+        % Returns the bounding box of this node, as a 1-by-6 row vector
+        minCoords =  [inf inf inf];
+        maxCoords = -[inf inf inf];
+        for iChild = 1:length(obj.Children)
+            box = boundingBox(obj.Children(iChild));
+            minCoords = min(minCoords, box([1 3 5]));
+            maxCoords = max(maxCoords, box([2 4 6]));
+        end
+        box = [minCoords ; maxCoords];
+        box = box(:)';
+    end
+    
     function b = isLeaf(obj)
         % returns true only if this node contains no children
         b = isempty(obj.Children);

@@ -36,6 +36,9 @@ methods (Abstract)
     % Draw the current node
     h = draw(obj);
     
+    % Returns the bounding box of this node, as a 1-by-6 row vector
+    box = boundingBox(obj);
+    
     % Determines whether the current node is a leaf (terminal) node
     b = isLeaf(obj);
         

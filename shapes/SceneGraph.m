@@ -23,9 +23,9 @@ properties
     % Most of the time, this will be a GroupNode instance.
     RootNode;
     
-    % the set of Shapes within the scene. (deprecated)
-    % Stored as a struct array.
-    Shapes;
+%     % the set of Shapes within the scene. (deprecated)
+%     % Stored as a struct array.
+%     Shapes;
     
     % Description of x-axis, as a SceneAxis instance
     XAxis;
@@ -128,8 +128,8 @@ methods
             plot(ax, [0 0], obj.YAxis.Limits, 'k-');
         end
 
-        for iShape = 1:length(obj.Shapes)
-            draw(obj.Shapes(iShape));
+        if ~isempty(obj.RootNode)
+            draw(obj.RootNode);
         end
         
         if nargout > 0
@@ -141,39 +141,14 @@ methods
         % updates the bounds of the axis such that they contain all Shapes
         % (with finite geometries)
 
-        % avoid case with no shape
-        if length(obj.Shapes) < 1
-            return;
-        end
-        
         % initial box
         box = [inf -inf inf -inf inf -inf];
         
-        % iterate over Shapes
-        for iShape = 1:length(obj.Shapes)
-            shape = obj.Shapes(iShape);
-            geom = shape.Geometry;
-            
-            if ismethod(geom, 'boundingBox')
-                bbox = boundingBox(geom);
-                box(1) = min(box(1), bbox.XMin);
-                box(2) = max(box(2), bbox.XMax);
-                box(3) = min(box(3), bbox.YMin);
-                box(4) = max(box(4), bbox.YMax);
-                
-                % eventually process 3D coords
-                if isa(bbox, 'Box3D')
-                    box(5) = min(box(5), bbox.ZMin);
-                    box(6) = max(box(6), bbox.ZMax);
-                end
-            end
+        % avoid case with no shape
+        if ~isempty(obj.RootNode)
+            box = boundingBox(obj.RootNode);
         end
         
-        % check presence of infinite
-        if any(~isfinite(box(1:4)))
-            warning('Unable to determine bounding box from existing geometries');
-            return;
-        end
         if any(~isfinite(box(5:6)))
             box(5:6) = obj.ZAxis.Limits;
         end
@@ -201,43 +176,42 @@ end % end methods
 
 %% Shapes management
 
-methods
-    function s = addShape(obj, s)
-        % Add a given shape to this scene, and return the new shape
-        % shape = addShape(scene, Point2D(4, 3));
-        if isa(s, 'Geometry')
-            s = Shape(s);
-        end
-        obj.Shapes = [obj.Shapes s];
-    end
-    
-    function removeShape(obj, s)
-        % remove a given shape from this scene
-        ind = [];
-        for i = 1:length(obj.Shapes)
-            if obj.Shapes(i) == s
-                ind = i;
-                break;
-            end
-        end
-        if isempty(ind)
-            disp('could not find shape to remove');
-            return;
-        end
-        obj.Shapes(ind) = [];
-    end
-    
-    function Shapes = getShapes(obj)
-        % return a cell array containing the Shapes in this scene
-        Shapes = obj.Shapes;
-    end
-    
-    function clearShapes(obj)
-        % clear the Shapes within this scene
-        obj.Shapes = {};
-    end
-    
-end
+% methods
+%     function s = addShape(obj, s)
+%         % Add a given shape to this scene, and return the new shape
+%         % shape = addShape(scene, Point2D(4, 3));
+%         if isa(s, 'Geometry')
+%             s = Shape(s);
+%         end
+%         obj.Shapes = [obj.Shapes s];
+%     end
+%     
+%     function removeShape(obj, s)
+%         % remove a given shape from this scene
+%         ind = [];
+%         for i = 1:length(obj.Shapes)
+%             if obj.Shapes(i) == s
+%                 ind = i;
+%                 break;
+%             end
+%         end
+%         if isempty(ind)
+%             disp('could not find shape to remove');
+%             return;
+%         end
+%         obj.Shapes(ind) = [];
+%     end
+%     
+%     function Shapes = getShapes(obj)
+%         % return a cell array containing the Shapes in this scene
+%         Shapes = obj.Shapes;
+%     end
+%     
+%     function clearShapes(obj)
+%         % clear the Shapes within this scene
+%         obj.Shapes = {};
+%     end
+% end
 
 %% background image
 methods
@@ -252,9 +226,9 @@ methods
         extent = physicalExtent(obj.BackgroundImage);
         obj.XAxis.Limits = extent([1 2]);
         obj.YAxis.Limits = extent([3 4]);
-        
     end
 end
+
 
 %% Serialization methods
 methods

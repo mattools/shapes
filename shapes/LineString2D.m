@@ -62,7 +62,7 @@ end
 %% Methods
 methods
     function box = boundingBox(obj)
-        % Returns the bounding box of obj shape
+        % Returns the bounding box of this geometry
         mini = min(obj.Coords);
         maxi = max(obj.Coords);
         box = Box2D([mini(1) maxi(1) mini(2) maxi(2)]);

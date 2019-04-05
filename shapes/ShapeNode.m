@@ -115,6 +115,21 @@ methods
             varargout = {h};
         end
     end
+    
+    function box = boundingBox(obj)
+        % Converts the bounding box ot the inner geometry to a 1-by-6 vector
+        geom = obj.Geometry;
+        if isa(geom, 'Geometry2D')
+            box2d = boundingBox(geom);
+            box = [box2d.XMin box2.XMax box2d.YMin box2d.YMax 0 0];
+        elseif isa(geom, 'Geometry3D')
+            box3d = boundingBox(geom);
+            box = [box3d.XMin box3d.XMax box3d.YMin box3d.YMax box3d.ZMin box3d.ZMax];
+        else
+            error(['instance of Geometry2D or Geometry3D is expected, not ' class(geom)]);
+        end
+    end
+    
 end % end methods
 
 

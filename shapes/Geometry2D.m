@@ -7,7 +7,7 @@ classdef Geometry2D < Geometry
 %   Geometry2D
 %
 %   See also
-%   Polygon2D, PointSet2D
+%   Polygon2D, MultiPoint2D
 
 % ------
 % Author: David Legland
@@ -29,12 +29,11 @@ end % end constructors
 %% Abstract Methods
 % Declares some methods that will be implemented by subclasses.
 methods ( Abstract )
-    
+    % Returns the bounding box of this geometry
     box = boundingBox(obj)
-    % Returns the bounding box of obj geometry
     
+    % Draws the current geometry, eventually specifying the style
     varargout = draw(obj, varargin)
-    % Draw the current geometry, eventually specifying the style
 end
 
 %% Abstract Methods
