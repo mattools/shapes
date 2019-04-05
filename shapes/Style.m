@@ -68,9 +68,9 @@ properties
     FillVisible     = false;
     
     % style for polygonal surfaces
-    FaceColor = [.5 .5 .5];
-    FaceOpacity = 1;
-    FaceVisible = true;
+    FaceColor       = [.7 .7 .7];
+    FaceOpacity     = 1;
+    FaceVisible     = true;
     
 end % end properties
 
@@ -214,7 +214,7 @@ methods
         str = struct();
 
         % global visibility
-        if obj.Visible ~= false
+        if ~obj.Visible
             str.visible = obj.Visible;
         end
 
@@ -250,7 +250,7 @@ methods
         end
         
         % update fill modifiers with values different from default
-        if obj.FillVisible ~= false
+        if obj.FillVisible
             str.fillVisible = obj.FillVisible;
         end
         if ~isSameColor(obj.FillColor, 'y')
@@ -261,7 +261,7 @@ methods
         end
         
         % update face modifiers with values different from default
-        if obj.FaceVisible ~= false
+        if ~obj.FaceVisible
             str.faceVisible = obj.FaceVisible;
         end
         if ~isSameColor(obj.FaceColor, [.7 .7 .7])
@@ -278,7 +278,7 @@ methods
             if ischar(color2)
                 color2 = colorFromName(color2);
             end
-            b = all(color1 & color2);
+            b = all(color1 == color2);
         end
         
         function color = colorFromName(name)
