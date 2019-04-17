@@ -153,10 +153,8 @@ methods
 
         str.type = 'shape';
         
-        % add the Name only if not null
-        if ~isempty(obj.Name)
-            str.name = obj.Name;
-        end
+        % call scene node method
+        convertSceneNodeFields(obj, str);
         
         % add optional Style
         if ~isempty(obj.Style)
@@ -179,22 +177,23 @@ methods
 end
 
 methods (Static)
-    function shape = fromStruct(str)
+    function node = fromStruct(str)
         % Creates a new instance from a structure
         
         % parse Geometry
         type = str.geometry.type;
         geom = eval([type '.fromStruct(str.geometry)']);
-        shape = ShapeNode(geom);
+        node = ShapeNode(geom);
         
         % parse the optionnal Name
-        if isfield(str, 'name') && ~isempty(str.name)
-            shape.Name = str.name;
-        end
+        parseSceneNodeFields(node, str);
+%         if isfield(str, 'name') && ~isempty(str.name)
+%             shape.Name = str.name;
+%         end
 
         % eventually parse Style
         if isfield(str, 'style') && ~isempty(str.style)
-            shape.Style = Style.fromStruct(str.style);
+            node.Style = Style.fromStruct(str.style);
         end
     end
     

@@ -66,5 +66,20 @@ methods (Static)
     end
 end
 
+methods (Access=protected)
+
+    function obj = parseSceneNodeFields(obj, str)
+        if isfield(str, 'name')
+            obj.Name = str.name;
+        end
+    end
+    
+    function str = convertSceneNodeFields(obj, str)
+        if ~isempty(obj.Name)
+            str.name = obj.Name;
+        end
+    end
+end
+
 end % end classdef
 

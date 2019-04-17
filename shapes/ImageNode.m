@@ -202,9 +202,11 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        if ~isempty(obj.Name)
-            str.name = obj.Name;
-        end
+        str = struct();
+        
+        % call scene node method
+        convertSceneNodeFields(obj, str);
+
         str.filePath = obj.FilePath;
         str.imageSize = obj.ImageSize;
         str.spacing = obj.Spacing;
@@ -223,11 +225,10 @@ methods (Static)
         
         % parse file path
         node = ImageNode(str.filePath);
-        
-        % parse optional fields
-        if isfield(str, 'name')
-            node.Name = str.name;
-        end
+
+        % parse SceneNode fields
+        parseSceneNodeFields(node, str);
+
         % parse optional fields
         if isfield(str, 'imageSize')
             node.ImageSize = str.imageSize;

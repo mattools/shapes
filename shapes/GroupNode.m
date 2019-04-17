@@ -101,10 +101,11 @@ methods
         % set type
         str.type = 'group';
 
-        % optional name
-        if ~isempty(obj.Name)
-            str.name = obj.Name;
-        end
+        % call scene node method
+        convertSceneNodeFields(obj, str);
+%         if ~isempty(obj.Name)
+%             str.name = obj.Name;
+%         end
         
         % allocate memory for children array
         str.children = cell(1, length(obj.Children));
@@ -138,9 +139,7 @@ methods (Static)
         % create an empty node
         node = GroupNode();
         
-        if isfield(str, 'name')
-            node.Name = str.name;
-        end
+        parseSceneNodeFields(node, str);
         
         % parse list of Children
         for iChild = 1:length(str.children)
