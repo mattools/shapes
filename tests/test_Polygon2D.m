@@ -46,3 +46,12 @@ a = area(poly);
 
 assertEqual(testCase, a, exp, 'AbsTol', .01);
 
+function test_transform(testCase) 
+
+vertices = [10 10; 20 10; 20 20; 10 20];
+poly = Polygon2D(vertices);
+trans = AffineTransform2D.createRotation(pi/3);
+poly2 = transform(poly, trans);
+
+assertTrue(testCase, isa(poly2, 'Polygon2D'));
+

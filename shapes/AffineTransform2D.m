@@ -91,6 +91,17 @@ methods
         point2 = Point2D(x2, y2);
     end
     
+    function pts2 = transformCoords(obj, pts)
+        % coords2 = transformPoint(obj, coords)
+        % coords should be a N-by-2 numeric array.
+        % coords2 has the same size as coords
+        
+        coeffs = obj.Coeffs;
+        pts2 = zeros(size(pts));
+        pts2(:,1) = coeffs(1) * pts(:,1) + coeffs(2) * pts(:,2) + coeffs(3);
+        pts2(:,2) = coeffs(4) * pts(:,1) + coeffs(5) * pts(:,2) + coeffs(6);
+    end
+    
     function b = isIdentity(obj, varargin)
         if isempty(varargin)
             tol = 1e-10;

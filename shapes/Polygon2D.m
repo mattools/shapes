@@ -90,13 +90,18 @@ methods
     end
     
     function verts = vertices(obj)
-        % returns vertices as a new instance of MultiPoint2D
+        % Returns vertices as a new instance of MultiPoint2D
         verts = MultiPoint2D(obj.Coords);
     end
 end
 
 %% Methods implementing the Geometry2D interface
 methods
+    function res = transform(obj, transform)
+        % Applies a geometric transform to this geometry
+        res = Polygon2D(transformCoords(transform, obj.Coords));
+    end
+    
     function box = boundingBox(obj)
         % Returns the bounding box of this shape
         mini = min(obj.Coords);
