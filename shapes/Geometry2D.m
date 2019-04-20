@@ -34,6 +34,9 @@ methods ( Abstract )
     
     % Draws the current geometry, eventually specifying the style
     varargout = draw(obj, varargin)
+
+%     % Applies a geometric transform to this geometry
+%     res = transform(obj, transform)
 end
 
 %% Abstract Methods

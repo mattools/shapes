@@ -33,7 +33,7 @@ exp = 40;
 
 perim = perimeter(poly);
 
-assertEqual(testCase, exp, perim, .01);
+assertEqual(testCase, perim, exp, 'AbsTol', .01);
 
 function test_area_square(testCase) %#ok<*DEFNU>
 % Test call of function without argument
@@ -44,5 +44,5 @@ exp = 100;
 
 a = area(poly);
 
-assertEqual(testCase, exp, a, .01);
+assertEqual(testCase, a, exp, 'AbsTol', .01);
 

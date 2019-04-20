@@ -109,6 +109,11 @@ methods
             varargout = {h};
         end
     end
+    
+    function res = transform(obj, transform)
+        % Applies a geometric transform to this geometry
+        res = Point2D(transformPoint([obj.X obj.Y], transform));
+    end
 end
 
 %% Methods implementing the Geometry2D interface (more)
