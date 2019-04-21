@@ -18,6 +18,9 @@ classdef SceneNode < handle
 
 %% Properties
 properties
+    % the optional name of this node
+    Name = '';
+    
 end % end properties
 
 

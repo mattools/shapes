@@ -23,9 +23,6 @@ classdef ShapeNode < SceneNode
 
 %% Properties
 properties
-    % a name for identifying the shape
-    Name = '';
-    
     % The geometry of the shape, as an instance of Geometry
     Geometry;
     
@@ -187,9 +184,6 @@ methods (Static)
         
         % parse the optionnal Name
         parseSceneNodeFields(node, str);
-%         if isfield(str, 'name') && ~isempty(str.name)
-%             shape.Name = str.name;
-%         end
 
         % eventually parse Style
         if isfield(str, 'style') && ~isempty(str.style)

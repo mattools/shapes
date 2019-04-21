@@ -17,10 +17,7 @@ classdef GroupNode < SceneNode
 
 
 %% Properties
-properties
-    % A name for this group
-    Name = '';
-    
+properties    
     % the list of children, as a 1-by-N cell array containing SceneNode instances
     Children = {};
     
@@ -103,9 +100,6 @@ methods
 
         % call scene node method
         convertSceneNodeFields(obj, str);
-%         if ~isempty(obj.Name)
-%             str.name = obj.Name;
-%         end
         
         % allocate memory for children array
         str.children = cell(1, length(obj.Children));

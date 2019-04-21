@@ -18,8 +18,6 @@ classdef ImageNode < SceneNode
 
 %% Properties
 properties
-    Name = '';
-    
     % the path to the image file, as a char array
     FilePath = '';
     

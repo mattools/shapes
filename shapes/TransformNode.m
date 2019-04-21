@@ -21,7 +21,7 @@ properties
     % The node to transform, as a SceneNode instance
     Node;
     
-    % The transform to apply, as a 3-by-3 matrix
+    % The transform to apply, as an instance of AffineTransform2D or 3D
     Transform;
     
 end % end properties
