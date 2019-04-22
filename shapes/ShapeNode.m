@@ -118,7 +118,7 @@ methods
         geom = obj.Geometry;
         if isa(geom, 'Geometry2D')
             box2d = boundingBox(geom);
-            box = [box2d.XMin box2.XMax box2d.YMin box2d.YMax 0 0];
+            box = [box2d.XMin box2d.XMax box2d.YMin box2d.YMax 0 0];
         elseif isa(geom, 'Geometry3D')
             box3d = boundingBox(geom);
             box = [box3d.XMin box3d.XMax box3d.YMin box3d.YMax box3d.ZMin box3d.ZMax];
@@ -132,6 +132,11 @@ end % end methods
 
 %% Methods specializing the SceneNode superclass
 methods
+    function node = transform(obj, transfo)
+        geom = transform(obj.Geometry, transfo);
+        node = ShapeNode(geom, obj.Style);
+    end
+    
     function printTree(obj, nIndents)
         str = [repmat('  ', 1, nIndents) '[ShapeNode] (' class(obj.Geometry) ')'];
         disp(str);

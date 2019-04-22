@@ -39,6 +39,9 @@ methods (Abstract)
     % Draw the current node
     h = draw(obj);
     
+    % Applies an affine transform to this node
+    node = transform(obj, transfo);
+        
     % Returns the bounding box of this node, as a 1-by-6 row vector
     box = boundingBox(obj);
     

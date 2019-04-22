@@ -179,6 +179,14 @@ methods
         end
     end
 
+    function node = transform(obj, transfo)
+        warning('Transform of image nodes not yet implemented');
+        box = physicalExtent(obj);
+        poly = [box(1) box(3); box(2) box(3); box(2) box(4); box(1) box(4)];
+        node = ShapeNode(Polygon2D(poly));
+        node = transform(node, transfo);
+    end
+
     function box = boundingBox(obj)
         extent = physicalExtent(obj);
         box = [extent 0 0];

@@ -1,4 +1,4 @@
-classdef TransformNode < handle
+classdef TransformNode < SceneNode
 %TRANSFORMNODE  One-line description here, please.
 %
 %   Class TransformNode
@@ -55,6 +55,32 @@ end % end constructors
 
 %% Methods
 methods
+    function varargout = draw(obj)
+        % Transforms and draws the child node
+        tnode = transform(obj.Node, obj.Transform);
+        h = draw(tnode);
+        if nargout > 0
+            varargout = {h};
+        end
+    end
+    
+    
+    function box = boundingBox(obj)
+        % Returns the bounding box of this node, as a 1-by-6 row vector
+        box = boundingBox(transform(obj.Node, obj.Transform));
+    end
+    
+    function printTree(obj, nIndents)
+        str = [repmat('  ', 1, nIndents) '[TransformNode]'];
+        disp(str);
+        printTree(obj.Node, nIndents+1);
+    end
+    
+    function b = isLeaf(obj) %#ok<MANU>
+        % returns false
+        b = false;
+    end
+    
 end % end methods
 
 end % end classdef

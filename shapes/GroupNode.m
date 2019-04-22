@@ -63,6 +63,15 @@ methods
         end
     end
     
+    function node = transform(obj, transfo)
+        nChildren = length(obj.Children);
+        children = cell(1, nChildren);
+        for i = 1:nChildren
+            children{i} = transform(obj.Children{i}, transfo);
+        end
+        node = GroupNode(children);
+    end
+    
     function box = boundingBox(obj)
         % Returns the bounding box of this node, as a 1-by-6 row vector
         minCoords =  [inf inf inf];

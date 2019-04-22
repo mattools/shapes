@@ -44,9 +44,8 @@ methods (Static)
         obj = AffineTransform2D([1 0 dx 0 1 dy]);
     end
     
-    function obj = createRotation(angle)
+    function obj = createRotation(theta)
         % trans = AffineTransform2D.createRotation(angleInRadians)
-        theta = deg2rad(angle);
         cot = cos(theta);
         sit = sin(theta);
         obj = AffineTransform2D([cot -sit 0 sit cot 0]);
