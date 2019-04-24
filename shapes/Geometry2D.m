@@ -7,7 +7,7 @@ classdef Geometry2D < Geometry
 %   Geometry2D
 %
 %   See also
-%   Polygon2D, MultiPoint2D
+%     Point2D, LineString2D, Polygon2D, MultiPoint2D
 
 % ------
 % Author: David Legland
@@ -44,13 +44,13 @@ end
 methods ( Abstract )
     
     res = scale(obj, varargin)
-    % Returns a scaled version of obj geometry
+    % Returns a scaled version of this geometry
         
     res = translate(obj, varargin)
-    % Returns a translated version of obj geometry       
+    % Returns a translated version of this geometry       
     
     res = rotate(obj, varargin)
-    % Returns a rotated version of obj geometry
+    % Returns a rotated version of this geometry
         
 end % end methods
 
