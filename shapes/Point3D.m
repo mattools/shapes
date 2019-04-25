@@ -2,15 +2,18 @@ classdef Point3D < Geometry3D
 %POINT3D  A point in the 3-dimensional plane
 %
 %   Usage:
-%   P = Point3D(X, Y, Z)
 %   P = Point3D(COORDS)
+%   where COORDS is a 1-by-3 array of numeric values
+%   P = Point3D(X, Y, Z)
+%   where each of X, Y and Z are numeric scalars
 %   P = Point3D(PT)
+%   where PT is another instance of Point3D
 %
 %   Example
 %   Point3D
 %
 %   See also
-%     Point2D
+%     Geometry3D, MultiPoint3D, Point2D
 
 % ------
 % Author: David Legland
@@ -58,7 +61,7 @@ methods
             end
         end
         
-        % initialisation from two scalar double argument
+        % initialisation from three scalar numeric arguments
         if nargin == 3
             var1 = varargin{1};
             var2 = varargin{2};
@@ -83,19 +86,39 @@ methods
         box = Box3D([obj.X obj.X obj.Y obj.Y obj.Z obj.Z]);
     end
     
-    function varargout = draw(obj, varargin)
-        % Draw obj point, eventually specifying the style
+    function h = draw(varargin)
+        % Draws this point, eventually specifying the style
+
+        % extract handle of axis to draw in
+        if numel(varargin{1}) == 1 && ishghandle(varargin{1}, 'axes')
+            hAx = varargin{1};
+            varargin(1)=[];
+        else
+            hAx = gca;
+        end
+
+        % extract the point instance from the list of input arguments
+        obj = varargin{1};
+        varargin(1) = [];
         
-        h = drawPoint3d([obj.X obj.Y obj.Z]);
-        if nargin > 1
-            var1 = varargin{1};
-            if isa(var1, 'Style')
-                apply(var1, h);
-            end
+        % extract optional drawing options
+        options = {};
+        if nargin > 1 && ischar(varargin{1})
+            options = varargin;
+            varargin = {};
         end
         
+        % draw the geometric primitive
+        hh = plot3(hAx, obj.X, obj.Y, obj.Z, options{:});
+
+        % optionnally add style processing
+        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+            apply(varargin{1}, hh);
+        end
+        
+        % format output argument
         if nargout > 0
-            varargout = {h};
+            h = hh;
         end
     end
 end

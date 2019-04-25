@@ -62,19 +62,39 @@ methods
         box = Box3D([mini(1) maxi(1) mini(2) maxi(2) mini(3) maxi(3)]);
     end
     
-    function varargout = draw(obj, varargin)
+    function h = draw(varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawPoint3d(obj.Coords);
-        if nargin > 1
-            var1 = varargin{1};
-            if isa(var1, 'Style')
-                apply(var1, h);
-            end
+        % extract handle of axis to draw in
+        if numel(varargin{1}) == 1 && ishghandle(varargin{1}, 'axes')
+            hAx = varargin{1};
+            varargin(1)=[];
+        else
+            hAx = gca;
+        end
+
+        % extract the point instance from the list of input arguments
+        obj = varargin{1};
+        varargin(1) = [];
+        
+        % extract optional drawing options
+        options = {};
+        if nargin > 1 && ischar(varargin{1})
+            options = varargin;
+            varargin = {};
         end
         
+        % draw the geometric primitive
+        hh = plot3(hAx, obj.Coords(:,1), obj.Coords(:,2), obj.Coords(:,3), options{:});
+
+        % optionnally add style processing
+        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+            apply(varargin{1}, hh);
+        end
+        
+        % format output argument
         if nargout > 0
-            varargout = {h};
+            h = hh;
         end
     end
     
