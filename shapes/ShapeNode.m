@@ -12,7 +12,7 @@ classdef ShapeNode < SceneNode
 %     draw(shape);
 %
 %   See also
-%     Geometry2D, Style
+%     SceneNode, Geometry, Style
 
 % ------
 % Author: David Legland
@@ -28,9 +28,6 @@ properties
     
     % The options for drawing the shape, as an instance of Style
     Style;
-    
-    % Visibility flag (default true)
-    Visible = true;
     
 end % end properties
 

@@ -21,6 +21,9 @@ properties
     % the optional name of this node
     Name = '';
     
+    % Visibility flag (default true)
+    Visible = true;
+    
 end % end properties
 
 
@@ -78,11 +81,17 @@ methods (Access=protected)
         if isfield(str, 'name')
             obj.Name = str.name;
         end
+        if isfield(str, 'visible')
+            obj.Visible = str.visible;
+        end
     end
     
     function str = convertSceneNodeFields(obj, str)
         if ~isempty(obj.Name)
             str.name = obj.Name;
+        end
+        if ~obj.Visible
+            str.visible = obj.Visible;
         end
     end
 end
