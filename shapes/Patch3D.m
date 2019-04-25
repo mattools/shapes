@@ -39,7 +39,64 @@ methods
 end % end constructors
 
 
-%% Methods
+%% Methods specific to Patch3D
+methods
+    function verts = vertices(obj)
+        % returns vertices as a new instance of MultiPoint3D
+        coords = [obj.X(:) obj.Y(:) obj.Z(:)];
+        verts = MultiPoint3D(coords);
+    end
+    
+    function drawSubGrid(varargin)
+        % Draws a grid within this patch
+        %
+        %   drawSubGrid(OBJ, 1) simply displays the boundary of the patch.
+        %
+        
+        % isolates the object instance
+        ind = find(cellfun(@(x) isa(x, 'Patch3D'), varargin));
+        obj = varargin{ind(1)};
+        varargin(ind(1)) = [];
+        
+        % extract handle of axis to draw in
+        if numel(varargin{1}) == 1 && ishghandle(varargin{1}, 'axes')
+            hAx = varargin{1};
+            varargin(1) = [];
+        else
+            hAx = gca;
+        end
+
+        % determines the number of patch tiles
+        nTiles = 1;
+        if ~isempty(varargin) && isnumeric(varargin{1}) && isscalar(varargin{1})
+            nTiles = varargin{1};
+            varargin(1) = [];
+        end
+        
+        % compute indices of curves
+        subI = round(linspace(1, size(obj.X,1), nTiles+1));
+        subJ = round(linspace(1, size(obj.X,2), nTiles+1));
+
+        % draw 3D curves in first direction
+        for i = 1:length(subI)
+            x = obj.X(subI(i), :)';
+            y = obj.Y(subI(i), :)';
+            z = obj.Z(subI(i), :)';
+
+            plot3(hAx, x, y, z, varargin{:});
+        end
+        
+        % draw 3D curves in second direction
+        for i = 1:length(subJ)
+            x = obj.X(:, subJ(i));
+            y = obj.Y(:, subJ(i));
+            z = obj.Z(:, subJ(i));
+            plot3(hAx, x, y, z, varargin{:});
+        end
+    end
+end
+
+%% Methods implementing the Geometry3D interface
 methods
     function box = boundingBox(obj)
         % Returns the bounding box of this shape
@@ -50,26 +107,40 @@ methods
         zmin = min(obj.Z(:));
         zmax = max(obj.Z(:));
         box = Box3D([xmin xmax ymin ymax zmin zmax]);
-    end
-    
-%     function verts = vertices(obj)
-%         % returns vertices as a new instance of MultiPoint3D
-%         verts = MultiPoint3D(obj.Coords);
-%     end
-    
-    function varargout = draw(obj, varargin)
+    end    
+
+    function h = draw(varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = surf('XData', obj.X, 'YData', obj.Y, 'ZData', obj.Z);
-        if nargin > 1
-            var1 = varargin{1};
-            if isa(var1, 'Style')
-                apply(var1, h);
-            end
+        % extract handle of axis to draw in
+        if numel(varargin{1}) == 1 && ishghandle(varargin{1}, 'axes')
+            hAx = varargin{1};
+            varargin(1) = [];
+        else
+            hAx = gca;
+        end
+
+        % extract the point instance from the list of input arguments
+        obj = varargin{1};
+        varargin(1) = [];
+        
+        % extract optional drawing options
+        options = {};
+        if nargin > 1 && ischar(varargin{1})
+            options = varargin;
+            varargin = {};
         end
         
+        hh = surf(hAx, 'XData', obj.X, 'YData', obj.Y, 'ZData', obj.Z, options{:});
+
+        % optionnally add style processing
+        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+            apply(varargin{1}, hh);
+        end
+        
+        % format output argument
         if nargout > 0
-            varargout = {h};
+            h = hh;
         end
     end
     
