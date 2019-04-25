@@ -120,13 +120,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Point3D', 'X', obj.X, 'Y', obj.Y, 'Z', obj.Z);
+        str = struct('type', 'Point3D', 'x', obj.X, 'y', obj.Y, 'z', obj.Z);
     end
 end
 methods (Static)
     function point = fromStruct(str)
         % Create a new instance from a structure
-        point = Point3D(str.X, str.Y, str.Z);
+        point = Point3D([str.x, str.y, str.z]);
     end
 end
 
