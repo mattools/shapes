@@ -48,6 +48,28 @@ end % end constructors
 
 %% Methods specific to LineString2D
 methods
+    function res = smooth(obj, M)
+        % Smoothes a polyline using local averaging
+
+        % create convolution vector
+        v2 = ones(M, 1) / M;
+        
+        % allocate memory for result
+        res = zeros(size(obj.Coords));
+        
+        % iterate over dimensions
+        for d = 1:2
+            v0 = obj.Coords(1, d);
+            v1 = obj.Coords(end, d);
+            vals = [v0(ones(M, 1)) ; obj.Coords(:,d) ; v1(ones(M, 1))];
+            resd = conv(vals, v2, 'same');
+            res(:,d) = resd(M+1:end-M);
+        end
+        
+        % convert result to LineString object
+        res = LineString2D(res);
+    end
+    
     function l = length(obj)
         % L = length(obj);
 
