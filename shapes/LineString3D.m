@@ -48,6 +48,13 @@ end % end constructors
 
 %% Methods specific to LineString3D
 methods
+    function l = length(obj)
+        % L = length(obj);
+
+        % compute the sum of the length of each line segment
+        l = sum(sqrt(sum(diff(obj.Coords).^2, 2)));
+    end
+    
     function centro = centroid(obj)
         
         % compute center and length of each line segment
@@ -56,6 +63,10 @@ methods
         
         % centroid of edge centers weighted by edge lengths
         centro = Point3D(sum(bsxfun(@times, centers, lengths), 1) / sum(lengths));
+    end
+    
+    function nv = vertexNumber(obj)
+        nv = size(obj.Coords, 1);
     end
 end
 
