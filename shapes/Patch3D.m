@@ -41,6 +41,28 @@ end % end constructors
 
 %% Methods specific to Patch3D
 methods
+    function res = smooth(obj, M)
+        % Smoothes a polyline using local averaging
+
+        % create convolution vector
+        v2 = ones(M, 1) / M;
+        
+        X2 = padarray(obj.X, [M M], 'replicate');
+        X2 = conv2(X2, v2, 'same');
+        X2 = X2(M+1:end-M, M+1:end-M);
+        
+        Y2 = padarray(obj.Y, [M M], 'replicate');
+        Y2 = conv2(Y2, v2, 'same');
+        Y2 = Y2(M+1:end-M, M+1:end-M);
+
+        Z2 = padarray(obj.Z, [M M], 'replicate');
+        Z2 = conv2(Z2, v2, 'same');
+        Z2 = Z2(M+1:end-M, M+1:end-M);
+
+        % convert result to Patch3D object
+        res = Patch3D(X2, Y2, Z2);
+    end
+
     function verts = vertices(obj)
         % returns vertices as a new instance of MultiPoint3D
         coords = [obj.X(:) obj.Y(:) obj.Z(:)];
