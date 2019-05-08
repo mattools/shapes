@@ -169,6 +169,14 @@ methods
         end
     end
     
+    function res = transform(obj, transfo)
+        % Returns a transformed version of this geometry
+        coords = [obj.X(:) obj.Y(:)];
+        coords = transformCoords(transfo, coords);
+        dims = size(obj.X);
+        res = Patch2D(reshape(coords(:,1), dims), reshape(coords(:,2), dims));
+    end
+    
     function res = scale(obj, factor)
         % Returns a scaled version of this geometry
         res = Patch2D(obj.X * factor, obj.Y * factor);
@@ -177,6 +185,12 @@ methods
     function res = translate(obj, shift)
         % Returns a translated version of this geometry
         res = Patch2D(obj.X + shift(1), obj.Y + shift(2));
+    end
+    
+    function res = rotate(obj, theta)
+        % Returns a rotated version of this geometry
+        transfo = AffineTransform2D.createRotation(theta);
+        res = transform(obj, transfo);
     end
     
 end % end methods

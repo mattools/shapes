@@ -1,13 +1,16 @@
 classdef TransformNode < SceneNode
-%TRANSFORMNODE  One-line description here, please.
+%TRANSFORMNODE Apply a transform to another node
 %
 %   Class TransformNode
+%   NODE2 = TransformNode(NODE, TRANSFO);
+%   NODE is an instance of SceneNode
+%   TRANDFO is an instance of AffineTransform2D or AffineTransform3D
 %
 %   Example
 %   TransformNode
 %
 %   See also
-%
+%     SceneNode, AffineTransform2D, AffineTransform3D
 
 % ------
 % Author: David Legland

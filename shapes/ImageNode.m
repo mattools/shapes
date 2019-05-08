@@ -93,6 +93,15 @@ end % end constructors
 
 %% Methods
 methods
+    function data = imageData(obj)
+        % returns the image data of this node, reading them if necessary
+        
+        if isempty(obj.ImageData)
+            readImageData(obj);
+        end
+        data = obj.ImageData;
+    end
+    
     function readImageData(obj)
         % read image data from file path and populate corresponding field
         obj.ImageData = imread(obj.FilePath);

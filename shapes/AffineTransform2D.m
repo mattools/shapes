@@ -118,12 +118,22 @@ methods
     function res = invert(obj)
         res = AffineTransform2D(inv(affineMatrix(obj)));
     end
+    function res = inverse(obj)
+        res = AffineTransform2D(inv(affineMatrix(obj)));
+    end
 
     function mat = affineMatrix(obj)
         mat = [obj.Coeffs(1:3) ; obj.Coeffs(4:6) ; 0 0 1];
     end
 
 end % end methods
+
+methods
+    function res = mtimes(obj, obj2)
+        mat2 = affineMatrix(obj) * affineMatrix(obj2);
+        res = AffineTransform2D(mat2);
+    end
+end
 
 end % end classdef
 
