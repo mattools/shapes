@@ -6,7 +6,9 @@ classdef Box2D < handle
 %   * XMin, XMax, YMin, YMax.
 %
 %   Example
-%   box = Box2D([0, 10, 0, 10])
+%     box = Box2D([5 15 6 14]);
+%     figure; axis([0 20 0 20]); hold on
+%     draw(box, 'b')
 %
 %   See also
 %     Geometry2D, Box3D
@@ -74,7 +76,10 @@ methods
         end
         
         % draw the box
-        h = drawBox([obj.XMin obj.XMax obj.YMin obj.YMax], varargin{:});
+%         h = drawBox([obj.XMin obj.XMax obj.YMin obj.YMax], varargin{:});
+        tx = [obj.XMin obj.XMax obj.XMax obj.XMin obj.XMin];
+        ty = [obj.YMin obj.YMin obj.YMax obj.YMax obj.YMin];
+        h = plot(tx, ty, varargin{:});
         
         % eventually apply style
         if ~isempty(style)
