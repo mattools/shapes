@@ -1,4 +1,4 @@
-classdef Box2D < Geometry2D
+classdef Box2D < handle
 %BOX2D Bounding box of a planar shape
 %
 %   Class Box2D
@@ -9,7 +9,7 @@ classdef Box2D < Geometry2D
 %   box = Box2D([0, 10, 0, 10])
 %
 %   See also
-%   Geometry2D
+%     Geometry2D, Box3D
 
 % ------
 % Author: David Legland
@@ -59,8 +59,8 @@ end % end constructors
 %% Methods
 methods
     function box = boundingBox(obj)
-        % Returns the bounding box of obj shape
-        box = obj.data;
+        % Returns the bounding box of this shape
+        box = Box2D([obj.XMin obj.XMax obj.YMin obj.YMax]);
     end
     
     function varargout = draw(obj, varargin)
@@ -109,16 +109,37 @@ end % end methods
 
 %% Serialization methods
 methods
+    function write(obj, fileName, varargin)
+        % Writes box representation into a JSON file
+        % 
+        % Requires implementation of the "toStruct" method.
+        
+        if exist('savejson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
+    end
+    
     function str = toStruct(obj)
-        % Convert to a structure to facilitate serialization
+        % Converts to a structure to facilitate serialization
         str = struct('type', 'Box2D', ...
             'XMin', obj.XMin, 'XMax', obj.XMax, ...
             'YMin', obj.YMin, 'YMax', obj.YMax);
     end
 end
+
 methods (Static)
+    function box = read(fileName)
+        % Reads box information from a file in JSON format
+        if exist('loadjson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        box = Box2D.fromStruct(loadjson(fileName));
+    end
+    
     function box = fromStruct(str)
-        % Create a new instance from a structure
+        % Creates a new instance from a structure
         box = Box2D([str.XMin str.XMax str.YMin str.YMax]);
     end
 end

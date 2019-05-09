@@ -1,4 +1,4 @@
-classdef Box3D < Geometry3D
+classdef Box3D < handle
 %BOX3D Bounding box of a 3D shape
 %
 %   Class Box3D
@@ -9,7 +9,7 @@ classdef Box3D < Geometry3D
 %   box = Box3D([0, 10, 0, 10, 0, 10])
 %
 %   See also
-%   Geometry3D, Box2D
+%     Geometry3D, Box2D
 %
 
 % ------
@@ -56,7 +56,6 @@ methods
         obj.YMax = data(4);
         obj.ZMin = data(5);
         obj.ZMax = data(6);
-
     end
 
 end % end constructors
@@ -66,7 +65,7 @@ end % end constructors
 methods
     function box = boundingBox(obj)
         % Returns the bounding box of obj shape
-        box = obj.data;
+        box = Box2D([obj.XMin obj.XMax obj.YMin obj.YMax obj.ZMin obj.ZMax]);
     end
     
     function varargout = draw(obj, varargin)
@@ -110,17 +109,36 @@ end % end methods
 
 %% Serialization methods
 methods
+    function write(obj, fileName, varargin)
+        % Writes box representation into a JSON file
+        %
+        % Requires implementation of the "toStruct" method.
+        if exist('savejson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
+    end
+    
     function str = toStruct(obj)
-        % Convert to a structure to facilitate serialization
+        % Converts to a structure to facilitate serialization
         str = struct('type', 'Box3D', ...
             'XMin', obj.XMin, 'XMax', obj.XMax, ...
             'YMin', obj.YMin, 'YMax', obj.YMax, ...
             'ZMin', obj.ZMin, 'ZMax', obj.ZMax);
     end
 end
+
 methods (Static)
+    function box = read(fileName)
+        % Reads box information from a file in JSON format
+        if exist('loadjson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        box = Box3D.fromStruct(loadjson(fileName));
+    end
+    
     function box = fromStruct(str)
-        % Create a new instance from a structure
+        % Creates a new instance from a structure
         box = Box3D([str.XMin str.XMax str.YMin str.YMax str.ZMin str.ZMax]);
     end
 end
