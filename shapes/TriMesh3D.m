@@ -40,6 +40,7 @@ methods
     end
 end
 
+
 %% Vertex management methods
 methods
     function nv = vertexNumber(obj)
@@ -68,19 +69,44 @@ methods
         box = Box3D([mini(1) maxi(1) mini(2) maxi(2) mini(3) maxi(3)]);
     end
     
-    function varargout = draw(obj, varargin)
+    function h = draw(varargin)
         % Draw the current geometry, eventually specifying the style
         
-        h = drawMesh(obj.VertexCoords, obj.FaceVertexInds);
-        if nargin > 1
-            var1 = varargin{1};
-            if isa(var1, 'Style')
-                apply(var1, h);
-            end
+        % extract handle of axis to draw in
+        if numel(varargin{1}) == 1 && ishghandle(varargin{1}, 'axes')
+            hAx = varargin{1};
+            varargin(1) = [];
+        else
+            hAx = gca;
+        end
+
+        % extract the point instance from the list of input arguments
+        obj = varargin{1};
+        varargin(1) = [];
+        
+        % add default drawing options
+        options = {'FaceColor', [.7 .7 .7]};
+
+        % extract optional drawing options
+        if nargin > 1 && ischar(varargin{1})
+            options = [options varargin];
         end
         
+        if length(options) == 1
+            options = [{'facecolor', [1 1 1]} options];
+        end
+
+        h = patch('Parent', hAx, ...
+            'vertices', obj.VertexCoords, 'faces', obj.FaceVertexInds, ...
+            options{:} );
+
+        % optionnally add style processing
+        if ~isempty(varargin) && isa(varargin{1}, 'Style')
+            apply(varargin{1}, hh);
+        end
+                
         if nargout > 0
-            varargout = {h};
+            h = hh;
         end
     end
     

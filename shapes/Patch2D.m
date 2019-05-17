@@ -159,7 +159,7 @@ methods
         end
 
         % optionnally add style processing
-        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+        if ~isempty(varargin) && isa(varargin{1}, 'Style')
             apply(varargin{1}, hh);
         end
         
