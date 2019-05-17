@@ -19,6 +19,10 @@ properties
     % coordinates of vertices, as a NV-by-3 array
     VertexCoords;
     
+    % vertex indices for each edge, as a NE-by-2 array
+    % Can be empty.
+    EdgeVertexInds = [];
+    
     % vertex indices for each face, as a NF-by-3 array
     FaceVertexInds;
 end
@@ -40,6 +44,79 @@ methods
     end
 end
 
+%% Drawing functions
+methods
+    function h = drawFaceNormals(obj, varargin)
+        % h = drawFaceNormals(mesh);
+        pts = faceCentroids(obj);
+        pos = pts.Coords;
+        vn = faceNormals(obj);
+        h = quiver3(pos(:, 1), pos(:, 2), pos(:, 3), ...
+            vn(:, 1), vn(:, 2), vn(:, 3), 0, varargin{:});
+    end
+end
+
+%% Geometric information about mesh
+methods
+    function vol = volume(obj)
+        % (signed) volume enclosed by this mesh
+        %
+        % See Also
+        %   surfaceArea
+
+        % initialize an array of volume
+        nFaces = size(obj.FaceVertexInds, 1);
+        vols = zeros(nFaces, 1);
+
+        % Shift all vertices to the mesh centroid
+        centroid = mean(obj.VertexCoords, 1);
+        
+        % compute volume of each tetraedron
+        for iFace = 1:nFaces
+            % consider the tetrahedron formed by face and mesh centroid
+            tetra = obj.VertexCoords(obj.FaceVertexInds(iFace, :), :);
+            tetra = bsxfun(@minus, tetra, centroid);
+            
+            % volume of current tetrahedron
+            vols(iFace) = det(tetra) / 6;
+        end
+        
+        vol = sum(vols);
+    end
+    
+    function area = surfaceArea(obj)
+        % surface area of mesh faces
+        %
+        % See Also
+        %   volume
+        
+        % compute two direction vectors of each trinagular face, using the
+        % first vertex of each face as origin
+        v1 = obj.VertexCoords(obj.FaceVertexInds(:, 2), :) - obj.VertexCoords(obj.FaceVertexInds(:, 1), :);
+        v2 = obj.VertexCoords(obj.FaceVertexInds(:, 3), :) - obj.VertexCoords(obj.FaceVertexInds(:, 1), :);
+        
+        % area of each triangle is half the cross product norm
+        % see also crossProduct3d in MatGeom
+        vn = zeros(size(v1));
+        vn(:) = bsxfun(@times, v1(:,[2 3 1],:), v2(:,[3 1 2],:)) - ...
+                bsxfun(@times, v2(:,[2 3 1],:), v1(:,[3 1 2],:));
+        vn = sqrt(sum(vn .* vn, 2));
+        
+        % sum up and normalize
+        area = sum(vn) / 2;
+    end
+    
+%     function mb = meanBreadth(obj)
+%         % Mean breadth of this mesh
+%         % Mean breadth is proportionnal to the integral of mean curvature
+%         %
+%         % See Also
+%         %   trimeshMeanBreadth
+%         
+%         mb = trimeshMeanBreadth(obj.VertexCoords, obj.FaceVertexInds);
+%     end
+end
+
 
 %% Vertex management methods
 methods
@@ -48,7 +125,45 @@ methods
     end
     
     function verts = vertices(obj)
-        verts = obj.VertexCoords;
+        verts = MultiPoint3D(obj.VertexCoords);
+    end
+end
+
+%% Edge management methods
+methods
+    function ne = edgeNumber(obj)
+        % ne = edgeNumber(mesh)
+        computeEdgeVertexInds(obj);
+        ne = size(obj.EdgeVertexInds, 1);
+    end
+        
+    function edgeList = edges(obj)
+        % edgeList = edges(mesh);
+        if isempty(obj.EdgeVertexInds)
+            computeEdgeVertexInds(obj);
+        end
+        edgeList = obj.EdgeVertexInds;
+    end
+end
+
+methods (Access = private)
+    function computeEdgeVertexInds(obj)
+        % updates the property EdgeVertexInds
+        
+        % compute total number of edges
+        % (3 edges per face)
+        nFaces  = size(obj.FaceVertexInds, 1);
+        nEdges  = nFaces * 3;
+        
+        % create vertex indices for all edges (including duplicates)
+        edges = zeros(nEdges, 2);
+        for i = 1:nFaces
+            f = obj.FaceVertexInds(i, :);
+            edges(((i-1)*3+1):i*3, :) = [f' f([2:end 1])'];
+        end
+        
+        % remove duplicate edges, and sort the result
+        obj.EdgeVertexInds = sortrows(unique(sort(edges, 2), 'rows'));
     end
 end
 
@@ -56,6 +171,41 @@ end
 methods
     function nf = faceNumber(obj)
         nf = size(obj.FaceVertexInds, 1);
+    end
+    
+    function normals = faceNormals(obj, inds)
+        % vn = faceNormals(mesh);
+        
+        nf = size(obj.FaceVertexInds, 1);
+        if nargin == 1
+            inds = 1:nf;
+        end
+
+        % compute vector of each edge
+        v1 = obj.VertexCoords(obj.FaceVertexInds(inds,2),:) - obj.VertexCoords(obj.FaceVertexInds(inds,1),:);
+        v2 = obj.VertexCoords(obj.FaceVertexInds(inds,3),:) - obj.VertexCoords(obj.FaceVertexInds(inds,1),:);
+
+        % compute normals using cross product (vectors have same size)
+        normals = cross(v1, v2, 2);
+    end
+    
+    function pts = faceCentroids(obj, inds)
+        % pts = faceCentroids(mesh);
+        nf = size(obj.FaceVertexInds, 1);
+        if nargin == 1
+            inds = 1:nf;
+        end
+        pts = zeros(length(inds), 3);
+        
+        for i = 1:3
+            pts = pts + obj.VertexCoords(obj.FaceVertexInds(inds,i),:) / 3;
+        end
+        
+        pts = MultiPoint3D(pts);
+    end
+
+    function poly = facePolygon(obj, ind)
+        poly = obj.VertexCoords(obj.FaceVertexInds(ind, :), :);
     end
 end
 
