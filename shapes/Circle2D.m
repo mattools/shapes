@@ -4,10 +4,10 @@ classdef Circle2D < Geometry2D
 %   Class Circle2D
 %
 %   Example
-%   Circle2D
+%     Circle2D
 %
 %   See also
-%
+%     Ellipse2D
 
 % ------
 % Author: David Legland
@@ -61,9 +61,28 @@ methods
         % returns the center of this circle as a Point2D
         center = Point2D(obj.CenterX, obj.CenterY);
     end
+    
+    function poly = asPolyline(obj, varargin)
+        
+        % determines number of points
+        N = 64;
+        if ~isempty(varargin)
+            N = varargin{1};
+        end
+        
+        % create circle
+        t = linspace(0, 2*pi, N+1)';
+        t(end) = [];
+        
+        % coordinates of circle points
+        x = obj.CenterX + obj.Radius * cos(t);
+        y = obj.CenterY + obj.Radius * sin(t);
+
+        poly = LinearRing2D([x y]);
+    end
 end
 
-%% Methods
+%% Methods implementing the Geometry2D interface
 methods
     function res = transform(obj, transform) %#ok<STOUT>
         % Applies a geometric transform to this geometry
@@ -104,7 +123,7 @@ methods
     end
     
     function res = rotate(obj, angle, varargin)
-        % Returns a rotated version of this polyline
+        % Returns a rotated version of this circle
         %
         % POLY2 = rotate(POLY, THETA)
         % POLY2 = rotate(POLY, THETA, CENTER)
