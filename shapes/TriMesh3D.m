@@ -25,6 +25,10 @@ properties
     
     % vertex indices for each face, as a NF-by-3 array
     Faces;
+    
+    % Mapping of faces associated to each edge.
+    % computed with method 'computeEdgeFaces'
+    EdgeFaces = [];
 end
 
 %% Constructor
@@ -53,6 +57,151 @@ methods
         vn = faceNormals(obj);
         h = quiver3(pos(:, 1), pos(:, 2), pos(:, 3), ...
             vn(:, 1), vn(:, 2), vn(:, 3), 0, varargin{:});
+    end
+end
+
+%% Global procesing of mesh
+methods
+    function res = subdivide(obj, n)
+        
+        % compute the edge array
+        % edgeVertexIndices = computeMeshEdges(faces);
+        computeEdges(obj);
+        nEdges = size(obj.Edges, 1);
+        
+        % index of faces around each edge
+        % edgeFaceIndices = meshEdgeFaces(vertices, edges, faces);
+        
+        % index of edges around each face
+        faceEdgeIndices = meshFaceEdges(obj.Vertices, obj.Edges, obj.Faces);
+        
+        
+        %% Create new vertices on edges
+        
+        % several interpolated positions
+        t = linspace(0, 1, n + 1)';
+        coef2 = t(2:end-1);
+        coef1 = 1 - t(2:end-1);
+        
+        % initialise the array of new vertices
+        vertices2 = obj.Vertices;
+        
+        % keep an array containing index of new vertices for each original edge
+        edgeNewVertexIndices = zeros(nEdges, n-1);
+        
+        % create new vertices on each edge
+        for iEdge = 1:nEdges
+            % extract each extremity as a point
+            v1 = obj.Vertices(obj.Edges(iEdge, 1), :);
+            v2 = obj.Vertices(obj.Edges(iEdge, 2), :);
+            
+            % compute new points
+            newPoints = coef1 * v1 + coef2 * v2;
+            
+            % add new vertices, and keep their indices
+            edgeNewVertexIndices(iEdge,:) = size(vertices2, 1) + (1:n-1);
+            vertices2 = [vertices2 ; newPoints]; %#ok<AGROW>
+        end
+        
+        
+        % create array
+        faces2 = zeros(0, 3);
+        
+        % iterate on faces of initial mesh
+        nFaces = size(obj.Faces, 1);
+        for iFace = 1:nFaces
+            % compute index of each corner vertex
+            face = obj.Faces(iFace, :);
+            iv1 = face(1);
+            iv2 = face(2);
+            iv3 = face(3);
+            
+            % compute index of each edge
+            faceEdges = faceEdgeIndices{iFace};
+            ie1 = faceEdges(1);
+            ie2 = faceEdges(2);
+            ie3 = faceEdges(3);
+            
+            % indices of new vertices on edges
+            edge1NewVertexIndices = edgeNewVertexIndices(ie1, :);
+            edge2NewVertexIndices = edgeNewVertexIndices(ie2, :);
+            edge3NewVertexIndices = edgeNewVertexIndices(ie3, :);
+            
+            % keep vertex 1 as reference for edges 1 and 3
+            if obj.Edges(ie1, 1) ~= iv1
+                edge1NewVertexIndices = edge1NewVertexIndices(end:-1:1);
+            end
+            if obj.Edges(ie3, 1) ~= iv1
+                edge3NewVertexIndices = edge3NewVertexIndices(end:-1:1);
+            end
+            
+            % create the first new face, on 'top' of the original face
+            topVertexInds = [edge1NewVertexIndices(1) edge3NewVertexIndices(1)];
+            newFace = [iv1 topVertexInds];
+            faces2 = [faces2; newFace]; %#ok<AGROW>
+            
+            % iterate over middle strips
+            for iStrip = 2:n-1
+                % index of extreme vertices of current row
+                ivr1 = edge1NewVertexIndices(iStrip);
+                ivr2 = edge3NewVertexIndices(iStrip);
+                
+                % extreme vertices as points
+                v1 = vertices2(ivr1, :);
+                v2 = vertices2(ivr2, :);
+                
+                % create additional vertices within the bottom row of the strip
+                t = linspace(0, 1, iStrip+1)';
+                coef2 = t(2:end-1);
+                coef1 = 1 - t(2:end-1);
+                newPoints = coef1 * v1 + coef2 * v2;
+                
+                % compute indices of new vertices in result array
+                newInds = size(vertices2, 1) + (1:iStrip-1);
+                botVertexInds = [ivr1 newInds ivr2];
+                
+                % add new vertices
+                vertices2 = [vertices2 ; newPoints]; %#ok<AGROW>
+                
+                % create top faces of current strip
+                for k = 1:iStrip-1
+                    newFace = [topVertexInds(k) botVertexInds(k+1) topVertexInds(k+1)];
+                    faces2 = [faces2; newFace]; %#ok<AGROW>
+                end
+                
+                % create bottom faces of current strip
+                for k = 1:iStrip
+                    newFace = [topVertexInds(k) botVertexInds(k) botVertexInds(k+1)];
+                    faces2 = [faces2; newFace]; %#ok<AGROW>
+                end
+                
+                % bottom vertices of current strip are top vertices of next strip
+                topVertexInds = botVertexInds;
+            end
+            
+            % for edge 2, keep vertex 2 of the current face as reference
+            if obj.Edges(ie2, 1) ~= iv2
+                edge2NewVertexIndices = edge2NewVertexIndices(end:-1:1);
+            end
+            
+            % consider new vertices together with extremities
+            botVertexInds = [iv2 edge2NewVertexIndices iv3];
+            
+            % create top faces for last strip
+            for k = 1:n-1
+                newFace = [topVertexInds(k) botVertexInds(k+1) topVertexInds(k+1)];
+                faces2 = [faces2; newFace]; %#ok<AGROW>
+            end
+            
+            % create bottom faces for last strip
+            for k = 1:n
+                newFace = [topVertexInds(k) botVertexInds(k) botVertexInds(k+1)];
+                faces2 = [faces2; newFace]; %#ok<AGROW>
+            end
+        end
+
+        % create the resulting data structure
+        res = TriMesh3D(vertices2, faces2);
     end
 end
 
@@ -164,6 +313,73 @@ methods (Access = private)
         
         % remove duplicate edges, and sort the result
         obj.Edges = sortrows(unique(sort(edges, 2), 'rows'));
+    end
+    
+    function edgeFaces = computeEdgeFaces(obj)
+        
+        % ensure edge array is computed
+        if isempty(obj.Edges)
+            computeEdges(obj);
+        end
+        edges = obj.Edges;
+        
+        % allocate memory for result
+        nEdges = size(obj.Edges, 1);
+        obj.EdgeFaces = zeros(nEdges, 2);
+
+        % iterate on faces
+        nFaces = size(obj.Faces, 1);
+        for iFace = 1:nFaces
+            face = obj.Faces(iFace, :);
+            
+            % iterate on edges of current face
+            for j = 1:length(face)
+                % build edge: array of vertices
+                j2 = mod(j, length(face)) + 1;
+                
+                % do not process edges with same vertices
+                if face(j) == face(j2)
+                    continue;
+                end
+                
+                % vertex indices of current edge
+                currentEdge = [face(j) face(j2)];
+                
+                % find index of current edge, assuming face is left-located
+                b1 = ismember(obj.Edges, currentEdge, 'rows');
+                indEdge = find(b1);
+                if ~isempty(indEdge)
+                    if obj.EdgeFaces(indEdge, 1) ~= 0
+                        error('TriMesh3D:subdivide:IllegalTopology', ...
+                            'Two faces were found on left side of edge %d ', indEdge);
+                    end
+                    
+                    obj.EdgeFaces(indEdge, 1) = iFace;
+                    continue;
+                end
+                
+                % otherwise, assume the face is right-located
+                b2 = ismember(edges, currentEdge([2 1]), 'rows');
+                indEdge = find(b2);
+                if ~isempty(indEdge)
+                    if obj.EdgeFaces(indEdge, 2) ~= 0
+                        error('TriMesh3D:subdivide:IllegalTopology', ...
+                            'Two faces were found on left side of edge %d ', indEdge);
+                    end
+                    
+                    obj.EdgeFaces(indEdge, 2) = iFace;
+                    continue;
+                end
+                
+                % If face was neither left nor right, error
+                warning('TriMesh3D:subdivide:IllegalTopology', ...
+                    'Edge %d of face %d was not found in edge array', ...
+                    j, iFace);
+                continue;
+            end
+        end
+        
+        edgeFaces = obj.EdgeFaces;
     end
 end
 
