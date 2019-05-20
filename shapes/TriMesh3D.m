@@ -62,6 +62,38 @@ end
 
 %% Global procesing of mesh
 methods
+    function res = smooth(obj, varargin)
+       % mesh2 = smooth(mesh, nIter);
+       % Smooth mesh by replacing each vertex by the average of its neighbors
+       
+       % determine number of iterations
+       nIter = 1;
+       if ~isempty(varargin)
+           nIter = varargin{1};
+       end
+       
+       % compute adjacency matrix,
+       % result is a Nv-by-Nv matrix with zeros on the diagonal
+       adj = vertexAdjacencyMatrix(obj);
+       
+       % Add "self adjacencies"
+       nv = size(obj.Vertices, 1);
+       adj = adj + speye(nv);
+       
+       % weight each vertex by the number of its neighbors
+       w = spdiags(full(sum(adj, 2).^(-1)), 0, nv, nv);
+       adj = w * adj;
+       
+       % do averaging to smooth the field
+       v2 = obj.Vertices;
+       for k = 1:nIter
+           v2 = adj * v2;
+       end
+       
+       % return new TriMesh
+       res = TriMesh3D(v2, obj.Faces);
+    end
+    
     function res = subdivide(obj, n)
         
         % compute the edge array
@@ -275,6 +307,32 @@ methods
     
     function verts = vertices(obj)
         verts = MultiPoint3D(obj.Vertices);
+    end
+    
+    function adj = vertexAdjacencyMatrix(obj)
+        % Adjacency matrix of mesh vertices
+        
+        % forces faces to be floating point array, for sparse function
+        faces = obj.Faces;
+        if ~isfloat(faces)
+            faces = double(obj.Faces);
+        end
+        
+        % populate a sparse matrix
+        adj = sparse(...
+            [faces(:,1); faces(:,1); faces(:,2); faces(:,2); faces(:,3); faces(:,3)], ...
+            [faces(:,3); faces(:,2); faces(:,1); faces(:,3); faces(:,2); faces(:,1)], ...
+            1.0);
+        
+        % remove double adjacencies
+        adj = min(adj, 1);
+        
+        % ensure the size of the matrix is Nv-by-Nv
+        % (this can happen if some vertices are not referenced)
+        nv = size(obj.Vertices, 1);
+        if size(adj, 1) < nv
+            adj(nv, nv) = 0;
+        end
     end
 end
 
