@@ -17,14 +17,14 @@ classdef TriMesh3D < Geometry3D
 
 properties
     % coordinates of vertices, as a NV-by-3 array
-    VertexCoords;
+    Vertices;
     
     % vertex indices for each edge, as a NE-by-2 array
     % Can be empty.
-    EdgeVertexInds = [];
+    Edges = [];
     
     % vertex indices for each face, as a NF-by-3 array
-    FaceVertexInds;
+    Faces;
 end
 
 %% Constructor
@@ -32,13 +32,13 @@ methods
     function obj = TriMesh3D(varargin)
         
         if isnumeric(varargin{1})
-            obj.VertexCoords = varargin{1};
-            obj.FaceVertexInds = varargin{2};
+            obj.Vertices = varargin{1};
+            obj.Faces = varargin{2};
             
         elseif isstruct(varargin{1})
             var1 = varargin{1};
-            obj.VertexCoords = var1.vertices;
-            obj.FaceVertexInds = var1.faces;
+            obj.Vertices = var1.vertices;
+            obj.Faces = var1.faces;
         end
         
     end
@@ -65,16 +65,16 @@ methods
         %   surfaceArea
 
         % initialize an array of volume
-        nFaces = size(obj.FaceVertexInds, 1);
+        nFaces = size(obj.Faces, 1);
         vols = zeros(nFaces, 1);
 
         % Shift all vertices to the mesh centroid
-        centroid = mean(obj.VertexCoords, 1);
+        centroid = mean(obj.Vertices, 1);
         
         % compute volume of each tetraedron
         for iFace = 1:nFaces
             % consider the tetrahedron formed by face and mesh centroid
-            tetra = obj.VertexCoords(obj.FaceVertexInds(iFace, :), :);
+            tetra = obj.Vertices(obj.Faces(iFace, :), :);
             tetra = bsxfun(@minus, tetra, centroid);
             
             % volume of current tetrahedron
@@ -92,8 +92,8 @@ methods
         
         % compute two direction vectors of each trinagular face, using the
         % first vertex of each face as origin
-        v1 = obj.VertexCoords(obj.FaceVertexInds(:, 2), :) - obj.VertexCoords(obj.FaceVertexInds(:, 1), :);
-        v2 = obj.VertexCoords(obj.FaceVertexInds(:, 3), :) - obj.VertexCoords(obj.FaceVertexInds(:, 1), :);
+        v1 = obj.Vertices(obj.Faces(:, 2), :) - obj.Vertices(obj.Faces(:, 1), :);
+        v2 = obj.Vertices(obj.Faces(:, 3), :) - obj.Vertices(obj.Faces(:, 1), :);
         
         % area of each triangle is half the cross product norm
         % see also crossProduct3d in MatGeom
@@ -113,7 +113,7 @@ methods
 %         % See Also
 %         %   trimeshMeanBreadth
 %         
-%         mb = trimeshMeanBreadth(obj.VertexCoords, obj.FaceVertexInds);
+%         mb = trimeshMeanBreadth(obj.Vertices, obj.Faces);
 %     end
 end
 
@@ -121,11 +121,11 @@ end
 %% Vertex management methods
 methods
     function nv = vertexNumber(obj)
-        nv = size(obj.VertexCoords, 1);
+        nv = size(obj.Vertices, 1);
     end
     
     function verts = vertices(obj)
-        verts = MultiPoint3D(obj.VertexCoords);
+        verts = MultiPoint3D(obj.Vertices);
     end
 end
 
@@ -133,57 +133,57 @@ end
 methods
     function ne = edgeNumber(obj)
         % ne = edgeNumber(mesh)
-        computeEdgeVertexInds(obj);
-        ne = size(obj.EdgeVertexInds, 1);
+        computeEdges(obj);
+        ne = size(obj.Edges, 1);
     end
         
     function edgeList = edges(obj)
         % edgeList = edges(mesh);
-        if isempty(obj.EdgeVertexInds)
-            computeEdgeVertexInds(obj);
+        if isempty(obj.Edges)
+            computeEdges(obj);
         end
-        edgeList = obj.EdgeVertexInds;
+        edgeList = obj.Edges;
     end
 end
 
 methods (Access = private)
-    function computeEdgeVertexInds(obj)
-        % updates the property EdgeVertexInds
+    function computeEdges(obj)
+        % updates the property Edges
         
         % compute total number of edges
         % (3 edges per face)
-        nFaces  = size(obj.FaceVertexInds, 1);
+        nFaces  = size(obj.Faces, 1);
         nEdges  = nFaces * 3;
         
         % create vertex indices for all edges (including duplicates)
         edges = zeros(nEdges, 2);
         for i = 1:nFaces
-            f = obj.FaceVertexInds(i, :);
+            f = obj.Faces(i, :);
             edges(((i-1)*3+1):i*3, :) = [f' f([2:end 1])'];
         end
         
         % remove duplicate edges, and sort the result
-        obj.EdgeVertexInds = sortrows(unique(sort(edges, 2), 'rows'));
+        obj.Edges = sortrows(unique(sort(edges, 2), 'rows'));
     end
 end
 
 %% Face management methods
 methods
     function nf = faceNumber(obj)
-        nf = size(obj.FaceVertexInds, 1);
+        nf = size(obj.Faces, 1);
     end
     
     function normals = faceNormals(obj, inds)
         % vn = faceNormals(mesh);
         
-        nf = size(obj.FaceVertexInds, 1);
+        nf = size(obj.Faces, 1);
         if nargin == 1
             inds = 1:nf;
         end
 
         % compute vector of each edge
-        v1 = obj.VertexCoords(obj.FaceVertexInds(inds,2),:) - obj.VertexCoords(obj.FaceVertexInds(inds,1),:);
-        v2 = obj.VertexCoords(obj.FaceVertexInds(inds,3),:) - obj.VertexCoords(obj.FaceVertexInds(inds,1),:);
+        v1 = obj.Vertices(obj.Faces(inds,2),:) - obj.Vertices(obj.Faces(inds,1),:);
+        v2 = obj.Vertices(obj.Faces(inds,3),:) - obj.Vertices(obj.Faces(inds,1),:);
 
         % compute normals using cross product (vectors have same size)
         normals = cross(v1, v2, 2);
@@ -191,21 +191,21 @@ methods
     
     function pts = faceCentroids(obj, inds)
         % pts = faceCentroids(mesh);
-        nf = size(obj.FaceVertexInds, 1);
+        nf = size(obj.Faces, 1);
         if nargin == 1
             inds = 1:nf;
         end
         pts = zeros(length(inds), 3);
         
         for i = 1:3
-            pts = pts + obj.VertexCoords(obj.FaceVertexInds(inds,i),:) / 3;
+            pts = pts + obj.Vertices(obj.Faces(inds,i),:) / 3;
         end
         
         pts = MultiPoint3D(pts);
     end
 
     function poly = facePolygon(obj, ind)
-        poly = obj.VertexCoords(obj.FaceVertexInds(ind, :), :);
+        poly = obj.Vertices(obj.Faces(ind, :), :);
     end
 end
 
@@ -214,8 +214,8 @@ end
 methods
     function box = boundingBox(obj)
         % Returns the bounding box of this shape
-        mini = min(obj.VertexCoords);
-        maxi = max(obj.VertexCoords);
+        mini = min(obj.Vertices);
+        maxi = max(obj.Vertices);
         box = Box3D([mini(1) maxi(1) mini(2) maxi(2) mini(3) maxi(3)]);
     end
     
@@ -247,7 +247,7 @@ methods
         end
 
         h = patch('Parent', hAx, ...
-            'vertices', obj.VertexCoords, 'faces', obj.FaceVertexInds, ...
+            'vertices', obj.Vertices, 'faces', obj.Faces, ...
             options{:} );
 
         % optionnally add style processing
@@ -263,13 +263,13 @@ methods
     function res = scale(obj, varargin)
         % Returns a scaled version of this geometry
         factor = varargin{1};
-        res = TriMesh3D(obj.VertexCoords * factor, obj.FaceVertexInds);
+        res = TriMesh3D(obj.Vertices * factor, obj.Faces);
     end
     
     function res = translate(obj, varargin)
         % Returns a translated version of this geometry
         shift = varargin{1};
-        res = TriMesh3D(bsxfun(@plus, obj.vertexCords, shift), obj.FaceVertexInds);
+        res = TriMesh3D(bsxfun(@plus, obj.vertexCords, shift), obj.Faces);
     end
     
 end % end methods
@@ -280,8 +280,8 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
         str = struct('type', 'TriMesh3D', ...
-            'vertices', obj.VertexCoords, ...
-            'faces', obj.FaceVertexInds);
+            'vertices', obj.Vertices, ...
+            'faces', obj.Faces);
     end
 end
 methods (Static)
