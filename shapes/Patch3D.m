@@ -166,6 +166,21 @@ methods
         end
     end
     
+    function res = transform(obj, transfo)
+        % Returns a transformed version of this geometry
+        if isa(transfo, 'AffineTransform2D')
+            coords = [obj.X(:) obj.Y(:)];
+            coords = transformCoords(transfo, coords);
+            dims = size(obj.X);
+            res = Patch3D(reshape(coords(:,1), dims), reshape(coords(:,2), dims), obj.Z);
+        else
+            coords = [obj.X(:) obj.Y(:) obj.Z(:)];
+            coords = transformCoords(transfo, coords);
+            dims = size(obj.X);
+            res = Patch3D(reshape(coords(:,1), dims), reshape(coords(:,2), dims), reshape(coords(:,3), dims));
+        end
+    end
+    
     function res = scale(obj, factor)
         % Returns a scaled version of this geometry
         res = Patch3D(obj.X * factor, obj.Y * factor, obj.Z * factor);

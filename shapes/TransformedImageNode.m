@@ -77,7 +77,7 @@ methods
         lx = linspace(extent(1), extent(2), dims(1)+1);
         ly = linspace(extent(3), extent(4), dims(2)+1);
         [x, y] = meshgrid(lx, ly);
-        patch = Patch2D(x, y);
+        patch = Patch3D(x, y, zeros(size(x)));
         
         % apply transform to patch
         patch = transform(patch, obj.Transform);
@@ -85,7 +85,7 @@ methods
         % display patch
         data = imageData(obj.Node);
         data = padarray(data, [1 1], 'replicate', 'post');
-        s = surf(gca, patch.X, patch.Y, zeros(size(patch.X)), data, 'linestyle', 'none');
+        s = surf(gca, patch.X, patch.Y, patch.Z, data, 'linestyle', 'none');
 
 %         % overlay grid
 %         drawSubGrid(aPatch, 8, 'color', 'b');
