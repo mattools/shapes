@@ -108,7 +108,7 @@ methods
         str.type = 'group';
 
         % call scene node method
-        convertSceneNodeFields(obj, str);
+        str = convertSceneNodeFields(obj, str);
         
         % allocate memory for children array
         str.children = cell(1, length(obj.Children));

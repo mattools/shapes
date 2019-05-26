@@ -153,7 +153,7 @@ methods
         str.type = 'shape';
         
         % call scene node method
-        convertSceneNodeFields(obj, str);
+        str = convertSceneNodeFields(obj, str);
         
         % add optional Style
         if ~isempty(obj.Style)

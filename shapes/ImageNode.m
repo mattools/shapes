@@ -220,7 +220,7 @@ methods
         str = struct();
         
         % call scene node method
-        convertSceneNodeFields(obj, str);
+        str = convertSceneNodeFields(obj, str);
 
         str.filePath = obj.FilePath;
         str.imageSize = obj.ImageSize;

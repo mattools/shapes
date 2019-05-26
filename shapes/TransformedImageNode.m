@@ -1,4 +1,4 @@
-classdef TransformedImageNode < handle
+classdef TransformedImageNode < SceneNode
 %TRANSFORMEDIMAGENODE A transform applied to an image
 %
 %   Class TransformedImageNode
@@ -30,7 +30,7 @@ classdef TransformedImageNode < handle
 %% Properties
 properties
     % The image to transform, as an instance of ImageNode
-    Node;
+    Image;
     
     % The transform to apply, as an instance of AffineTransform2D or 3D
     Transform;
@@ -53,7 +53,7 @@ methods
             error('requires an AffineTransform2D or 3D as second input');
         end
        
-        obj.Node = varargin{1};
+        obj.Image = varargin{1};
         obj.Transform = varargin{2};
 
     end
@@ -70,20 +70,11 @@ methods
     function h = draw(obj, varargin)
         % display transformed image data on current axis
         
-        extent = physicalExtent(obj.Node);
-        
         % create the patch object for representing the image
-        dims = obj.Node.ImageSize;
-        lx = linspace(extent(1), extent(2), dims(1)+1);
-        ly = linspace(extent(3), extent(4), dims(2)+1);
-        [x, y] = meshgrid(lx, ly);
-        patch = Patch3D(x, y, zeros(size(x)));
-        
-        % apply transform to patch
-        patch = transform(patch, obj.Transform);
+        patch = createPatch(obj);
         
         % display patch
-        data = imageData(obj.Node);
+        data = imageData(obj.Image);
         data = padarray(data, [1 1], 'replicate', 'post');
         s = surf(gca, patch.X, patch.Y, patch.Z, data, 'linestyle', 'none');
 
@@ -100,6 +91,90 @@ methods
         if nargout > 0
             h = s;
         end
+    end
+    
+
+    function node = transform(obj, transfo)
+        transfo = concatenate(transfo, obj.Transfo);
+        node = TransformedImageNode(obj.Image, transfo);
+    end
+
+    function box = boundingBox(obj)
+        box = boundingBox(createPatch(obj));
+    end
+    
+    function printTree(obj, nIndents)
+        str = [repmat('  ', 1, nIndents) '[TransformedImageNode]'];
+        disp(str);
+        printTree(obj.Image, nIndents+1);
+    end
+    
+    function b = isLeaf(obj) %#ok<MANU>
+        b = false;
+    end
+end
+
+%% Utility Methods
+methods (Access = private)
+    function patch = createPatch(obj)
+        % creates the patch object for representing the transformed image
+        extent = physicalExtent(obj.Image);
+        dims = obj.Image.ImageSize;
+        lx = linspace(extent(1), extent(2), dims(1)+1);
+        ly = linspace(extent(3), extent(4), dims(2)+1);
+        [x, y] = meshgrid(lx, ly);
+        patch = Patch3D(x, y, zeros(size(x)));
+        
+        % apply transform to patch
+        patch = transform(patch, obj.Transform);
+    end
+end % end methods
+
+%% Serialization methods
+methods
+    function str = toStruct(obj)
+        % Convert to a structure to facilitate serialization
+
+        str = struct('type', 'TransformedImage');
+        
+        % call scene node method
+        str = convertSceneNodeFields(obj, str);
+
+        % convert specific fields
+        str.image = toStruct(obj.Image);
+        str.transform = toStruct(obj.Transform);
+    end
+    
+    function write(obj, fileName, varargin)
+        % Write into a JSON file
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
+    end
+end
+
+methods (Static)
+    function node = fromStruct(str)
+        % Creates a new instance from a structure
+        
+        image = ImageNode.fromStruct(str.image);
+
+        transfoType = str.transform.type;
+        if strcmpi(transfoType, 'AffineTransform2D')
+            transfo = AffineTransform2D.fromStruct(str.transform);
+        elseif strcmpi(transfoType, 'AffineTransform3D')
+            transfo = AffineTransform3D.fromStruct(str.transform);
+        else
+            error(['Unable to parse transform type: ' transfoType]);
+        end
+        
+        node = TransformedImageNode(image, transfo);
+
+        % parse SceneNode fields
+        parseSceneNodeFields(node, str);
+    end
+    
+    function node = read(fileName)
+        % Read a ImageNode instance from a file in JSON format
+        node = ImageNode.fromStruct(loadjson(fileName));
     end
 end
 

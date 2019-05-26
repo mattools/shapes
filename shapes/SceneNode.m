@@ -64,6 +64,7 @@ methods (Static)
         switch lower(str.type)
             case 'shape', node = ShapeNode.fromStruct(str);
             case 'group', node = GroupNode.fromStruct(str);
+            case 'transformedimage', node = TransformedImageNode.fromStruct(str);
             otherwise
                 warning(['Unknown SceneNode type: ' type]);
         end

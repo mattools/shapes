@@ -76,7 +76,10 @@ methods
     function printTree(obj, nIndents)
         str = [repmat('  ', 1, nIndents) '[TransformNode]'];
         disp(str);
-        printTree(obj.Node, nIndents+1);
+        printTree(obj.Node, nIndents+1);       
+%         % print transform string
+%         str = [repmat('  ', 1, nIndents+1) 'Transform='];
+%         disp(str);
     end
     
     function b = isLeaf(obj) %#ok<MANU>
