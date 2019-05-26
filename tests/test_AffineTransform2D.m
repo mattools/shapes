@@ -41,3 +41,9 @@ function test_isIdentity_false(testCase)
 trans = AffineTransform2D.createRotation(pi/3);
 assertFalse(testCase, isIdentity(trans));
 
+
+function test_toAndFromStruct(testCase)
+trans = AffineTransform2D.createTranslation([30 20]);
+str = toStruct(trans);
+trans2 = AffineTransform2D.fromStruct(str);
+assertEqual(testCase, trans.Coeffs, trans2.Coeffs);
