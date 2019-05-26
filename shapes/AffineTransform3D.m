@@ -42,7 +42,7 @@ methods (Static)
             error('requires numeric input');
         end
          
-        obj = AffineTransform3D([1 0 0 dx  0 1 0 dy  0 0 1 dz]);
+        obj = AffineTransform3D([1 0 0 dx ; 0 1 0 dy ; 0 0 1 dz; 0 0 0 1]);
     end
 end
 
@@ -104,10 +104,49 @@ methods
 
 end % end methods
 
+%% Overload Matlab computation functions
 methods
     function res = mtimes(obj, obj2)
         mat2 = affineMatrix(obj) * affineMatrix(obj2);
         res = AffineTransform3D(mat2);
+    end
+end
+
+
+%% Serialization methods
+methods
+    function write(obj, fileName, varargin)
+        % Writes box representation into a JSON file
+        % 
+        % Requires implementation of the "toStruct" method.
+        
+        if exist('savejson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        
+        savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
+    end
+    
+    function str = toStruct(obj)
+        % Converts to a structure to facilitate serialization
+        str = struct(...
+            'type', 'AffineTransform3D', ...
+            'matrix', [obj.Coeffs(1:4) ; obj.Coeffs(5:8) ; obj.Coeffs(9:12) ; 0 0 0 1]);
+    end
+end
+
+methods (Static)
+    function box = read(fileName)
+        % Reads box information from a file in JSON format
+        if exist('loadjson', 'file') == 0
+            error('Requires the ''jsonlab'' library');
+        end
+        box = AffineTransform2D.fromStruct(loadjson(fileName));
+    end
+    
+    function transfo = fromStruct(str)
+        % Creates a new instance from a structure
+        transfo = AffineTransform3D(str.matrix);
     end
 end
 
