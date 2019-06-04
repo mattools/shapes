@@ -68,9 +68,9 @@ properties
     FillVisible     = false;
     
     % style for polygonal surfaces
-    FaceColor       = [.7 .7 .7];
+    FaceColor       = [.75 .75 .75];
     FaceOpacity     = 1;
-    FaceVisible     = true;
+    FaceVisible     = false;
     
 end % end properties
 

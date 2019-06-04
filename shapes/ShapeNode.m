@@ -91,7 +91,10 @@ methods
         % inner function for creating default style
             if isa(geom, 'Point2D') || isa(geom, 'MultiPoint2D')
                 style = Style('MarkerVisible', true, 'LineVisible', false);
+            elseif isa(geom, 'Mesh3D')
+                style = Style('FaceVisible', true);
             else
+                % default style
                 style = Style();
             end
         end
