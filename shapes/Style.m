@@ -1,5 +1,5 @@
 classdef Style < handle
-%STYLE Stores information for drawing shapes
+% Encapsulates information for drawing shapes.
 %
 %   Class Style
 %   Contains the information for drawing a shape.

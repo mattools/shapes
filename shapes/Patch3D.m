@@ -1,5 +1,5 @@
 classdef Patch3D < Geometry3D
-%PATCH3D A 3D parametric defined by three arrays x, y, and z
+% A 3D parametric surface defined by three arrays x, y, and z.
 %
 %   Class Patch3D
 %
@@ -7,6 +7,7 @@ classdef Patch3D < Geometry3D
 %   Patch3D
 %
 %   See also
+%     Patch2D
 %
 
 % ------

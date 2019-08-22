@@ -1,5 +1,5 @@
 classdef AffineTransform2D < handle
-%AFFINETRANSFORM2D A 2D affine transform defined by its matrix
+% A 2D affine transform defined by its matrix.
 %
 %   Class AffineTransform2D
 %

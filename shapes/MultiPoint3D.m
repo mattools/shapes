@@ -1,5 +1,5 @@
 classdef MultiPoint3D < handle
-%MULTIPOINT3D  One-line description here, please.
+% A set of points in the 3D space.
 %
 %   Class MultiPoint3D
 %
@@ -7,7 +7,7 @@ classdef MultiPoint3D < handle
 %   MultiPoint3D
 %
 %   See also
-%
+%     Point3D, MultiPoint2D
 
 % ------
 % Author: David Legland

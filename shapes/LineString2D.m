@@ -1,5 +1,5 @@
 classdef LineString2D < Geometry2D
-% An open polyline composed of several line segments 
+% An open polyline composed of several line segments. 
 %
 %   Represents a polyline defined be a series of Coords. 
 %

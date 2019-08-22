@@ -1,5 +1,5 @@
 classdef Circle2D < Geometry2D
-%CIRCLE2D  One-line description here, please.
+% A circle in the plane.
 %
 %   Class Circle2D
 %

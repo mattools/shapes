@@ -1,5 +1,5 @@
 classdef Shape < handle
-%SHAPE Contains information to draw a 2D or 3D shape 
+% Contains information to draw a 2D or 3D shape.
 %
 %   The shape class encapsulates information about the Geometry of the
 %   shape (as an instance of Geometry class) and drawing options (as an

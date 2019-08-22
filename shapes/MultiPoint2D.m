@@ -1,5 +1,5 @@
 classdef MultiPoint2D < Geometry2D
-%MULTIPOINT2D A set of points in the plane
+% A set of points in the plane.
 %
 %   Represents a set of Coordinates. 
 %
@@ -9,7 +9,7 @@ classdef MultiPoint2D < Geometry2D
 %   MultiPoint2D([0 0; 10 0; 10 10]; 0 10]);
 %
 %   See also
-%   Geometry2D, Polygon2D, LineString2D
+%     Geometry2D, Polygon2D, LineString2D
 
 % ------
 % Author: David Legland

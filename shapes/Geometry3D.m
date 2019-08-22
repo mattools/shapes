@@ -1,5 +1,5 @@
 classdef Geometry3D < Geometry
-%GEOMETRY3D Abstract class for 3D geometries
+% Abstract class for 3D geometries.
 %
 %   Class Geometry3D
 %

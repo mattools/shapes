@@ -1,5 +1,5 @@
 classdef Polygon2D < Geometry2D
-%POLYGON2D A polygon in the plane
+% A polygon in the plane.
 %
 %   Represents a polygon defined be a series of Coords. 
 %
@@ -9,7 +9,7 @@ classdef Polygon2D < Geometry2D
 %   Polygon2D([0 0; 10 0; 10 10; 0 10]);
 %
 %   See also
-%     Geometry2D, LineString2D
+%     Geometry2D, LinearRing2D
 
 % ------
 % Author: David Legland

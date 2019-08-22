@@ -1,13 +1,13 @@
 classdef TriMesh3D < Geometry3D
-%TRIMESH Class for representing a triangular 3D mesh
+% Class for representing a 3D triangular mesh.
 %
-%   output = TriMesh3D(input)
+%   MESH = TriMesh3D(V, F)
 %
 %   Example
 %   TriMesh3D
 %
 %   See also
-%
+%     Meshes3D
  
 % ------
 % Author: David Legland

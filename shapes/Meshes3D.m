@@ -1,5 +1,5 @@
 classdef Meshes3D < handle
-%MESHES3D Utility class containing static methods for meshes
+% Utility class containing static methods for meshes.
 %
 %   Class Meshes3D
 %

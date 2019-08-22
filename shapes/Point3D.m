@@ -1,5 +1,5 @@
 classdef Point3D < Geometry3D
-%POINT3D  A point in the 3-dimensional plane
+% A point in the 3-dimensional space.
 %
 %   Usage:
 %   P = Point3D(COORDS)

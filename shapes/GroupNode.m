@@ -1,5 +1,5 @@
 classdef GroupNode < SceneNode
-%GROUPNODE Contatenates a group of nodes
+% Contatenates a group of nodes.
 %
 %   Class GroupNode
 %

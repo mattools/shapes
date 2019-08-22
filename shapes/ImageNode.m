@@ -1,5 +1,5 @@
 classdef ImageNode < SceneNode
-%IMAGENODE Contains information to represent an image within the scene
+% Contains information to represent an image within the scene.
 %
 %   Class ImageNode
 %

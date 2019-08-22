@@ -1,5 +1,5 @@
 classdef SceneNode < handle
-%SCENENODE Abstract class for Node in a SceneGraph
+% Abstract class for Node in a SceneGraph.
 %
 %   Class SceneNode
 %

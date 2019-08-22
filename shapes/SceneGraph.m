@@ -1,5 +1,5 @@
 classdef SceneGraph < handle
-%SCENEGRAPH The top-level class for the scene
+% The top-level class for the scene.
 %
 %   Class SceneGraph
 %

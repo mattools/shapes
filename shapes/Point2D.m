@@ -1,5 +1,5 @@
 classdef Point2D < Geometry2D
-%POINT2D  A point in the 2-dimensional plane
+% A point in the 2-dimensional plane.
 %
 %   Usage:
 %   P = Point2D(X, Y)
@@ -10,7 +10,7 @@ classdef Point2D < Geometry2D
 %   Point2D
 %
 %   See also
-%
+%     Geometry2D, Point3D
 
 % ------
 % Author: David Legland

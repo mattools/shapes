@@ -1,5 +1,5 @@
 classdef LinearRing2D < Geometry2D
-%LINEARRING2D A close polyline in the plane
+% A closed polyline in the plane.
 %
 %   Represents a linear ringdefined be a series of Coords. 
 %

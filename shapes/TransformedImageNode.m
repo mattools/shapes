@@ -1,5 +1,5 @@
 classdef TransformedImageNode < SceneNode
-%TRANSFORMEDIMAGENODE A transform applied to an image
+% A transform applied to an image.
 %
 %   Class TransformedImageNode
 %
@@ -19,6 +19,7 @@ classdef TransformedImageNode < SceneNode
 %
 %   See also
 %     SceneNode, ImageNode, AffineTransform2D
+%
 
 % ------
 % Author: David Legland

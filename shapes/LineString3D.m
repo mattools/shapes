@@ -1,15 +1,15 @@
 classdef LineString3D < Geometry3D
-%LineString3D An open 3D polyline composed of several line segments 
+% An open 3D polyline composed of several line segments.
 %
 %   Represents a polyline defined be a series of Coords. 
 %
 %   Data are represented by a NV-by-3 array.
 %
 %   Example
-%   LineString3D([0 0 0; 10 0 0; 10 10 0]; 0 10 0]);
+%   LineString3D([0 0 0; 10 0 0; 10 10 0; 0 10 0]);
 %
 %   See also
-%   Geometry3D, LineString3D
+%     Geometry3D, LineString2D
 
 % ------
 % Author: David Legland

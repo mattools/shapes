@@ -1,5 +1,5 @@
 classdef Geometry < handle
-%GEOMETRY Abstract class for geometries whatever the dimension
+% Abstract class for a geometry of any dimensionality.
 %
 %   Class Geometry
 %

@@ -1,5 +1,5 @@
 classdef SceneAxis < handle
-%SCENEAXIS Describes one of the axes of a scene
+% Describes one of the axes of a scene.
 %
 %   Class SceneAxis
 %

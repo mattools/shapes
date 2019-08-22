@@ -1,7 +1,12 @@
 classdef Ellipse2D < Geometry2D
-%ELLIPSE2D  One-line description here, please.
+% A planar ellipse.
 %
-%   Class Ellipse2D
+%   An ellipse is defined by five parameters:
+%   * CenterX     the x-coordinate of the center
+%   * CenterY     the y-coordinate of the center
+%   * Radius1     the length of the semi-major axis
+%   * Radius2     the length of the semi-minor axis
+%   * Orientation the orientation of the major axis
 %
 %   Example
 %   Ellipse2D

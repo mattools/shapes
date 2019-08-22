@@ -1,5 +1,5 @@
 classdef Box2D < handle
-%BOX2D Bounding box of a planar shape
+% Bounding box of a planar shape.
 %
 %   Class Box2D
 %   Defined by max extent in each dimension:

@@ -1,5 +1,5 @@
 classdef Scene < handle
-%SCENE  A container of shape instances
+% A container of shape instances.
 %
 %   Class Scene
 %

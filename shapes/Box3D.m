@@ -1,5 +1,5 @@
 classdef Box3D < handle
-%BOX3D Bounding box of a 3D shape
+% Bounding box of a 3D shape.
 %
 %   Class Box3D
 %   Defined by max extent in each dimension:

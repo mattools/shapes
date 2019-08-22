@@ -1,5 +1,5 @@
 classdef TransformNode < SceneNode
-%TRANSFORMNODE Apply a transform to another node
+% Apply a transform to another node.
 %
 %   Class TransformNode
 %   NODE2 = TransformNode(NODE, TRANSFO);
@@ -11,6 +11,7 @@ classdef TransformNode < SceneNode
 %
 %   See also
 %     SceneNode, AffineTransform2D, AffineTransform3D
+%
 
 % ------
 % Author: David Legland

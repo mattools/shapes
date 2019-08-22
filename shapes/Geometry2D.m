@@ -1,5 +1,5 @@
 classdef Geometry2D < Geometry
-%Geometry2D Abstract class for planar geometries
+% Abstract class for planar geometries.
 %
 %   Class Geometry2D
 %

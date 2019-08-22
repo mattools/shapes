@@ -1,5 +1,5 @@
 classdef Patch2D < Geometry2D
-%PATCH2D A 2D parametric defined by two arrays x and y
+% A 2D parametric grid defined by two arrays x and y.
 %
 %   Class Patch2D
 %
@@ -7,6 +7,7 @@ classdef Patch2D < Geometry2D
 %   Patch2D
 %
 %   See also
+%     Patch3D
 %
 
 % ------
