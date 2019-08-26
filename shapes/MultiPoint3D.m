@@ -88,7 +88,7 @@ methods
         hh = plot3(hAx, obj.Coords(:,1), obj.Coords(:,2), obj.Coords(:,3), options{:});
 
         % optionnally add style processing
-        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+        if ~isempty(varargin) && isa(varargin{1}, 'Style')
             apply(varargin{1}, hh);
         end
         
@@ -117,13 +117,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'MultiPoint3D', 'coordinates', obj.Coords);
+        str = struct('Type', 'MultiPoint3D', 'Coordinates', obj.Coords);
     end
 end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = MultiPoint3D(str.coordinates);
+        poly = MultiPoint3D(str.Coordinates);
     end
 end
 

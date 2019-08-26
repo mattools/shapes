@@ -1,50 +1,50 @@
 {
-	"xAxis": {
-		"limits": [0,90]
+	"XAxis": {
+		"Limits": [0,90]
 	},
-	"yAxis": {
-		"limits": [0,50]
+	"YAxis": {
+		"Limits": [0,50]
 	},
-	"zAxis": {
-		"limits": [0,1]
+	"ZAxis": {
+		"Limits": [0,1]
 	},
-	"shapes": [
+	"Shapes": [
 		{
-			"geometry": {
-				"type": "Polygon2D",
-				"coordinates": [
+			"Geometry": {
+				"Type": "Polygon2D",
+				"Coordinates": [
 					[8.819660113,10],
 					[31.18033989,10],
 					[20,30]
 				]
 			},
-			"style": {
-				"lineColor": "k",
-				"lineWidth": 2,
-				"fillVisible": 1
+			"Style": {
+				"LineColor": "k",
+				"LineWidth": 2,
+				"FillVisible": 1
 			}
 		},
 		{
-			"geometry": {
-				"type": "Polygon2D",
-				"coordinates": [
+			"Geometry": {
+				"Type": "Polygon2D",
+				"Coordinates": [
 					[35,10],
 					[55,10],
 					[55,30],
 					[35,30]
 				]
 			},
-			"style": {
-				"lineColor": "k",
-				"lineWidth": 2,
-				"fillColor": "r",
-				"fillVisible": 1
+			"Style": {
+				"LineColor": "k",
+				"LineWidth": 2,
+				"FillColor": "r",
+				"FillVisible": 1
 			}
 		},
 		{
-			"geometry": {
-				"type": "Polygon2D",
-				"coordinates": [
+			"Geometry": {
+				"Type": "Polygon2D",
+				"Coordinates": [
 					[80,20],
 					[79.94521895,21.04528463],
 					[79.78147601,22.07911691],
@@ -107,11 +107,11 @@
 					[79.94521895,18.95471537]
 				]
 			},
-			"style": {
-				"lineColor": "k",
-				"lineWidth": 2,
-				"fillColor": "b",
-				"fillVisible": 1
+			"Style": {
+				"LineColor": "k",
+				"LineWidth": 2,
+				"FillColor": "b",
+				"FillVisible": 1
 			}
 		}
 	]

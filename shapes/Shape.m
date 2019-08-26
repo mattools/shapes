@@ -125,20 +125,20 @@ methods
 
         % add the Name only if not null
         if ~isempty(obj.Name)
-            str.name = obj.Name;
+            str.Name = obj.Name;
         end
         
         % add optional Style
         if ~isempty(obj.Style)
-            str.style = toStruct(obj.Style);
+            str.Style = toStruct(obj.Style);
         end
 
         % creates a structure for Geometry, including class Name
-        str.geometry = toStruct(obj.Geometry);
-        if ~isfield(str.geometry, 'type')
+        str.Geometry = toStruct(obj.Geometry);
+        if ~isfield(str.Geometry, 'Type')
             type = classname(obj.Geometry);
             warning(['Geometry type not specified, use class Name: ' type]);
-            str.geometry.type = type;
+            str.Geometry.Type = type;
         end
     end
     
@@ -153,18 +153,18 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse Geometry
-        type = str.geometry.type;
-        geom = eval([type '.fromStruct(str.geometry)']);
+        type = str.Geometry.Type;
+        geom = eval([type '.fromStruct(str.Geometry)']);
         shape = Shape(geom);
         
         % parse the optionnal Name
-        if isfield(str, 'name') && ~isempty(str.name)
-            shape.Name = str.name;
+        if isfield(str, 'Name') && ~isempty(str.Name)
+            shape.Name = str.Name;
         end
 
         % eventually parse Style
-        if isfield(str, 'style') && ~isempty(str.style)
-            shape.Style = Style.fromStruct(str.style);
+        if isfield(str, 'Style') && ~isempty(str.Style)
+            shape.Style = Style.fromStruct(str.Style);
         end
     end
     

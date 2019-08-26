@@ -70,7 +70,7 @@ methods
         res.XAxis = SceneAxis(obj.XAxis);
         res.YAxis = SceneAxis(obj.YAxis);
         res.ZAxis = SceneAxis(obj.ZAxis);
-        res.BackgroundImage = ImageNode(obj.BackgroundImage);
+%         res.BackgroundImage = ImageNode(obj.BackgroundImage);
         res.AxisLinesVisible = obj.AxisLinesVisible;
         
         root = obj.RootNode;
@@ -196,13 +196,13 @@ methods
         % Convert to a structure to facilitate serialization
 
         % first add information about axes
-        str.xAxis = toStruct(obj.XAxis);
-        str.yAxis = toStruct(obj.YAxis);
-        str.zAxis = toStruct(obj.ZAxis);
+        str.XAxis = toStruct(obj.XAxis);
+        str.ZAxis = toStruct(obj.YAxis);
+        str.ZAxis = toStruct(obj.ZAxis);
 
-        str.axisLinesVisible = obj.AxisLinesVisible;
+        str.ZxisLinesVisible = obj.AxisLinesVisible;
 
-        str.rootNode = toStruct(obj.RootNode);
+        str.RootNode = toStruct(obj.RootNode);
     end
     
     function write(obj, fileName, varargin)
@@ -229,17 +229,17 @@ methods (Static)
         scene = SceneGraph();
         
         % parse eventual axes information
-        if isfield(str, 'xAxis')
-            scene.XAxis = SceneAxis.fromStruct(str.xAxis);
+        if isfield(str, 'XAxis')
+            scene.XAxis = SceneAxis.fromStruct(str.XAxis);
         end
-        if isfield(str, 'yAxis')
-            scene.YAxis = SceneAxis.fromStruct(str.yAxis);
+        if isfield(str, 'YAxis')
+            scene.YAxis = SceneAxis.fromStruct(str.YAxis);
         end
-        if isfield(str, 'zAxis')
-            scene.ZAxis = SceneAxis.fromStruct(str.zAxis);
+        if isfield(str, 'ZAxis')
+            scene.ZAxis = SceneAxis.fromStruct(str.ZAxis);
         end
                 
-        if isfield(str, 'axisLinesVisible')
+        if isfield(str, 'AxisLinesVisible')
             scene.AxisLinesVisible = str.axisLinesVisible;
         end
         
@@ -248,23 +248,23 @@ methods (Static)
         scene.RootNode.Name = 'Root';
         
         % recursively parse the root node
-        if isfield(str, 'rootNode')
-            scene.RootNode = SceneNode.fromStruct(str.rootNode);
+        if isfield(str, 'RootNode')
+            scene.RootNode = SceneNode.fromStruct(str.RootNode);
         end
         
         % parse old background image data
-        if isfield(str, 'backgroundImage')
-            imageNode = ImageNode.fromStruct(str.backgroundImage);
+        if isfield(str, 'BackgroundImage')
+            imageNode = ImageNode.fromStruct(str.BackgroundImage);
             imageNode.Name = 'BackgroundImage';
             add(scene.RootNode, imageNode);
         end
         
         % parse old Shape data
-        if isfield(str, 'shapes')
+        if isfield(str, 'Shapes')
             shapes = GroupNode();
             shapes.Name = 'Shapes';
-            for i = 1:length(str.shapes)
-                add(shapes, ShapeNode.fromStruct(str.shapes{i}));
+            for i = 1:length(str.Shapes)
+                add(shapes, ShapeNode.fromStruct(str.Shapes{i}));
             end
             add(scene.RootNode, shapes);
         end

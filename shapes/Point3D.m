@@ -112,7 +112,7 @@ methods
         hh = plot3(hAx, obj.X, obj.Y, obj.Z, options{:});
 
         % optionnally add style processing
-        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+        if ~isempty(varargin) && isa(varargin{1}, 'Style')
             apply(varargin{1}, hh);
         end
         
@@ -143,13 +143,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Point3D', 'x', obj.X, 'y', obj.Y, 'z', obj.Z);
+        str = struct('Type', 'Point3D', 'X', obj.X, 'Y', obj.Y, 'Z', obj.Z);
     end
 end
 methods (Static)
     function point = fromStruct(str)
         % Create a new instance from a structure
-        point = Point3D([str.x, str.y, str.z]);
+        point = Point3D([str.X str.Y str.Z]);
     end
 end
 

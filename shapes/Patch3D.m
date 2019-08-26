@@ -157,7 +157,7 @@ methods
         hh = surf(hAx, 'XData', obj.X, 'YData', obj.Y, 'ZData', obj.Z, options{:});
 
         % optionnally add style processing
-        if ~isempty(varargin) && isa(varargin{1}, 'Style');
+        if ~isempty(varargin) && isa(varargin{1}, 'Style')
             apply(varargin{1}, hh);
         end
         
@@ -198,13 +198,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Patch3D', 'x', obj.X, 'y', obj.Y, 'z', obj.Z);
+        str = struct('Type', 'Patch3D', 'X', obj.X, 'Y', obj.Y, 'Z', obj.Z);
     end
 end
 methods (Static)
     function obj = fromStruct(str)
         % Create a new instance from a structure
-        obj = Patch3D(str.x, str.y, str.z);
+        obj = Patch3D(str.X, str.Y, str.Z);
     end
 end
 

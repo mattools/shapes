@@ -176,13 +176,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'LinearRing2D', 'coordinates', obj.Coords);
+        str = struct('Type', 'LinearRing2D', 'Coordinates', obj.Coords);
     end
 end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = LinearRing2D(str.coordinates);
+        poly = LinearRing2D(str.Coordinates);
     end
 end
 

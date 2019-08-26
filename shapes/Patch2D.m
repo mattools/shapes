@@ -200,13 +200,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Patch2D', 'x', obj.X, 'y', obj.Y);
+        str = struct('Type', 'Patch2D', 'X', obj.X, 'Y', obj.Y);
     end
 end
 methods (Static)
     function obj = fromStruct(str)
         % Create a new instance from a structure
-        obj = Patch2D(str.x, str.y);
+        obj = Patch2D(str.X, str.Y);
     end
 end
 

@@ -257,21 +257,21 @@ methods
         % Convert to a structure to facilitate serialization
 
         % first add information about axes
-        str.xAxis = toStruct(obj.XAxis);
-        str.yAxis = toStruct(obj.YAxis);
-        str.zAxis = toStruct(obj.ZAxis);
+        str.XAxis = toStruct(obj.XAxis);
+        str.YAxis = toStruct(obj.YAxis);
+        str.ZAxis = toStruct(obj.ZAxis);
 
         if ~isempty(obj.BackgroundImage)
-            str.backgroundImage = toStruct(obj.BackgroundImage);
+            str.BackgroundImage = toStruct(obj.BackgroundImage);
         end
         
-        str.axisLinesVisible = obj.AxisLinesVisible;
+        str.AxisLinesVisible = obj.AxisLinesVisible;
 
         % create a structure for the list of Shapes
         % (use it as last fields to finish by the more numerous data)
-        str.shapes = cell(1, length(obj.Shapes));
+        str.Shapes = cell(1, length(obj.Shapes));
         for i = 1:length(obj.Shapes)
-            str.shapes{i} = toStruct(obj.Shapes(i));
+            str.Shapes{i} = toStruct(obj.Shapes(i));
         end
         
     end
@@ -299,27 +299,27 @@ methods (Static)
         scene = Scene();
         
         % parse eventual axes information
-        if isfield(str, 'xAxis')
-            scene.XAxis = SceneAxis.fromStruct(str.xAxis);
+        if isfield(str, 'XAxis')
+            scene.XAxis = SceneAxis.fromStruct(str.XAxis);
         end
-        if isfield(str, 'yAxis')
-            scene.YAxis = SceneAxis.fromStruct(str.yAxis);
+        if isfield(str, 'YAxis')
+            scene.YAxis = SceneAxis.fromStruct(str.YAxis);
         end
-        if isfield(str, 'zAxis')
-            scene.ZAxis = SceneAxis.fromStruct(str.zAxis);
-        end
-        
-        if isfield(str, 'backgroundImage')
-            scene.BackgroundImage = ImageNode.fromStruct(str.backgroundImage);
+        if isfield(str, 'ZAxis')
+            scene.ZAxis = SceneAxis.fromStruct(str.ZAxis);
         end
         
-        if isfield(str, 'axisLinesVisible')
-            scene.AxisLinesVisible = str.axisLinesVisible;
+        if isfield(str, 'BackgroundImage')
+            scene.BackgroundImage = ImageNode.fromStruct(str.BackgroundImage);
+        end
+        
+        if isfield(str, 'AxisLinesVisible')
+            scene.AxisLinesVisible = str.AxisLinesVisible;
         end
         
         % parse list of Shapes
-        for iShape = 1:length(str.shapes)
-            shape = Shape.fromStruct(str.shapes{iShape});
+        for iShape = 1:length(str.Shapes)
+            shape = Shape.fromStruct(str.Shapes{iShape});
             addShape(scene, shape);
         end
     end

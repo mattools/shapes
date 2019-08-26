@@ -222,10 +222,10 @@ methods
         % call scene node method
         str = convertSceneNodeFields(obj, str);
 
-        str.filePath = obj.FilePath;
-        str.imageSize = obj.ImageSize;
-        str.spacing = obj.Spacing;
-        str.origin = obj.Origin;
+        str.FilePath = obj.FilePath;
+        str.ImageSize = obj.ImageSize;
+        str.Spacing = obj.Spacing;
+        str.Origin = obj.Origin;
     end
     
     function write(obj, fileName, varargin)
@@ -239,20 +239,20 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse file path
-        node = ImageNode(str.filePath);
+        node = ImageNode(str.FilePath);
 
         % parse SceneNode fields
         parseSceneNodeFields(node, str);
 
         % parse optional fields
-        if isfield(str, 'imageSize')
-            node.ImageSize = str.imageSize;
+        if isfield(str, 'ImageSize')
+            node.ImageSize = str.ImageSize;
         end
-        if isfield(str, 'spacing')
-            node.Spacing = str.spacing;
+        if isfield(str, 'Spacing')
+            node.Spacing = str.Spacing;
         end
-        if isfield(str, 'origin')
-            node.Origin = str.origin;
+        if isfield(str, 'Origin')
+            node.Origin = str.Origin;
         end
     end
     

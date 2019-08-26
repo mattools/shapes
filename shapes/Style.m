@@ -215,60 +215,60 @@ methods
 
         % global visibility
         if ~obj.Visible
-            str.visible = obj.Visible;
+            str.Visible = obj.Visible;
         end
 
         % update marker modifiers with values different from default
         if obj.MarkerVisible ~= false
-            str.markerVisible = obj.MarkerVisible;
+            str.MarkerVisible = obj.MarkerVisible;
         end
         if obj.MarkerColor ~= 'b'
-            str.markerColor = obj.MarkerColor;
+            str.MarkerColor = obj.MarkerColor;
         end
         if obj.MarkerStyle ~= '+'
-            str.markerStyle = obj.MarkerStyle;
+            str.MarkerStyle = obj.MarkerStyle;
         end
         if obj.MarkerSize ~= 6
-            str.markerSize = obj.MarkerSize;
+            str.MarkerSize = obj.MarkerSize;
         end
         if ~ischar(obj.MarkerFillColor) || ~strcmp(obj.MarkerFillColor, 'none')
-            str.markerFillColor = obj.MarkerFillColor;
+            str.MarkerFillColor = obj.MarkerFillColor;
         end
         
         % update line modifiers with values different from default
         if obj.LineVisible ~= true
-            str.lineVisible = obj.LineVisible;
+            str.LineVisible = obj.LineVisible;
         end
         if ~isSameColor(obj.LineColor, 'b')
-            str.lineColor = obj.LineColor;
+            str.LineColor = obj.LineColor;
         end
         if obj.LineWidth ~= .5
-            str.lineWidth = obj.LineWidth;
+            str.LineWidth = obj.LineWidth;
         end
         if ~strcmp(obj.LineStyle, '-')
-            str.lineStyle = obj.LineStyle;
+            str.LineStyle = obj.LineStyle;
         end
         
         % update fill modifiers with values different from default
         if obj.FillVisible
-            str.fillVisible = obj.FillVisible;
+            str.FillVisible = obj.FillVisible;
         end
         if ~isSameColor(obj.FillColor, 'y')
-            str.fillColor = obj.FillColor;
+            str.FillColor = obj.FillColor;
         end
         if obj.FillOpacity ~= 1
-            str.fillOpacity = obj.FillOpacity;
+            str.FillOpacity = obj.FillOpacity;
         end
         
         % update face modifiers with values different from default
         if ~obj.FaceVisible
-            str.faceVisible = obj.FaceVisible;
+            str.FaceVisible = obj.FaceVisible;
         end
         if ~isSameColor(obj.FaceColor, [.7 .7 .7])
-            str.faceColor = obj.FaceColor;
+            str.FaceColor = obj.FaceColor;
         end
         if obj.FaceOpacity ~= 1
-            str.faceOpacity = obj.FaceOpacity;
+            str.FaceOpacity = obj.FaceOpacity;
         end
         
         function b = isSameColor(color1, color2)
@@ -314,61 +314,61 @@ methods (Static)
         
         % global visibility
         if isfield(str, 'visible')
-            style.Visible = str.visible;
+            style.Visible = str.Visible;
         end
 
         % parse marker style modifiers
         if isfield(str, 'markerVisible')
-            style.MarkerVisible = str.markerVisible;
+            style.MarkerVisible = str.MarkerVisible;
         end
         if isfield(str, 'markerColor')
-            style.MarkerColor = str.markerColor;
+            style.MarkerColor = str.MarkerColor;
         end
         if isfield(str, 'markerStyle')
-            style.MarkerStyle = str.markerStyle;
+            style.MarkerStyle = str.MarkerStyle;
         end
         if isfield(str, 'markerSize')
-            style.MarkerSize = str.markerSize;
+            style.MarkerSize = str.MarkerSize;
         end
         if isfield(str, 'markerFillColor')
-            style.MarkerFillColor = str.markerFillColor;
+            style.MarkerFillColor = str.MarkerFillColor;
         end
         
         
         % parse line style modifiers
         if isfield(str, 'lineVisible')
-            style.LineVisible = str.lineVisible;
+            style.LineVisible = str.MineVisible;
         end
         if isfield(str, 'lineColor')
-            style.LineColor = str.lineColor;
+            style.LineColor = str.LineColor;
         end
         if isfield(str, 'lineWidth')
-            style.LineWidth = str.lineWidth;
+            style.LineWidth = str.LineWidth;
         end
         if isfield(str, 'lineStyle')
-            style.LineStyle = str.lineStyle;
+            style.LineStyle = str.LineStyle;
         end
          
         % parse fill style modifiers
         if isfield(str, 'fillVisible')
-            style.FillVisible = str.fillVisible;
+            style.FillVisible = str.FillVisible;
         end
         if isfield(str, 'fillColor')
-            style.FillColor = str.fillColor;
+            style.FillColor = str.FillColor;
         end
         if isfield(str, 'fillOpacity')
-            style.FillOpacity = str.fillOpacity;
+            style.FillOpacity = str.FillOpacity;
         end
         
         % parse face style modifiers
         if isfield(str, 'faceVisible')
-            style.FaceVisible = str.faceVisible;
+            style.FaceVisible = str.FaceVisible;
         end
         if isfield(str, 'faceColor')
-            style.FaceColor = str.faceColor;
+            style.FaceColor = str.FaceColor;
         end
         if isfield(str, 'faceOpacity')
-            style.FaceOpacity = str.faceOpacity;
+            style.FaceOpacity = str.FaceOpacity;
         end
         
     end

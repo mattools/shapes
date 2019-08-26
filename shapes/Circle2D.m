@@ -138,13 +138,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'Circle2D', 'center', [obj.CenterX obj.CenterY], 'radius', obj.Radius);
+        str = struct('Type', 'Circle2D', 'CenterX', obj.CenterX, 'CenterY', obj.CenterY, 'Radius', obj.Radius);
     end
 end
 methods (Static)
     function circ = fromStruct(str)
         % Create a new instance from a structure
-        circ = Circle2D([str.center str.radius]);
+        circ = Circle2D([str.CenterX str.CenterY str.Radius]);
     end
 end
 

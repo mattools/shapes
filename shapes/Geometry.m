@@ -53,10 +53,10 @@ methods (Static)
         % Creates a new transform instance from a structure
         
         % check existence of 'type' field
-        if ~isfield(str, 'type')
+        if ~isfield(str, 'Type')
             error('Requires a field with name "type"');
         end
-        type = str.type;
+        type = str.Type;
 
         % parse transform
         try

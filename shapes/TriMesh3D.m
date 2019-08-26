@@ -553,18 +553,18 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'TriMesh3D', ...
-            'vertices', obj.Vertices, ...
-            'faces', obj.Faces);
+        str = struct('Type', 'TriMesh3D', ...
+            'Vertices', obj.Vertices, ...
+            'Faces', obj.Faces);
     end
 end
 methods (Static)
     function mesh = fromStruct(str)
         % Create a new instance from a structure
-        if ~(isfield(str, 'vertices') && isfield(str, 'faces'))
+        if ~(isfield(str, 'Vertices') && isfield(str, 'Faces'))
             error('Requires fields vertices and faces');
         end
-        if size(str.faces, 2) ~= 3
+        if size(str.Faces, 2) ~= 3
             error('Requires a triangular face array');
         end
         mesh = TriMesh3D(str);

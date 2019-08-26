@@ -77,7 +77,7 @@ methods
         % display patch
         data = imageData(obj.Image);
         data = padarray(data, [1 1], 'replicate', 'post');
-        s = surf(gca, patch.X, patch.Y, patch.Z, data, 'linestyle', 'none');
+        s = surf(gca, patch.X, patch.Y, patch.Z, data, 'LineStyle', 'None');
 
 %         % overlay grid
 %         drawSubGrid(aPatch, 8, 'color', 'b');
@@ -136,14 +136,14 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        str = struct('type', 'TransformedImage');
+        str = struct('Type', 'TransformedImage');
         
         % call scene node method
         str = convertSceneNodeFields(obj, str);
 
         % convert specific fields
-        str.image = toStruct(obj.Image);
-        str.transform = toStruct(obj.Transform);
+        str.Image = toStruct(obj.Image);
+        str.Transform = toStruct(obj.Transform);
     end
     
     function write(obj, fileName, varargin)
@@ -156,13 +156,13 @@ methods (Static)
     function node = fromStruct(str)
         % Creates a new instance from a structure
         
-        image = ImageNode.fromStruct(str.image);
+        image = ImageNode.fromStruct(str.Image);
 
-        transfoType = str.transform.type;
+        transfoType = str.Transform.Type;
         if strcmpi(transfoType, 'AffineTransform2D')
-            transfo = AffineTransform2D.fromStruct(str.transform);
+            transfo = AffineTransform2D.fromStruct(str.Transform);
         elseif strcmpi(transfoType, 'AffineTransform3D')
-            transfo = AffineTransform3D.fromStruct(str.transform);
+            transfo = AffineTransform3D.fromStruct(str.Transform);
         else
             error(['Unable to parse transform type: ' transfoType]);
         end

@@ -74,13 +74,13 @@ methods
 
         % create a structure containing all fields that differ from default
         if ~isempty(obj.Limits)
-            str.limits = obj.Limits;
+            str.Limits = obj.Limits;
         end
         if obj.Reverse
-            str.reverse = obj.Reverse;
+            str.Reverse = obj.Reverse;
         end
         if ~isempty(obj.Label)
-            str.label = obj.Label;
+            str.Label = obj.Label;
         end
     end
     
@@ -102,11 +102,11 @@ methods (Static)
         for i = 1:length(names)
             name = names{i};
             if strcmpi(name, 'Limits')
-                axis.Limits = str.limits;
+                axis.Limits = str.Limits;
             elseif strcmpi(name, 'Reverse')
-                axis.Reverse = str.reverse;
+                axis.Reverse = str.Reverse;
             elseif strcmpi(name, 'Label')
-                axis.Label = str.label;
+                axis.Label = str.Label;
             else
                 warning(['Unknown SceneAxis parameter: ' name]);
             end

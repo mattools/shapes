@@ -79,20 +79,20 @@ end
 methods (Access=protected)
 
     function obj = parseSceneNodeFields(obj, str)
-        if isfield(str, 'name')
-            obj.Name = str.name;
+        if isfield(str, 'Name')
+            obj.Name = str.Name;
         end
-        if isfield(str, 'visible')
-            obj.Visible = str.visible;
+        if isfield(str, 'Visible')
+            obj.Visible = str.Visible;
         end
     end
     
     function str = convertSceneNodeFields(obj, str)
         if ~isempty(obj.Name)
-            str.name = obj.Name;
+            str.Name = obj.Name;
         end
         if ~obj.Visible
-            str.visible = obj.Visible;
+            str.Visible = obj.Visible;
         end
     end
 end

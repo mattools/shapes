@@ -153,22 +153,22 @@ methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
 
-        str.type = 'shape';
+        str.Type = 'Shape';
         
         % call scene node method
         str = convertSceneNodeFields(obj, str);
         
         % add optional Style
         if ~isempty(obj.Style)
-            str.style = toStruct(obj.Style);
+            str.Style = toStruct(obj.Style);
         end
 
         % creates a structure for Geometry, including class Name
-        str.geometry = toStruct(obj.Geometry);
-        if ~isfield(str.geometry, 'type')
+        str.Geometry = toStruct(obj.Geometry);
+        if ~isfield(str.Geometry, 'Type')
             type = classname(obj.Geometry);
             warning(['Geometry type not specified, use class Name: ' type]);
-            str.geometry.type = type;
+            str.Geometry.Type = type;
         end
     end
     
@@ -183,16 +183,16 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse Geometry
-        type = str.geometry.type;
-        geom = eval([type '.fromStruct(str.geometry)']);
+        type = str.Geometry.Type;
+        geom = eval([type '.fromStruct(str.Geometry)']);
         node = ShapeNode(geom);
         
         % parse the optionnal Name
         parseSceneNodeFields(node, str);
 
         % eventually parse Style
-        if isfield(str, 'style') && ~isempty(str.style)
-            node.Style = Style.fromStruct(str.style);
+        if isfield(str, 'Style') && ~isempty(str.Style)
+            node.Style = Style.fromStruct(str.Style);
         end
     end
     

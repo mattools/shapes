@@ -140,13 +140,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'LineString3D', 'coordinates', obj.Coords);
+        str = struct('Type', 'LineString3D', 'Coordinates', obj.Coords);
     end
 end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = LineString3D(str.coordinates);
+        poly = LineString3D(str.Coordinates);
     end
 end
 

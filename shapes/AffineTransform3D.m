@@ -130,8 +130,8 @@ methods
     function str = toStruct(obj)
         % Converts to a structure to facilitate serialization
         str = struct(...
-            'type', 'AffineTransform3D', ...
-            'matrix', [obj.Coeffs(1:4) ; obj.Coeffs(5:8) ; obj.Coeffs(9:12) ; 0 0 0 1]);
+            'Type', 'AffineTransform3D', ...
+            'Matrix', [obj.Coeffs(1:4) ; obj.Coeffs(5:8) ; obj.Coeffs(9:12) ; 0 0 0 1]);
     end
 end
 
@@ -146,7 +146,7 @@ methods (Static)
     
     function transfo = fromStruct(str)
         % Creates a new instance from a structure
-        transfo = AffineTransform3D(str.matrix);
+        transfo = AffineTransform3D(str.Matrix);
     end
 end
 

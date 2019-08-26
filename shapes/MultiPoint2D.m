@@ -118,13 +118,13 @@ end % end methods
 methods
     function str = toStruct(obj)
         % Convert to a structure to facilitate serialization
-        str = struct('type', 'MultiPoint2D', 'coordinates', obj.Coords);
+        str = struct('Type', 'MultiPoint2D', 'Coordinates', obj.Coords);
     end
 end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = MultiPoint2D(str.coordinates);
+        poly = MultiPoint2D(str.Coordinates);
     end
 end
 
