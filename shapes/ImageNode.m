@@ -215,9 +215,9 @@ end
 %% Serialization methods
 methods
     function str = toStruct(obj)
-        % Convert to a structure to facilitate serialization
+        % Convert to a structure to facilitate serialization.
 
-        str = struct();
+        str = struct('Type', 'ImageNode');
         
         % call scene node method
         str = convertSceneNodeFields(obj, str);
@@ -236,10 +236,14 @@ end
 
 methods (Static)
     function node = fromStruct(str)
-        % Creates a new instance from a structure
+        % Creates a new instance from a structure.
         
         % parse file path
-        node = ImageNode(str.FilePath);
+        if isfield(str, 'FilePath')
+            node = ImageNode(str.FilePath);
+        elseif isfield(str, 'filePath')
+            node = ImageNode(str.filePath);
+        end
 
         % parse SceneNode fields
         parseSceneNodeFields(node, str);
@@ -247,12 +251,18 @@ methods (Static)
         % parse optional fields
         if isfield(str, 'ImageSize')
             node.ImageSize = str.ImageSize;
+        elseif isfield(str, 'imageSize')
+            node.ImageSize = str.imageSize;
         end
         if isfield(str, 'Spacing')
             node.Spacing = str.Spacing;
+        elseif isfield(str, 'spacing')
+            node.Spacing = str.spacing;
         end
         if isfield(str, 'Origin')
             node.Origin = str.Origin;
+        elseif isfield(str, 'origin')
+            node.Origin = str.origin;
         end
     end
     

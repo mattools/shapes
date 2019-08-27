@@ -4,9 +4,11 @@ classdef GroupNode < SceneNode
 %   Class GroupNode
 %
 %   Example
-%   GroupNode
+%     grp = GroupNode();
+%     
 %
 %   See also
+%     SceneNode
 %
 
 % ------
@@ -18,7 +20,7 @@ classdef GroupNode < SceneNode
 
 %% Properties
 properties    
-    % the list of children, as a 1-by-N cell array containing SceneNode instances
+    % The list of children, as a 1-by-N cell array containing SceneNode instances.
     Children = {};
     
 end % end properties
@@ -27,8 +29,20 @@ end % end properties
 %% Constructor
 methods
     function obj = GroupNode(varargin)
-    % Constructor for GroupNode class
-
+        % Constructor for GroupNode class
+        
+        while length(varargin) > 1
+            name = varargin{1};
+            value = varargin{2};
+            if strcmpi(name, 'Name')
+                obj.Name = value;
+            elseif strcmpi(name, 'Visible')
+                obj.Visible = value;
+            else
+                error('Unknown parameter for GroupNode');
+            end
+            varargin(1:2) = [];
+        end
     end
 
 end % end constructors
@@ -49,7 +63,7 @@ end % end methods
 %% Methods specializing the SceneNode superclass
 methods
     function varargout = draw(obj)
-        % draw all children referenced by this group
+        % Draw all children referenced by this group.
         
         nChildren = length(obj.Children);
         h = cell(1, nChildren);
@@ -73,7 +87,7 @@ methods
     end
     
     function box = boundingBox(obj)
-        % Returns the bounding box of this node, as a 1-by-6 row vector
+        % Return the bounding box of this node, as a 1-by-6 row vector.
         minCoords =  [inf inf inf];
         maxCoords = -[inf inf inf];
         for iChild = 1:length(obj.Children)
@@ -94,7 +108,7 @@ methods
     end
     
     function b = isLeaf(obj)
-        % returns true only if this node contains no children
+        % Return true only if this node contains no children.
         b = isempty(obj.Children);
     end
 end
@@ -102,25 +116,25 @@ end
 %% Serialization methods
 methods
     function str = toStruct(obj)
-        % Convert to a structure to facilitate serialization
+        % Convert to a structure to facilitate serialization.
         
         % set type
-        str.type = 'group';
+        str = struct('Type', 'Group');
 
         % call scene node method
         str = convertSceneNodeFields(obj, str);
         
         % allocate memory for children array
-        str.children = cell(1, length(obj.Children));
+        str.Children = cell(1, length(obj.Children));
 
         % populate child nodes
         for iChild = 1:length(obj.Children)
-             str.children{iChild} = toStruct(obj.Children{iChild});
+             str.Children{iChild} = toStruct(obj.Children{iChild});
         end
     end
     
     function write(obj, fileName, varargin)
-        % Write into a JSON file
+        % Write into a JSON file.
         
         % check existence of output directory
         [outputDir, tmp] = fileparts(fileName);  %#ok<ASGLU>
@@ -137,7 +151,7 @@ end
 
 methods (Static)
     function node = fromStruct(str)
-        % Create a new instance from a structure
+        % Create a new instance from a structure.
         
         % create an empty node
         node = GroupNode();
@@ -145,15 +159,15 @@ methods (Static)
         parseSceneNodeFields(node, str);
         
         % parse list of Children
-        for iChild = 1:length(str.children)
-            strChild = str.children{iChild};
+        for iChild = 1:length(str.Children)
+            strChild = str.Children{iChild};
             child = SceneNode.fromStruct(strChild);
             add(node, child);
         end
     end
     
     function node = read(fileName)
-        % Read a node from a file in JSON format
+        % Read a node from a file in JSON format.
         node = GroupNode.fromStruct(loadjson(fileName));
     end
 end

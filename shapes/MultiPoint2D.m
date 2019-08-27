@@ -124,7 +124,13 @@ end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = MultiPoint2D(str.Coordinates);
+        if isfield(str, 'Coordinates')
+            poly = MultiPoint2D(str.Coordinates);
+        elseif isfield(str, 'coordinates')
+            poly = MultiPoint2D(str.coordinates);
+        else
+            error('Field <Coordinates> of MultiPoint2D is not defined');
+        end
     end
 end
 

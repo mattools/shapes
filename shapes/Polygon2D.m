@@ -188,7 +188,13 @@ end
 methods (Static)
     function poly = fromStruct(str)
         % Create a new instance from a structure
-        poly = Polygon2D(str.Coordinates);
+        if isfield(str, 'Coordinates')
+            poly = Polygon2D(str.Coordinates);
+        elseif isfield(str, 'coordinates')
+            poly = Polygon2D(str.coordinates);
+        else
+            error('Field <Coordinates> of Polygon2D is not defined');
+        end
     end
 end
 

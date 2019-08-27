@@ -153,18 +153,27 @@ methods (Static)
         % Creates a new instance from a structure
         
         % parse Geometry
-        type = str.Geometry.Type;
-        geom = eval([type '.fromStruct(str.Geometry)']);
+        if isfield(str, 'Geometry')
+            type = str.Geometry.Type;
+            geom = eval([type '.fromStruct(str.Geometry)']);
+        elseif isfield(str, 'geometry')
+            type = str.geometry.type;
+            geom = eval([type '.fromStruct(str.geometry)']);
+        end
         shape = Shape(geom);
         
         % parse the optionnal Name
         if isfield(str, 'Name') && ~isempty(str.Name)
             shape.Name = str.Name;
+        elseif isfield(str, 'name') && ~isempty(str.name)
+            shape.Name = str.name;
         end
 
         % eventually parse Style
         if isfield(str, 'Style') && ~isempty(str.Style)
             shape.Style = Style.fromStruct(str.Style);
+        elseif isfield(str, 'style') && ~isempty(str.style)
+            shape.Style = Style.fromStruct(str.style);
         end
     end
     

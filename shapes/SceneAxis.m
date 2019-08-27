@@ -101,12 +101,18 @@ methods (Static)
         names = fieldnames(str);
         for i = 1:length(names)
             name = names{i};
-            if strcmpi(name, 'Limits')
+            if strcmp(name, 'Limits')
                 axis.Limits = str.Limits;
+            elseif strcmp(name, 'limits')
+                axis.Limits = str.limits;
             elseif strcmpi(name, 'Reverse')
                 axis.Reverse = str.Reverse;
-            elseif strcmpi(name, 'Label')
+            elseif strcmpi(name, 'reverse')
+                axis.Reverse = str.reverse;
+            elseif strcmp(name, 'Label')
                 axis.Label = str.Label;
+            elseif strcmp(name, 'label')
+                axis.Label = str.label;
             else
                 warning(['Unknown SceneAxis parameter: ' name]);
             end

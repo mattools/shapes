@@ -298,7 +298,6 @@ methods
         
     end
     
-    
     function write(obj, fileName, varargin)
         % Write into a JSON file
         savejson('', toStruct(obj), 'FileName', fileName, varargin{:});
@@ -313,62 +312,94 @@ methods (Static)
         style = Style();
         
         % global visibility
-        if isfield(str, 'visible')
+        if isfield(str, 'Visible')
             style.Visible = str.Visible;
+        elseif isfield(str, 'visible')
+            style.Visible = str.visible;
         end
 
         % parse marker style modifiers
-        if isfield(str, 'markerVisible')
+        if isfield(str, 'MarkerVisible')
             style.MarkerVisible = str.MarkerVisible;
+        elseif isfield(str, 'markerVisible')
+            style.MarkerVisible = str.markerVisible;
         end
-        if isfield(str, 'markerColor')
+        if isfield(str, 'MarkerColor')
             style.MarkerColor = str.MarkerColor;
+        elseif isfield(str, 'markerColor')
+            style.MarkerColor = str.markerColor;
         end
-        if isfield(str, 'markerStyle')
+        if isfield(str, 'MarkerStyle')
             style.MarkerStyle = str.MarkerStyle;
+        elseif isfield(str, 'markerStyle')
+            style.MarkerStyle = str.markerStyle;
         end
-        if isfield(str, 'markerSize')
+        if isfield(str, 'MarkerSize')
             style.MarkerSize = str.MarkerSize;
+        elseif isfield(str, 'markerSize')
+            style.MarkerSize = str.markerSize;
         end
-        if isfield(str, 'markerFillColor')
+        if isfield(str, 'MarkerFillColor')
             style.MarkerFillColor = str.MarkerFillColor;
+        elseif isfield(str, 'markerFillColor')
+            style.MarkerFillColor = str.markerFillColor;
         end
         
         
         % parse line style modifiers
-        if isfield(str, 'lineVisible')
-            style.LineVisible = str.MineVisible;
+        if isfield(str, 'LineVisible')
+            style.LineVisible = str.LineVisible;
+        elseif isfield(str, 'lineVisible')
+            style.LineVisible = str.lineVisible;
         end
-        if isfield(str, 'lineColor')
+        if isfield(str, 'LineColor')
             style.LineColor = str.LineColor;
+        elseif isfield(str, 'lineColor')
+            style.LineColor = str.lineColor;
         end
-        if isfield(str, 'lineWidth')
+        if isfield(str, 'LineWidth')
             style.LineWidth = str.LineWidth;
+        elseif isfield(str, 'lineWidth')
+            style.LineWidth = str.lineWidth;
         end
-        if isfield(str, 'lineStyle')
+        if isfield(str, 'LineStyle')
             style.LineStyle = str.LineStyle;
+        elseif isfield(str, 'lineStyle')
+            style.LineStyle = str.lineStyle;
         end
          
         % parse fill style modifiers
-        if isfield(str, 'fillVisible')
+        if isfield(str, 'FillVisible')
             style.FillVisible = str.FillVisible;
+        elseif isfield(str, 'fillVisible')
+            style.FillVisible = str.fillVisible;
         end
-        if isfield(str, 'fillColor')
+        if isfield(str, 'FillColor')
             style.FillColor = str.FillColor;
+        elseif isfield(str, 'fillColor')
+            style.FillColor = str.fillColor;
         end
-        if isfield(str, 'fillOpacity')
+        if isfield(str, 'FillOpacity')
             style.FillOpacity = str.FillOpacity;
+        elseif isfield(str, 'fillOpacity')
+            style.FillOpacity = str.fillOpacity;
         end
         
         % parse face style modifiers
-        if isfield(str, 'faceVisible')
+        if isfield(str, 'FaceVisible')
             style.FaceVisible = str.FaceVisible;
+        elseif isfield(str, 'faceVisible')
+            style.FaceVisible = str.faceVisible;
         end
-        if isfield(str, 'faceColor')
+        if isfield(str, 'FaceColor')
             style.FaceColor = str.FaceColor;
+        elseif isfield(str, 'faceColor')
+            style.FaceColor = str.faceColor;
         end
-        if isfield(str, 'faceOpacity')
+        if isfield(str, 'FaceOpacity')
             style.FaceOpacity = str.FaceOpacity;
+        elseif isfield(str, 'faceOpacity')
+            style.FaceOpacity = str.faceOpacity;
         end
         
     end

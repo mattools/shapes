@@ -301,26 +301,43 @@ methods (Static)
         % parse eventual axes information
         if isfield(str, 'XAxis')
             scene.XAxis = SceneAxis.fromStruct(str.XAxis);
+        elseif isfield(str, 'xAxis')
+            scene.XAxis = SceneAxis.fromStruct(str.xAxis);
         end
         if isfield(str, 'YAxis')
             scene.YAxis = SceneAxis.fromStruct(str.YAxis);
+        elseif isfield(str, 'yAxis')
+            scene.YAxis = SceneAxis.fromStruct(str.yAxis);
         end
         if isfield(str, 'ZAxis')
             scene.ZAxis = SceneAxis.fromStruct(str.ZAxis);
+        elseif isfield(str, 'zAxis')
+            scene.ZAxis = SceneAxis.fromStruct(str.zAxis);
         end
         
         if isfield(str, 'BackgroundImage')
             scene.BackgroundImage = ImageNode.fromStruct(str.BackgroundImage);
+        elseif isfield(str, 'backgroundImage')
+            scene.BackgroundImage = ImageNode.fromStruct(str.backgroundImage);
         end
         
         if isfield(str, 'AxisLinesVisible')
             scene.AxisLinesVisible = str.AxisLinesVisible;
+        elseif isfield(str, 'axisLinesVisible')
+            scene.AxisLinesVisible = str.axisLinesVisible;
         end
         
         % parse list of Shapes
-        for iShape = 1:length(str.Shapes)
-            shape = Shape.fromStruct(str.Shapes{iShape});
-            addShape(scene, shape);
+        if isfield(str, 'Shapes')
+            for iShape = 1:length(str.Shapes)
+                shape = Shape.fromStruct(str.Shapes{iShape});
+                addShape(scene, shape);
+            end
+        elseif isfield(str, 'shapes')
+            for iShape = 1:length(str.shapes)
+                shape = Shape.fromStruct(str.shapes{iShape});
+                addShape(scene, shape);
+            end
         end
     end
     

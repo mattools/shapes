@@ -43,13 +43,56 @@ properties
     
 end % end properties
 
+%% Static methods
+methods (Static)
+    function obj = convertScene(scene)
+        % Convert a Scene object into a SceneGraph object.
+        
+        % create SceneGraph
+        obj = SceneGraph();
+        
+        % convert group of scene shapes into a group node
+        shapes = GroupNode();
+        shapes.Name = 'Shapes';
+        for i = 1:length(scene.Shapes)
+            shape = scene.Shapes(i);
+            node = ShapeNode(shape);
+            add(shapes, node);
+        end
+
+        % add optional background image
+        if ~isempty(scene.BackgroundImage)
+            root = GroupNode('Name', 'Root');
+            add(root, scene.BackgroundImage);
+            add(root, shapes);
+            obj.RootNode = root;
+        else
+            obj.RootNode = shapes;
+        end
+        
+        % setup meta data
+        obj.XAxis = scene.XAxis;
+        obj.YAxis = scene.YAxis;
+        obj.ZAxis = scene.ZAxis;
+        obj.AxisLinesVisible = scene.AxisLinesVisible;
+        obj.BaseDir = scene.BaseDir;
+    end
+end
 
 %% Constructor
 methods
     function obj = SceneGraph(varargin)
         % Constructor for SceneGraph class
+
+        if ~isempty(varargin)
+            if isa(varargin{1}, 'Scene')
+                % convert old Scene into new SceneGraph
+                obj = SceneGraph.convertScene(varargin{1});
+                return;
+            end
+        end
         
-        % create new axes
+        % create new default axes
         obj.XAxis = SceneAxis();
         obj.YAxis = SceneAxis();
         obj.ZAxis = SceneAxis();
@@ -197,7 +240,7 @@ methods
 
         % first add information about axes
         str.XAxis = toStruct(obj.XAxis);
-        str.ZAxis = toStruct(obj.YAxis);
+        str.YAxis = toStruct(obj.YAxis);
         str.ZAxis = toStruct(obj.ZAxis);
 
         str.ZxisLinesVisible = obj.AxisLinesVisible;

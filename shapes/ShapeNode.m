@@ -55,6 +55,14 @@ methods
             obj.Name = var1.Name;
             return;
         end
+        if isa(var1, 'Shape')
+            % Conversion from old "Scene" class
+            obj.Geometry = var1.Geometry; % Geometry is not duplicated
+            obj.Style = Style(var1.Style);
+            obj.Visible = var1.Visible;
+            obj.Name = var1.Name;
+            return;
+        end
         
         if ~isa(var1, 'Geometry')
             error('First argument must be a Geometry or a ShapeNode');

@@ -60,11 +60,16 @@ methods (Static)
     function node = fromStruct(str)
         % Create a new instance from a structure
         
-        % Dispatch to sub-classes depending on content of the "type" field.
-        switch lower(str.type)
-            case 'shape', node = ShapeNode.fromStruct(str);
-            case 'group', node = GroupNode.fromStruct(str);
-            case 'transformedimage', node = TransformedImageNode.fromStruct(str);
+        % Dispatch to sub-classes depending on content of the "Type" field.
+        switch lower(str.Type)
+            case 'shape'
+                node = ShapeNode.fromStruct(str);
+            case 'group'
+                node = GroupNode.fromStruct(str);
+            case 'imagenode'
+                node = ImageNode.fromStruct(str);
+            case 'transformedimage'
+                node = TransformedImageNode.fromStruct(str);
             otherwise
                 warning(['Unknown SceneNode type: ' type]);
         end
