@@ -55,6 +55,7 @@ methods (Abstract)
         
 end % end methods
 
+
 %% Serialization methods
 methods (Static)
     function node = fromStruct(str)

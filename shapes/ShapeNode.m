@@ -121,6 +121,16 @@ methods
         end
     end
     
+end % end methods
+
+
+%% Methods specializing the SceneNode superclass
+methods
+    function node = transform(obj, transfo)
+        geom = transform(obj.Geometry, transfo);
+        node = ShapeNode(geom, obj.Style);
+    end
+    
     function box = boundingBox(obj)
         % Converts the bounding box ot the inner geometry to a 1-by-6 vector
         geom = obj.Geometry;
@@ -133,16 +143,6 @@ methods
         else
             error(['instance of Geometry2D or Geometry3D is expected, not ' class(geom)]);
         end
-    end
-    
-end % end methods
-
-
-%% Methods specializing the SceneNode superclass
-methods
-    function node = transform(obj, transfo)
-        geom = transform(obj.Geometry, transfo);
-        node = ShapeNode(geom, obj.Style);
     end
     
     function printTree(obj, nIndents)

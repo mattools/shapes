@@ -32,16 +32,21 @@ properties
     % Description of z-axis, as a SceneAxis instance
     ZAxis;
 
-%     % an optional background image, as an instance of ImageNode (deprecated)
-%     BackgroundImage;
-    
-    % indicates whether main axes are visible or not (boolean)
+    % Indicates whether main axes are visible or not (boolean)
     AxisLinesVisible = true;
     
     % base directory for saving data
     BaseDir = pwd;
     
 end % end properties
+
+%% Method for controlling properties access
+methods
+      function set.RootNode(obj, node)
+          obj.RootNode = node;
+          fitBoundsToShape(obj);
+      end
+end
 
 %% Static methods
 methods (Static)
@@ -113,7 +118,6 @@ methods
         res.XAxis = SceneAxis(obj.XAxis);
         res.YAxis = SceneAxis(obj.YAxis);
         res.ZAxis = SceneAxis(obj.ZAxis);
-%         res.BackgroundImage = ImageNode(obj.BackgroundImage);
         res.AxisLinesVisible = obj.AxisLinesVisible;
         
         root = obj.RootNode;
@@ -216,22 +220,6 @@ methods
     end
 end % end methods
 
-%% background image
-methods
-    function setBackgroundImage(obj, img)
-        if isa(img, 'ImageNode')
-            obj.BackgroundImage = img;
-        else
-            img = ImageNode(img);
-            obj.BackgroundImage = img;
-        end
-        
-        extent = physicalExtent(obj.BackgroundImage);
-        obj.XAxis.Limits = extent([1 2]);
-        obj.YAxis.Limits = extent([3 4]);
-    end
-end
-
 
 %% Serialization methods
 methods
@@ -281,9 +269,9 @@ methods (Static)
         if isfield(str, 'ZAxis')
             scene.ZAxis = SceneAxis.fromStruct(str.ZAxis);
         end
-                
+        
         if isfield(str, 'AxisLinesVisible')
-            scene.AxisLinesVisible = str.axisLinesVisible;
+            scene.AxisLinesVisible = str.AxisLinesVisible;
         end
         
         % create default root node
@@ -318,6 +306,7 @@ methods (Static)
         scene = SceneGraph.fromStruct(loadjson(fileName));
     end
 end
+
 
 end % end classdef
 
