@@ -40,13 +40,13 @@ properties
     
 end % end properties
 
-%% Method for controlling properties access
-methods
-      function set.RootNode(obj, node)
-          obj.RootNode = node;
-          fitBoundsToShape(obj);
-      end
-end
+% %% Method for controlling properties access
+% methods
+%       function set.RootNode(obj, node)
+%           obj.RootNode = node;
+%           fitBoundsToShape(obj);
+%       end
+% end
 
 %% Static methods
 methods (Static)
@@ -195,14 +195,16 @@ methods
             box = boundingBox(obj.RootNode);
         end
         
-        if any(~isfinite(box(5:6)))
-            box(5:6) = obj.ZAxis.Limits;
+        % set up new bounding box only if finite value was obtained
+        if ~any(~isfinite(box(1:2)))
+            obj.XAxis.Limits = box(1:2);
         end
-        
-        % set up new bounding box
-        obj.XAxis.Limits = box(1:2);
-        obj.YAxis.Limits = box(3:4);
-        obj.ZAxis.Limits = box(5:6);
+        if ~any(~isfinite(box(3:4)))
+            obj.YAxis.Limits = box(3:4);
+        end
+        if ~any(~isfinite(box(5:6)))
+            obj.ZAxis.Limits = box(5:6);
+        end
     end
     
     function box = viewBox(obj)
